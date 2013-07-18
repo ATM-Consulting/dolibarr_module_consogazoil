@@ -1,7 +1,7 @@
-My Module
+Gazoil Comsuption
 =========
 
-This is a full featured module template for Dolibarr
+This module is use to manage Gazoil consumption for Car/Truck
 
 Licence
 -------
