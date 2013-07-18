@@ -31,6 +31,14 @@ Module10000Desc = Gazoil consumption management
 ConsoGazoilSetup = Gazoil consumption setup
 Settings = Settings
 ConsoGazoilSetupPage = Gazoil consumption setup page
+ConsoGazThresoldConso=Thresold of flag in report Usage per month per vehicule
+ConsoGazThresoldKM=Thresold of flag in report Taking gazoil
+ConsoGazMailExploit=Email adresse to alert when file is imported
+ConsoGazMailExploitSubject=[Gazoil Conso] : New file have been imported
+ConsoGazMailExploitMail=Dear Mr/Ms, a gazoil file have just been imported, please connect to the application to check it.
+ConsoGazMailExploitHelp=Separated by coma
+ConsoGazVehNoImport=Id of vehicule to never import
+ConsoGazVehNoImportHelp=Separated by coma
 
 #
 # About page

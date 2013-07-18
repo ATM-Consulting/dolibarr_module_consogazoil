@@ -48,11 +48,43 @@ $action = GETPOST('action', 'alpha');
  * Actions
  */
 
+if ($action == 'setvar')
+{
+	require_once(DOL_DOCUMENT_ROOT."/core/lib/files.lib.php");
+	
+	$val=GETPOST('GAZOIL_THRESOLD_CONSO','alpha');
+	$res = dolibarr_set_const($db, 'GAZOIL_THRESOLD_CONSO', $val,'chaine',0,'',$conf->entity);
+	if (! $res > 0) $error++;
+	
+	$val=GETPOST('GAZOIL_THRESOLD_KM','alpha');
+	$res = dolibarr_set_const($db, 'GAZOIL_THRESOLD_KM', $val,'chaine',0,'',$conf->entity);
+	if (! $res > 0) $error++;
+	
+	$val=GETPOST('GAZOIL_EMAIL_EXPLOIT','alpha');
+	$res = dolibarr_set_const($db, 'GAZOIL_EMAIL_EXPLOIT', $val,'chaine',0,'',$conf->entity);
+	if (! $res > 0) $error++;
+	
+	$val=GETPOST('GAZOIL_ID_VEH_NO_IMPORT','alpha');
+	$res = dolibarr_set_const($db, 'GAZOIL_ID_VEH_NO_IMPORT', $val,'chaine',0,'',$conf->entity);
+	if (! $res > 0) $error++;
+	
+	if (! $error)
+	{
+		setEventMessage($langs->trans("SetupSaved"),'mesgs');
+	}
+	else
+	{
+		setEventMessage($langs->trans("Error"),'errors');
+	}
+}
+
 /*
  * View
  */
 $page_name = "ConsoGazoilSetup";
 llxHeader('', $langs->trans($page_name));
+
+$form=new Form($db);
 
 // Subheader
 $linkback = '<a href="' . DOL_URL_ROOT . '/admin/modules.php">'
@@ -71,6 +103,64 @@ dol_fiche_head(
 
 // Setup page goes here
 echo $langs->trans("ConsoGazoilSetupPage");
+
+
+print '<table class="noborder" width="100%">';
+
+print '<form method="post" action="'.$_SERVER['PHP_SELF'].'" >';
+print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+print '<input type="hidden" name="action" value="setvar">';
+
+print '<tr class="liste_titre">';
+print '<td>'.$langs->trans("Name").'</td>';
+print '<td width="400px">'.$langs->trans("Valeur").'</td>';
+print '<td></td>';
+print "</tr>\n";
+
+//GAZOIL_THRESOLD_CONSO
+print '<tr class="pair"><td>'.$langs->trans("ConsoGazThresoldConso").'</td>';
+print '<td align="left">';
+print '<input type="text"   name="GAZOIL_THRESOLD_CONSO" value="'.$conf->global->GAZOIL_THRESOLD_CONSO.'" size="5" >%</td>';
+print '<td align="center">';
+print '</td>';
+print '</tr>';
+
+
+//GAZOIL_THRESOLD_KM
+print '<tr class="pair"><td>'.$langs->trans("ConsoGazThresoldKM").'</td>';
+print '<td align="left">';
+print '<input type="text"   name="GAZOIL_THRESOLD_KM" value="'.$conf->global->GAZOIL_THRESOLD_KM.'" size="5" >Km</td>';
+print '<td align="center">';
+print '</td>';
+print '</tr>';
+
+
+//GAZOIL_EMAIL_EXPLOIT
+print '<tr class="pair"><td>'.$langs->trans("ConsoGazMailExploit").'</td>';
+print '<td align="left">';
+print '<textarea wrap="soft" cols="70" rows="2"  name="GAZOIL_EMAIL_EXPLOIT">'.$conf->global->GAZOIL_EMAIL_EXPLOIT.'</textarea></td>';
+print '<td align="center">';
+print $form->textwithpicto('',$langs->trans("ConsoGazMailExploitHelp"),1,'help');
+print '</td>';
+print '</tr>';
+
+
+//GAZOIL_ID_VEH_NO_IMPORT
+print '<tr class="pair"><td>'.$langs->trans("ConsoGazVehNoImport").'</td>';
+print '<td align="left">';
+print '<textarea wrap="soft" cols="70" rows="2"  name="GAZOIL_ID_VEH_NO_IMPORT">'.$conf->global->GAZOIL_ID_VEH_NO_IMPORT.'</textarea></td>';
+print '<td align="center">';
+print $form->textwithpicto('',$langs->trans("ConsoGazVehNoImportHelp"),1,'help');
+print '</td>';
+print '</tr>';
+
+
+print '<tr class="impair"><td colspan="3" align="right"><input type="submit" class="button" value="'.$langs->trans("Save").'"></td>';
+print '</tr>';
+
+print '</table><br>';
+print '</form>';
+
 
 llxFooter();
 

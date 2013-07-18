@@ -31,6 +31,14 @@ Module10000Desc = Controle de Consomation Gazoil
 ConsoGazoilSetup = Configuration du module Consomation Gazoil
 Settings = Réglages
 ConsoGazoilSetupPage = Page de réglage de Consomation Gazoil
+ConsoGazThresoldConso=Seuil d'alerte dans le rapport consommation de carburant par véhicule par mois 
+ConsoGazThresoldKM=Seuil d'alerte dans le rapport de prise de carburant
+ConsoGazMailExploit=Liste des emails auquel sera envoyé un message a la fin de l'import du fichier
+ConsoGazMailExploitHelp=Les adresses email doivent être séparé par <b>virgule</b>
+ConsoGazMailExploitSubject=[Consomation Gazoil] : Nouvel import de fichier
+ConsoGazMailExploitMail=Chére M/Mme, Un fichier de consomation de Gazoil viens d'être importé, veuillez regardez les données
+ConsoGazVehNoImport=Liste des Id de véhicule a ne pas importer
+ConsoGazVehNoImportHelp=Les Id de véhicule doivent être séparé par <b>virgule</b>
 
 #
 # Page À propos

@@ -101,7 +101,7 @@ class modConsoGazoil extends DolibarrModules
 
         // Data directories to create when module is enabled.
         // Example: this->dirs = array("/consogazoil/temp");
-        $this->dirs = array();
+        $this->dirs = array('/consogazoil');
 
         // Config pages. Put here list of php pages
         // stored into consogazoil/admin directory, used to setup module.
@@ -129,7 +129,43 @@ class modConsoGazoil extends DolibarrModules
 		$this->const[$r][2] = $this->version;
 		$this->const[$r][3] = 'Last version installed to know change table to execute';
 		$this->const[$r][4] = 0;
-		$this->const[$r][5] = 0;
+		$this->const[$r][5] = 'allentities';
+		$this->const[$r][6] = 0;
+		
+		$r++;
+		$this->const[$r][0] = "GAZOIL_THRESOLD_CONSO";
+		$this->const[$r][1] = "chaine";
+		$this->const[$r][2] = '10';
+		$this->const[$r][3] = 'Threshold color flag gazoil conso';
+		$this->const[$r][4] = 0;
+		$this->const[$r][5] = 'current';
+		$this->const[$r][6] = 0;
+		
+		$r++;
+		$this->const[$r][0] = "GAZOIL_THRESOLD_KM";
+		$this->const[$r][1] = "chaine";
+		$this->const[$r][2] = '250';
+		$this->const[$r][3] = 'Threshold color flag KM';
+		$this->const[$r][4] = 0;
+		$this->const[$r][5] = 'current';
+		$this->const[$r][6] = 0;
+		
+		$r++;
+		$this->const[$r][0] = "GAZOIL_EMAIL_EXPLOIT";
+		$this->const[$r][1] = "chaine";
+		$this->const[$r][2] = '';
+		$this->const[$r][3] = 'Email list to inform of import';
+		$this->const[$r][4] = 0;
+		$this->const[$r][5] = 'current';
+		$this->const[$r][6] = 0;
+		
+		$r++;
+		$this->const[$r][0] = "GAZOIL_ID_VEH_NO_IMPORT";
+		$this->const[$r][1] = "chaine";
+		$this->const[$r][2] = '';
+		$this->const[$r][3] = 'Id of vehicule to not import';
+		$this->const[$r][4] = 0;
+		$this->const[$r][5] = 'current';
 		$this->const[$r][6] = 0;
 
         // Array to add new pages in new tabs
