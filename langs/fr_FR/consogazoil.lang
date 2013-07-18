@@ -69,9 +69,17 @@ ConsoGazReportTaken=Suivi Prise de carburant
 ConsoGazReportKM=Suivi du KM/véhicule
 
 #
+# Common
+#
+ConsoGazMustBeNumeric=Le champ %s doit être un nombre.
+
+#
 # List
 #
 ConsoGazSearch=Recherche
 ConsoGazAll=Tous
 ConsoGazImmat=Immatriculation
 ConsoGazConsoAvg=Conso. Moy.
+ConsoGazDelete=
+ConsoGazDelete=Supprimer
+ConsoGazConfirmDelete=Etes vous sure de vouloir supprimer ?

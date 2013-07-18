@@ -49,7 +49,33 @@ function consogazoilAdminPrepareHead()
     //$this->tabs = array(
     //	'entity:-tabname:Title:@consogazoil:/consogazoil/mypage.php?id=__ID__'
     //); // to remove a tab
-    complete_head_from_modules($conf, $langs, $object, $head, $h, 'consogazoil');
+    complete_head_from_modules($conf, $langs, $object, $head, $h, 'consogazoiladmin');
 
     return $head;
+}
+
+function vehicule_prepare_head($object) {
+	
+	global $langs, $conf;
+	
+	$langs->load("consogazoil@consogazoil");
+	
+	$h = 0;
+	$head = array();
+	
+	$head[$h][0] = dol_buildpath("/consogazoil/vehicule/card.php", 1).'?id='.$object->id;
+	$head[$h][1] = $langs->trans("ConsoGazManageVeh");
+	$head[$h][2] = 'card';
+	$h++;
+	
+	$head[$h][0] = dol_buildpath('/consogazoil/vehicule/info.php',1).'?id='.$object->id;
+	$head[$h][1] = $langs->trans("Info");
+	$head[$h][2] = 'info';
+	$hselected = $h;
+	$h++;
+	
+	complete_head_from_modules($conf, $langs, $object, $head, $h, 'consogazoilvehicule');
+	
+	return $head;
+	
 }

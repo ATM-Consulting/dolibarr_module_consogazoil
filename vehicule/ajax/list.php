@@ -48,6 +48,7 @@ $object = new ConsogazoilVehicule($db);
 	 * you want to insert a non-database field (for example a counter or static image)
 	 */
 	$aColumns = array(
+			'rowid',
 			'ref',
 			'immat_veh',
 			'avg_conso'
@@ -68,7 +69,7 @@ $object = new ConsogazoilVehicule($db);
 	if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
 	{
 		
-		$sLimit = $db->plimit($db->escape( $_GET['iDisplayStart'] )+1,$db->escape( $_GET['iDisplayLength']));
+		$sLimit = $db->plimit($db->escape( $_GET['iDisplayLength']),$db->escape( $_GET['iDisplayStart'] ));
 	}
 
 
@@ -106,40 +107,22 @@ $object = new ConsogazoilVehicule($db);
 		$sWhere = "WHERE (";
 		$numColumns = count($aColumns);
 		for ( $i=0 ; $i<$numColumns ; $i++ ) {
-			$sWhere .= $aColumns[$i]." LIKE '%".$db->escape( $_GET['sSearch'] )."%') OR ";	
+			
+			if (($aColumns[$i] == "ref") || ($aColumns[$i] == "immat_veh")) {
+				$sWhere .= $aColumns[$i]." LIKE '%".$db->escape( $_GET['sSearch'] )."%' OR ";	
+			}
+			if (($aColumns[$i] == "avg_conso") && (is_numeric($_GET['sSearch']))) {
+				$sWhere .= $aColumns[$i]." = ".$db->escape( $_GET['sSearch'] )." OR ";	
+			}
 		}
 		$sWhere = substr_replace( $sWhere, "", -3 );
 		$sWhere .= ')';
-	}
-
-	/* Individual column filtering */
-	for ($i=0 ; $i<$numColumns ; $i++)
-	{
-		if ( $_GET['bSearchable_'.$i] == "true" && $_GET['sSearch_'.$i] != '' )
-		{
-			if ( $sWhere == "" )
-			{
-				$sWhere = "WHERE ";
-			}
-			else
-			{
-				$sWhere .= " AND ";
-			}
-			$sWhere .= $aColumns[$i]." LIKE '%".$db->escape($_GET['sSearch_'.$i])."%' ";
-		}
 	}
 	
 	/*
 	 * SQL queries
 	 * Get data to display
 	 */
-	/*$sQuery = "
-		SELECT SQL_CALC_FOUND_ROWS ".str_replace(" , ", " ", implode(", ", $aColumns))."
-		FROM   $sTable
-		$sWhere
-		$sOrder
-		$sLimit
-	";*/
 	$sQuery = "
 		SELECT ".str_replace(" , ", " ", implode(", ", $aColumns))."
 			FROM   $sTable
@@ -187,9 +170,9 @@ $object = new ConsogazoilVehicule($db);
 		for ($i=0 ; $i<$numColumns ; $i++)
 		{
 			if ($aColumns[$i] == "ref") {
-				$object->fetch($aRow[$aColumns[$i]]);
+				$object->fetch($aRow[$aColumns['rowid']]);
 				$row[] = $object->getNomUrl(1);
-			} else {
+			} else if ($aColumns[$i] != "rowid") {
 				$row[]=$aRow[$aColumns[$i]];
 			}			
 		}

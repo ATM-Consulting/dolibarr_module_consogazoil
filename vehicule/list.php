@@ -1,5 +1,6 @@
 <?php
-/* Copyright (C) 2013	Florian HENRY 		<florian.henry@open-concept.pro>
+/* Consomation Gazoil 
+ * Copyright (C) 2013	Florian HENRY 		<florian.henry@open-concept.pro>
  *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -16,21 +17,19 @@
 */
 
 /**
- *	\file		consogazoil/vehicule/list.php
- *	\ingroup	consogazoil
+ * \file		consogazoil/vehicule/list.php
+ * \ingroup	consogazoil
  */
-
-$res=@include '../../main.inc.php';					// For root directory
-if (! $res) $res=@include '../../../main.inc.php';	// For "custom" directory
-
-
+$res = @include '../../main.inc.php'; // For root directory
+if (! $res) $res = @include '../../../main.inc.php'; // For "custom" directory
+                                                   
 // Load translation files required by the page
-$langs->load("fidelite@fidelite");
+$langs->load ( "fidelite@fidelite" );
 
 // Security check
-if (!$user->rights->consogazoil->lire) accessforbidden();
+if (! $user->rights->consogazoil->lire) accessforbidden ();
 
-$optioncss=GETPOST('optioncss','alpha');
+$optioncss = GETPOST ( 'optioncss', 'alpha' );
 
 /*
  * VIEW
@@ -38,17 +37,14 @@ $optioncss=GETPOST('optioncss','alpha');
 * Put here all code to build page
 */
 
-llxHeader('',$langs->trans('ConsoGazManageVeh').'-'.$langs->trans('ConsoGazList'));
+llxHeader ( '', $langs->trans ( 'ConsoGazManageVeh' ) . '-' . $langs->trans ( 'ConsoGazList' ) );
 
+$form = new Form ( $db );
 
-$form = new Form($db);
-
-
-echo load_fiche_titre($langs->trans('ConsoGazManageVeh').'-'.$langs->trans('ConsoGazList'), '', 'consogazoil@consogazoil');
-
+echo load_fiche_titre ( $langs->trans ( 'ConsoGazManageVeh' ) . '-' . $langs->trans ( 'ConsoGazList' ), '', 'consogazoil@consogazoil' );
 
 include 'tpl/list.tpl.php';
 
 // End of page
-llxFooter();
-$db->close();
+llxFooter ();
+$db->close ();

@@ -22,15 +22,13 @@
  */
 
 // Put here all includes required by your class file
-require_once(DOL_DOCUMENT_ROOT."/core/class/commonobject.class.php");
-//require_once(DOL_DOCUMENT_ROOT."/societe/class/societe.class.php");
-//require_once(DOL_DOCUMENT_ROOT."/product/class/product.class.php");
+require_once 'commonobjectconsogazoil.class.php';
 
 
 /**
  *	Put here description of your class
  */
-class ConsogazoilStation extends CommonObject
+class ConsogazoilStation extends CommonObjectConsoGazoil
 {
 	var $db;							//!< To store db handler
 	var $error;							//!< To return error code (or message)

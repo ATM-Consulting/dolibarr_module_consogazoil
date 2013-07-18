@@ -69,9 +69,16 @@ ConsoGazReportTaken=Gazoil Taken
 ConsoGazReportKM=Km/Vehicule
 
 #
+# Common
+#
+ConsoGazMustBeNumeric=Field %s must be a numeric
+
+#
 # List
 #
 ConsoGazSearch=Search
 ConsoGazAll=All
 ConsoGazImmat=Immatriculation
 ConsoGazConsoAvg=Avg. Conso.
+ConsoGazDelete=Delete
+ConsoGazConfirmDelete=Are you sure to delete ?

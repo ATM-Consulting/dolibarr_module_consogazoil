@@ -22,15 +22,13 @@
  */
 
 // Put here all includes required by your class file
-require_once(DOL_DOCUMENT_ROOT."/core/class/commonobject.class.php");
-//require_once(DOL_DOCUMENT_ROOT."/societe/class/societe.class.php");
-//require_once(DOL_DOCUMENT_ROOT."/product/class/product.class.php");
+require_once 'commonobjectconsogazoil.class.php';
 
 
 /**
  *	Put here description of your class
  */
-class ConsogazoilVehicule extends CommonObject
+class ConsogazoilVehicule extends CommonObjectConsoGazoil
 {
 	var $db;							//!< To store db handler
 	var $error;							//!< To return error code (or message)
@@ -184,9 +182,10 @@ class ConsogazoilVehicule extends CommonObject
      *  Load object in memory from the database
      *
      *  @param	int		$id    Id object
+     *  @param	int		$ref   ref object
      *  @return int          	<0 if KO, >0 if OK
      */
-    function fetch($id)
+    function fetch($id,$ref='')
     {
     	global $langs;
         $sql = "SELECT";
@@ -208,8 +207,10 @@ class ConsogazoilVehicule extends CommonObject
 
 		
         $sql.= " FROM ".MAIN_DB_PREFIX."consogazoil_vehicule as t";
-        $sql.= " WHERE t.rowid = ".$id;
-
+        if (!empty($id)) {
+        	$sql.= " WHERE t.rowid = ".$id;
+        }else if (!empty($ref)) $sql.= " WHERE t.ref = '".$ref."'";
+        
     	dol_syslog(get_class($this)."::fetch sql=".$sql, LOG_DEBUG);
         $resql=$this->db->query($sql);
         if ($resql)
@@ -570,6 +571,69 @@ class ConsogazoilVehicule extends CommonObject
 		{
 			$this->error="Error ".$this->db->lasterror();
 			dol_syslog(get_class($this)."::fetch_all ".$this->error, LOG_ERR);
+			return -1;
+		}
+	}
+	
+	/**
+	 *      Return clicable link of object (with eventually picto)
+	 *
+	 *      @param	int		$withpicto       Add picto into link
+	 *      @param  int		$max             Maxlength of ref
+	 *      @param  int		$short           1=Return just URL
+	 *      @param  string  $moretitle       Add more text to title tooltip
+	 *      @return string 			         String with URL
+	 */
+	function getNomUrl()
+	{
+		global $langs;
+	
+		$result='';
+	
+		$url = dol_buildpath('/consogazoil/vehicule/card.php',1).'?id='.$this->id;
+	
+		$label=$langs->trans("Show").': '.$this->ref;
+
+		$result='<a href="'.$url.'">'.$label.'</a>';
+		
+		return $result;
+	}
+	
+	/**
+	 *  Give information on the object
+	 *
+	 *  @param	int		$id    Id object
+	 *  @return int          	<0 if KO, >0 if OK
+	 */
+	function info($id)
+	{
+		global $langs;
+	
+		$sql = "SELECT";
+		$sql.= " p.rowid, p.datec, p.tms, p.fk_user_modif, p.fk_user_creat";
+		$sql.= " FROM ".MAIN_DB_PREFIX."consogazoil_vehicule as p";
+		$sql.= " WHERE p.rowid = ".$id;
+	
+		dol_syslog(get_class($this)."::info sql=".$sql, LOG_DEBUG);
+		$resql=$this->db->query($sql);
+		if ($resql)
+		{
+			if ($this->db->num_rows($resql))
+			{
+				$obj = $this->db->fetch_object($resql);
+				$this->id = $obj->rowid;
+				$this->date_creation = $this->db->jdate($obj->datec);
+				$this->date_modification = $this->db->jdate($obj->tms);
+				$this->user_modification = $obj->fk_user_modif;
+				$this->user_creation = $obj->fk_user_creat;
+			}
+			$this->db->free($resql);
+			return 1;
+		}
+		else
+		{
+			$this->error="Error ".$this->db->lasterror();
+			dol_syslog(get_class($this)."::info ".$this->error, LOG_ERR);
 			return -1;
 		}
 	}
