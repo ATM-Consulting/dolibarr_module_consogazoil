@@ -20,21 +20,21 @@
 
 # Module label 'ModuleXXXName'
 # (where XXX is value of numeric property 'numero' of module)
-Module103040Name = Mon module
+Module103040Name = Consomation Gazoil
 # Module description 'ModuleXXXDesc'
 # (where XXX is value of numeric property 'numero' of module)
-Module10000Desc = Description de mon module
+Module10000Desc = Controle de Consomation Gazoil
 
 #
 # Page d'administration
 #
-ConsoGazoilSetup = Configuration du module mon module
+ConsoGazoilSetup = Configuration du module Consomation Gazoil
 Settings = Réglages
-ConsoGazoilSetupPage = Page de réglage de mon module
+ConsoGazoilSetupPage = Page de réglage de Consomation Gazoil
 
 #
 # Page À propos
 #
 About = À propos
-ConsoGazoilAbout = À propos de mon module
-ConsoGazoilAboutPage = Page à propos de mon module
+ConsoGazoilAbout = À propos de Consomation Gazoil
+ConsoGazoilAboutPage = Page à propos de Consomation Gazoil

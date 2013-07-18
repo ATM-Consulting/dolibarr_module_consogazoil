@@ -1,5 +1,5 @@
--- <one line to give the program's name and a brief idea of what it does.>
--- Copyright (C) <year>  <name of author>
+-- Consomation Gazoil 
+-- Copyright (C) 2013 florian Henry <florian.henry@open-concept.pro>
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -13,3 +13,19 @@
 --
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+CREATE TABLE IF NOT EXISTS llx_consogazoil_vehtake (
+  rowid 		integer NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  entity 		integer NOT NULL DEFAULT 1,
+  fk_vehicule		integer NOT NULL,
+  fk_station		integer NOT NULL,
+  fk_driver		integer NOT NULL,
+  volume		real NOT NULL,
+  km_declare		integer NOT NULL,
+  km_controle		integer NULL,
+  datec			datetime NOT NULL,
+  tms 			timestamp NOT NULL,
+  fk_user_creat 	integer NOT NULL,
+  fk_user_modif 	integer NOT NULL,
+  import_key		varchar(14)
+) ENGINE=InnoDB;

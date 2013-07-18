@@ -121,22 +121,16 @@ class modConsoGazoil extends DolibarrModules
         // List of particular constants to add when module is enabled
         // (key, 'chaine', value, desc, visible, 'current' or 'allentities', deleteonunactive)
         // Example:
-        $this->const = array(
-            //	0=>array(
-            //		'MYMODULE_MYNEWCONST1',
-            //		'chaine',
-            //		'myvalue',
-            //		'This is a constant to add',
-            //		1
-            //	),
-            //	1=>array(
-            //		'MYMODULE_MYNEWCONST2',
-            //		'chaine',
-            //		'myvalue',
-            //		'This is another constant to add',
-            //		0
-            //	)
-        );
+      
+        $r=0;
+        $r++;
+		$this->const[$r][0] = "GAZOIL_LAST_VERION_INSTALL";
+		$this->const[$r][1] = "chaine";
+		$this->const[$r][2] = $this->version;
+		$this->const[$r][3] = 'Last version installed to know change table to execute';
+		$this->const[$r][4] = 0;
+		$this->const[$r][5] = 0;
+		$this->const[$r][6] = 0;
 
         // Array to add new pages in new tabs
         // Example:
@@ -465,6 +459,146 @@ class modConsoGazoil extends DolibarrModules
      */
     private function loadTables()
     {
-        return $this->_load_tables('/consogazoil/sql/');
+        return $this->_load_tables_consogazoil('/consogazoil/sql/');
+    }
+    
+    /**
+     *  Create tables and keys required by module.
+     *  Do not use version of Dolibarr because execute script only if version requiered it
+     *  Files module.sql and module.key.sql with create table and create keys
+     *  commands must be stored in directory reldir='/module/sql/'
+     *  This function is called by this->init
+     *
+     *  @param	string	$reldir		Relative directory where to scan files
+     *  @return	int     			<=0 if KO, >0 if OK
+     */
+    function _load_tables_consogazoil($reldir)
+    {
+    	global $db,$conf;
+    
+    	$error=0;
+    
+    	include_once(DOL_DOCUMENT_ROOT ."/core/lib/admin.lib.php");
+    
+    	$ok = 1;
+    	foreach($conf->file->dol_document_root as $dirroot)
+    	{
+    		if ($ok)
+    		{
+    			$dir = $dirroot.$reldir;
+    			$ok = 0;
+    
+    			// Run llx_mytable.sql files
+    			$handle=@opendir($dir);         // Dir may not exists
+    			if (is_resource($handle))
+    			{
+    				while (($file = readdir($handle))!==false)
+    				{
+    					if (preg_match('/\.sql$/i',$file) && ! preg_match('/\.key\.sql$/i',$file) && substr($file,0,4) == 'llx_' && substr($file,0,4) != 'data')
+    					{
+    						$result=run_sql($dir.$file,1,'',1);
+    						if ($result <= 0) $error++;
+    					}
+    				}
+    				closedir($handle);
+    			}
+    
+    			// Run llx_mytable.key.sql files (Must be done after llx_mytable.sql)
+    			$handle=@opendir($dir);         // Dir may not exist
+    			if (is_resource($handle))
+    			{
+    				while (($file = readdir($handle))!==false)
+    				{
+    					if (preg_match('/\.key\.sql$/i',$file) && substr($file,0,4) == 'llx_' && substr($file,0,4) != 'data')
+    					{
+    						$result=run_sql($dir.$file,1,'',1);
+    						if ($result <= 0) $error++;
+    					}
+    				}
+    				closedir($handle);
+    			}
+    
+    			// Run data_xxx.sql files (Must be done after llx_mytable.key.sql)
+    			$handle=@opendir($dir);         // Dir may not exist
+    			if (is_resource($handle))
+    			{
+    				while (($file = readdir($handle))!==false)
+    				{
+    					if (preg_match('/\.sql$/i',$file) && ! preg_match('/\.key\.sql$/i',$file) && substr($file,0,4) == 'data')
+    					{
+    						$result=run_sql($dir.$file,1,'',1);
+    						if ($result <= 0) $error++;
+    					}
+    				}
+    				closedir($handle);
+    			}
+    
+    			// Run update_xxx.sql files
+    			$handle=@opendir($dir);         // Dir may not exist
+    			if (is_resource($handle))
+    			{
+    				while (($file = readdir($handle))!==false)
+    				{
+    					$dorun = false;
+    					if (preg_match('/\.sql$/i',$file) && ! preg_match('/\.key\.sql$/i',$file) && substr($file,0,6) == 'update')
+    					{
+    						//dol_syslog(get_class($this)."::_load_tables_agefodd analyse file:".$file, LOG_DEBUG);
+    
+    						//Special test to know what kind of update script to run
+    						$sql="SELECT value FROM ".MAIN_DB_PREFIX."const WHERE name='GAZOIL_LAST_VERION_INSTALL'";
+    
+    						//dol_syslog(get_class($this)."::_load_tables_agefodd sql:".$sql, LOG_DEBUG);
+    						$resql=$this->db->query($sql);
+    						if ($resql) {
+    							if ($this->db->num_rows($resql)==1) {
+    								$obj = $this->db->fetch_object($resql);
+    								$last_version_install=$obj->value;
+    								//dol_syslog(get_class($this)."::_load_tables_agefodd last_version_install:".$last_version_install, LOG_DEBUG);
+    
+    								$tmpversion=explode('_',$file);
+    								$fileversion_array=explode('-',$tmpversion[1]);
+    								$fileversion=str_replace('.sql','',$fileversion_array[1]);
+    								//dol_syslog(get_class($this)."::_load_tables_agefodd fileversion:".$fileversion, LOG_DEBUG);
+    								if (version_compare($last_version_install, $fileversion)==-1) {
+    									$dorun = true;
+    									//dol_syslog(get_class($this)."::_load_tables_agefodd run file:".$file, LOG_DEBUG);
+    								}
+    
+    							}
+    						}
+    						else
+    						{
+    							$this->error="Error ".$this->db->lasterror();
+    							dol_syslog(get_class($this)."::_load_tables_consogazoil ".$this->error, LOG_ERR);
+    							$error ++;
+    						}
+    
+    						if ($dorun) {
+    							$result=run_sql($dir.$file,1,'',1);
+    							if ($result <= 0) $error++;
+    						}
+    					}
+    				}
+    				closedir($handle);
+    			}
+    
+    			if ($error == 0)
+    			{
+    				$ok = 1;
+    			}
+    		}
+    	}
+    
+    	//DELETE AGF_LAST_VERION_INSTALL to update with the new one
+    	$sql='DELETE FROM '.MAIN_DB_PREFIX.'const WHERE name=\'AGF_LAST_VERION_INSTALL\'';
+    	dol_syslog(get_class($this)."::_load_tables_agefodd sql:".$sql, LOG_DEBUG);
+    	$resql=$this->db->query($sql);
+    	if (!$resql) {
+    		$this->error="Error ".$this->db->lasterror();
+    		dol_syslog(get_class($this)."::_load_tables_agefodd ".$this->error, LOG_ERR);
+    		$error ++;
+    	}
+    
+    	return $ok;
     }
 }
