@@ -52,3 +52,26 @@ ConsoGazVehNoImportHelp=Separated by coma
 About = About
 ConsoGazoilAbout = About Gazoil consumption
 ConsoGazoilAboutPage = Gazoil consumption about page
+
+#
+# Menu
+#
+ConsoGazManageVeh=Manage Vehicule
+ConsoGazList=List
+ConsoGazNew=Create
+ConsoGazManageServ=Manage Service
+ConsoGazManageSta=Manage Station
+ConsoGazManageDriv=Manage driver
+ConsoGazManageImport=Import
+ConsoGazManageReport=Reports
+ConsoGazReportConso=Conso. Gazoil/Vehicule/Month 
+ConsoGazReportTaken=Gazoil Taken
+ConsoGazReportKM=Km/Vehicule
+
+#
+# List
+#
+ConsoGazSearch=Search
+ConsoGazAll=All
+ConsoGazImmat=Immatriculation
+ConsoGazConsoAvg=Avg. Conso.

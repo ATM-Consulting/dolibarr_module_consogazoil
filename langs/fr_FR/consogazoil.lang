@@ -52,3 +52,26 @@ ConsoGazVehNoImportHelp=Les Id de véhicule doivent être séparé par <b>virgul
 About = À propos
 ConsoGazoilAbout = À propos de Consomation Gazoil
 ConsoGazoilAboutPage = Page à propos de Consomation Gazoil
+
+#
+# Menu
+#
+ConsoGazManageVeh=Gérer les véhicules
+ConsoGazList=Liste
+ConsoGazNew=Creé
+ConsoGazManageServ=Gérer les Services
+ConsoGazManageSta=Gérer les Stations
+ConsoGazManageDriv=Gérer les conducteurs
+ConsoGazManageImport=Import fichier
+ConsoGazManageReport=Rapport
+ConsoGazReportConso=Suivie Conso. de carburant/véhicule/mois 
+ConsoGazReportTaken=Suivi Prise de carburant
+ConsoGazReportKM=Suivi du KM/véhicule
+
+#
+# List
+#
+ConsoGazSearch=Recherche
+ConsoGazAll=Tous
+ConsoGazImmat=Immatriculation
+ConsoGazConsoAvg=Conso. Moy.

@@ -167,6 +167,15 @@ class modConsoGazoil extends DolibarrModules
 		$this->const[$r][4] = 0;
 		$this->const[$r][5] = 'current';
 		$this->const[$r][6] = 0;
+		
+		$r++;
+		$this->const[$r][0] = 	'REQUIRE_JQUERY_DATATABLES';
+		$this->const[$r][1] = 	'yesno';
+		$this->const[$r][2] = 	'1';
+		$this->const[$r][3] = 	'use JQUERY DataTable Module';
+		$this->const[$r][4] = 	0;
+		$this->const[$r][5] = 	'allentities';
+		$this->const[$r][6] = 	1;
 
         // Array to add new pages in new tabs
         // Example:
@@ -258,23 +267,6 @@ class modConsoGazoil extends DolibarrModules
         // Permissions
         $this->rights = array(); // Permission array used by this module
         $r = 0;
-
-        // Add here list of permission defined by
-        // an id, a label, a boolean and two constant strings.
-        // Example:
-        //// Permission id (must not be already used)
-        //$this->rights[$r][0] = 2000;
-        //// Permission label
-        //$this->rights[$r][1] = 'Permision label';
-        //// Permission by default for new user (0/1)
-        //$this->rights[$r][3] = 1;
-        //// In php code, permission will be checked by test
-        //// if ($user->rights->permkey->level1->level2)
-        //$this->rights[$r][4] = 'level1';
-        //// In php code, permission will be checked by test
-        //// if ($user->rights->permkey->level1->level2)
-        //$this->rights[$r][5] = 'level2';
-        //$r++;
         
         $this->rights[$r][0] = 103041;
 		$this->rights[$r][1] = 'Lecture';
@@ -343,32 +335,261 @@ class modConsoGazoil extends DolibarrModules
         //	// 0=Menu for internal users, 1=external users, 2=both
         //	'user'=>2
         //);
-        //$r++;
-        //$this->menu[$r]=array(
-        //	// Use r=value where r is index key used for the parent menu entry
-        //	// (higher parent must be a top menu entry)
-        //	'fk_menu'=>'r=0',
-        //	// This is a Left menu entry
-        //	'type'=>'left',
-        //	'titre'=>'ConsoGazoil left menu',
-        //	'mainmenu'=>'consogazoil',
-        //	'leftmenu'=>'consogazoil',
-        //	'url'=>'/consogazoil/pagelevel1.php',
-        //	// Lang file to use (without .lang) by module.
-        //	// File must be in langs/code_CODE/ directory.
-        //	'langs'=>'mylangfile',
-        //	'position'=>100,
-        //	// Define condition to show or hide menu entry.
-        //	// Use '$conf->consogazoil->enabled' if entry must be visible if module is enabled.
-        //	'enabled'=>'$conf->consogazoil->enabled',
-        //	// Use 'perms'=>'$user->rights->consogazoil->level1->level2'
-        //	// if you want your menu with a permission rules
-        //	'perms'=>'1',
-        //	'target'=>'',
-        //	// 0=Menu for internal users, 1=external users, 2=both
-        //	'user'=>2
-        //);
-        //$r++;
+        
+        $this->menu[$r]=array(
+        	'fk_menu'=>0,
+        	'type'=>'top',
+        	'titre'=>'Module103040Name',
+        	'mainmenu'=>'consogazoil',
+        	'url'=>'/consogazoil/index.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>100,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->lire',
+        	'target'=>'',
+        	'user'=>2
+        );
+       
+        $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil',
+        	'type'=>'left',
+        	'titre'=>'ConsoGazManageVeh',
+        	'leftmenu'=>'consogazoilveh',
+        	'url'=>'/consogazoil/vehicule/list.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>101,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->lire',
+        	'target'=>'',
+        	'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoilveh',
+        	'type'=>'left',
+        	'titre'=>'ConsoGazList',
+        	'url'=>'/consogazoil/vehicule/list.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>103,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->lire',
+        	'target'=>'',
+        	'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoilveh',
+        	'type'=>'left',
+        	'titre'=>'ConsoGazNew',
+        	'url'=>'/consogazoil/vehicule/card.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>104,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->creer',
+        	'target'=>'',
+        	'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil',
+        	'type'=>'left',
+        	'titre'=>'ConsoGazManageServ',
+        	'leftmenu'=>'consogazoilserv',
+        	'url'=>'/consogazoil/service/list.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>105,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->lire',
+        	'target'=>'',
+        	'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoilserv',
+        	'type'=>'left',
+        	'titre'=>'ConsoGazList',
+        	'url'=>'/consogazoil/service/list.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>106,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->lire',
+        	'target'=>'',
+        	'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoilserv',
+        	'type'=>'left',
+        	'titre'=>'ConsoGazNew',
+        	'url'=>'/consogazoil/service/card.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>107,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->creer',
+        	'target'=>'',
+        	'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil',
+        	'type'=>'left',
+        	'titre'=>'ConsoGazManageSta',
+        	'leftmenu'=>'consogazoilsta',
+        	'url'=>'/consogazoil/station/list.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>108,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->lire',
+        	'target'=>'',
+        	'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoilsta',
+        	'type'=>'left',
+        	'titre'=>'ConsoGazList',
+        	'url'=>'/consogazoil/station/list.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>109,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->lire',
+        	'target'=>'',
+        	'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoilsta',
+        	'type'=>'left',
+        	'titre'=>'ConsoGazNew',
+        	'url'=>'/consogazoil/station/card.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>110,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->creer',
+        	'target'=>'',
+        	'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil',
+        	'type'=>'left',
+        	'titre'=>'ConsoGazManageDriv',
+        	'leftmenu'=>'consogazoildriv',
+        	'url'=>'/consogazoil/driver/list.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>111,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->lire',
+        	'target'=>'',
+        	'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoildriv',
+        	'type'=>'left',
+        	'titre'=>'ConsoGazList',
+        	'url'=>'/consogazoil/driver/list.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>112,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->lire',
+        	'target'=>'',
+        	'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoildriv',
+        	'type'=>'left',
+        	'titre'=>'ConsoGazNew',
+        	'url'=>'/consogazoil/driver/card.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>113,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->creer',
+        	'target'=>'',
+        	'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil',
+        	'type'=>'left',
+        	'titre'=>'ConsoGazManageImport',
+        	'leftmenu'=>'consogazoilimport',
+        	'url'=>'/consogazoil/import/import.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>114,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->import',
+        	'target'=>'',
+        	'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoilimport',
+        	'type'=>'left',
+        	'titre'=>'ConsoGazManageImport',
+        	'url'=>'/consogazoil/import/import.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>115,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->import',
+        	'target'=>'',
+        	'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil',
+        	'type'=>'left',
+        	'titre'=>'ConsoGazManageReport',
+        	'leftmenu'=>'consogazoilreport',
+        	'url'=>'/consogazoil/report/conso.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>116,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->import',
+        	'target'=>'',
+        	'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoilreport',
+        	'type'=>'left',
+        	'titre'=>'ConsoGazReportConso',
+        	'url'=>'/consogazoil/report/conso.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>117,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->lire',
+        	'target'=>'',
+        	'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoilreport',
+        	'type'=>'left',
+        	'titre'=>'ConsoGazReportTaken',
+        	'url'=>'/consogazoil/report/taken.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>118,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->lire',
+        	'target'=>'',
+        	'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoilreport',
+        	'type'=>'left',
+        	'titre'=>'ConsoGazReportKM',
+        	'url'=>'/consogazoil/report/km.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>119,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->lire',
+        	'target'=>'',
+        	'user'=>2
+        );
         //
         // Example to declare a Left Menu entry into an existing Top menu entry:
         //$this->menu[$r]=array(

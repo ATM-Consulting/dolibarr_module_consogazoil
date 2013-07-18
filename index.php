@@ -15,3 +15,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * 	\file		consogazoil/index.php
+ * 	\ingroup	consogazoil
+ * 	\brief		This file  about page
+ * 				
+ */
+
+
+// Dolibarr environment
+$res = @include("../main.inc.php"); // From htdocs directory
+if (! $res) {
+    $res = @include("../../main.inc.php"); // From "custom" directory
+}
+
+
+//require_once "../class/myclass.class.php";
+// Translations
+$langs->load("consogazoil@consogazoil");
+
+// Access control
+if (! $user->rights->consogazoil->lire) {
+    accessforbidden();
+}
+
+/*
+ * Actions
+ */
+
+/*
+ * View
+ */
+$page_name = "Module103040Name";
+llxHeader('', $langs->trans($page_name));
+
+print $langs->trans('Module103040Desc');
+
+llxFooter();
+$db->close();
