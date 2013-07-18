@@ -23,7 +23,13 @@
 Module103040Name = Gazoil consumption
 # Module description 'ModuleXXXDesc'
 # (where XXX is value of numeric property 'numero' of module)
-Module10000Desc = Gazoil consumption management
+Module103040Desc = Gazoil consumption management
+Permission103041=See Conso Gazoil data
+Permission103042=Change Conso Gazoil data
+Permission103043=Create Conso Gazoil data
+Permission103044=Delete Conso Gazoil data
+Permission103045=Import Conso Gazoil data
+Permission103046=Export Conso Gazoil data
 
 #
 # Admin page

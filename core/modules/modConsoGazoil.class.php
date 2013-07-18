@@ -275,6 +275,44 @@ class modConsoGazoil extends DolibarrModules
         //// if ($user->rights->permkey->level1->level2)
         //$this->rights[$r][5] = 'level2';
         //$r++;
+        
+        $this->rights[$r][0] = 103041;
+		$this->rights[$r][1] = 'Lecture';
+		$this->rights[$r][3] = 1;
+		$this->rights[$r][4] = 'lire';
+		$r++;
+
+		$this->rights[$r][0] = 103042;
+		$this->rights[$r][1] = 'Modification';
+		$this->rights[$r][3] = 0;
+		$this->rights[$r][4] = 'modifier';
+		$r++;
+
+		$this->rights[$r][0] = 103043;
+		$this->rights[$r][1] = 'Ajout';
+		$this->rights[$r][3] = 0;
+		$this->rights[$r][4] = 'creer';
+		$r++;
+
+
+		$this->rights[$r][0] = 103044;
+		$this->rights[$r][1] = 'Suppression';
+		$this->rights[$r][3] = 0;
+		$this->rights[$r][4] = 'supprimer';
+		$r++;
+
+		$this->rights[$r][0] = 103045;
+		$this->rights[$r][1] = 'Imports';
+		$this->rights[$r][3] = 0;
+		$this->rights[$r][4] = 'import';
+		$r++;
+
+		$this->rights[$r][0] = 103046;
+		$this->rights[$r][1] = 'Export';
+		$this->rights[$r][3] = 0;
+		$this->rights[$r][4] = 'export';
+        
+        
         // Main menu entries
         $this->menus = array(); // List of menus to add
         $r = 0;
