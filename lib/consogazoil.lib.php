@@ -77,5 +77,80 @@ function vehicule_prepare_head($object) {
 	complete_head_from_modules($conf, $langs, $object, $head, $h, 'consogazoilvehicule');
 	
 	return $head;
-	
 }
+
+function service_prepare_head($object) {
+
+	global $langs, $conf;
+
+	$langs->load("consogazoil@consogazoil");
+
+	$h = 0;
+	$head = array();
+
+	$head[$h][0] = dol_buildpath("/consogazoil/service/card.php", 1).'?id='.$object->id;
+	$head[$h][1] = $langs->trans("ConsoGazManageServ");
+	$head[$h][2] = 'card';
+	$h++;
+
+	$head[$h][0] = dol_buildpath('/consogazoil/service/info.php',1).'?id='.$object->id;
+	$head[$h][1] = $langs->trans("Info");
+	$head[$h][2] = 'info';
+	$hselected = $h;
+	$h++;
+
+	complete_head_from_modules($conf, $langs, $object, $head, $h, 'consogazoilservice');
+
+	return $head;
+}
+
+function station_prepare_head($object) {
+
+	global $langs, $conf;
+
+	$langs->load("consogazoil@consogazoil");
+
+	$h = 0;
+	$head = array();
+
+	$head[$h][0] = dol_buildpath("/consogazoil/station/card.php", 1).'?id='.$object->id;
+	$head[$h][1] = $langs->trans("ConsoGazManageSta");
+	$head[$h][2] = 'card';
+	$h++;
+
+	$head[$h][0] = dol_buildpath('/consogazoil/station/info.php',1).'?id='.$object->id;
+	$head[$h][1] = $langs->trans("Info");
+	$head[$h][2] = 'info';
+	$hselected = $h;
+	$h++;
+
+	complete_head_from_modules($conf, $langs, $object, $head, $h, 'consogazoilstation');
+
+	return $head;
+}
+
+function driver_prepare_head($object) {
+
+	global $langs, $conf;
+
+	$langs->load("consogazoil@consogazoil");
+
+	$h = 0;
+	$head = array();
+
+	$head[$h][0] = dol_buildpath("/consogazoil/driver/card.php", 1).'?id='.$object->id;
+	$head[$h][1] = $langs->trans("ConsoGazManageDriv");
+	$head[$h][2] = 'card';
+	$h++;
+
+	$head[$h][0] = dol_buildpath('/consogazoil/driver/info.php',1).'?id='.$object->id;
+	$head[$h][1] = $langs->trans("Info");
+	$head[$h][2] = 'info';
+	$hselected = $h;
+	$h++;
+
+	complete_head_from_modules($conf, $langs, $object, $head, $h, 'consogazoildriver');
+
+	return $head;
+}
+

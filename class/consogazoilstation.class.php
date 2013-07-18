@@ -165,9 +165,10 @@ class ConsogazoilStation extends CommonObjectConsoGazoil
      *  Load object in memory from the database
      *
      *  @param	int		$id    Id object
+     *  @param	int		$ref   ref object
      *  @return int          	<0 if KO, >0 if OK
      */
-    function fetch($id)
+    function fetch($id,$ref='')
     {
     	global $langs;
         $sql = "SELECT";
@@ -185,7 +186,9 @@ class ConsogazoilStation extends CommonObjectConsoGazoil
 
 		
         $sql.= " FROM ".MAIN_DB_PREFIX."consogazoil_station as t";
-        $sql.= " WHERE t.rowid = ".$id;
+         if (!empty($id)) {
+        	$sql.= " WHERE t.rowid = ".$id;
+        }else if (!empty($ref)) $sql.= " WHERE t.ref = '".$ref."'";
 
     	dol_syslog(get_class($this)."::fetch sql=".$sql, LOG_DEBUG);
         $resql=$this->db->query($sql);
@@ -525,6 +528,26 @@ class ConsogazoilStation extends CommonObjectConsoGazoil
 			dol_syslog(get_class($this)."::fetch_all ".$this->error, LOG_ERR);
 			return -1;
 		}
+	}
+	
+	/**
+	 *      Return clicable link of object (with eventually picto)
+	 *
+	 *      @return string 			         String with URL
+	 */
+	function getNomUrl()
+	{
+		global $langs;
+	
+		$result='';
+	
+		$url = dol_buildpath('/consogazoil/station/card.php',1).'?id='.$this->id;
+	
+		$label=$langs->trans("Show").': '.$this->ref;
+	
+		$result='<a href="'.$url.'">'.$label.'</a>';
+	
+		return $result;
 	}
 
 }

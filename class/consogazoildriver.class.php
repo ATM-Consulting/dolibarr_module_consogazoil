@@ -22,15 +22,13 @@
  */
 
 // Put here all includes required by your class file
-require_once(DOL_DOCUMENT_ROOT."/core/class/commonobject.class.php");
-//require_once(DOL_DOCUMENT_ROOT."/societe/class/societe.class.php");
-//require_once(DOL_DOCUMENT_ROOT."/product/class/product.class.php");
+require_once 'commonobjectconsogazoil.class.php';
 
 
 /**
  *	Put here description of your class
  */
-class ConsogazoilDriver extends CommonObject
+class ConsogazoilDriver extends CommonObjectConsoGazoil
 {
 	var $db;							//!< To store db handler
 	var $error;							//!< To return error code (or message)
@@ -165,9 +163,10 @@ class ConsogazoilDriver extends CommonObject
      *  Load object in memory from the database
      *
      *  @param	int		$id    Id object
+     *  @param	int		$ref   ref object
      *  @return int          	<0 if KO, >0 if OK
      */
-    function fetch($id)
+    function fetch($id,$ref='')
     {
     	global $langs;
         $sql = "SELECT";
@@ -184,7 +183,9 @@ class ConsogazoilDriver extends CommonObject
 
 		
         $sql.= " FROM ".MAIN_DB_PREFIX."consogazoil_driver as t";
-        $sql.= " WHERE t.rowid = ".$id;
+        if (!empty($id)) {
+        	$sql.= " WHERE t.rowid = ".$id;
+        }else if (!empty($ref)) $sql.= " WHERE t.ref = '".$ref."'";
 
     	dol_syslog(get_class($this)."::fetch sql=".$sql, LOG_DEBUG);
         $resql=$this->db->query($sql);
@@ -518,6 +519,26 @@ class ConsogazoilDriver extends CommonObject
 			dol_syslog(get_class($this)."::fetch_all ".$this->error, LOG_ERR);
 			return -1;
 		}
+	}
+	
+	/**
+	 *      Return clicable link of object (with eventually picto)
+	 *
+	 *      @return string 			         String with URL
+	 */
+	function getNomUrl()
+	{
+		global $langs;
+	
+		$result='';
+	
+		$url = dol_buildpath('/consogazoil/driver/card.php',1).'?id='.$this->id;
+	
+		$label=$langs->trans("Show").': '.$this->ref;
+	
+		$result='<a href="'.$url.'">'.$label.'</a>';
+	
+		return $result;
 	}
 	
 	

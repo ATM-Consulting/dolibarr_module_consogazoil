@@ -83,3 +83,20 @@ ConsoGazConsoAvg=Conso. Moy.
 ConsoGazDelete=
 ConsoGazDelete=Supprimer
 ConsoGazConfirmDelete=Etes vous sure de vouloir supprimer ?
+ConsoGazIsPref=Station préférenciel
+
+#
+# DataTable
+#
+NoRecordsToDisplay= Aucune lignes a afficher
+NoEntriesToShow= Aucune lignes a afficher 
+FilteredFrom = Filtré sur 
+TotalEntries = Total de lignes
+Entries = Nombre de lignes a afficher
+First = Début
+Last = Fin
+FidSearchCustShop = Rechercher Client ou Commercants
+FidSearchCust = Rechercher Client
+FidSearchShop = Rechercher Commercants
+Showing = Afficher
+FidAll=Tous

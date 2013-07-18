@@ -18,7 +18,7 @@
  */
 
 /**
- *       \file       /consogazoil/vehicule/ajax/list.php
+ *       \file       /consogazoil/driver/ajax/list.php
  *       \brief      File to return datables output
  */
 
@@ -32,7 +32,7 @@ if (! defined('NOREQUIREAJAX'))  define('NOREQUIREAJAX','1');
 $res=@include("../../../main.inc.php");						// For root directory
 if (! $res) $res=@include("../../../../main.inc.php");		// For "custom" directory
 
-dol_include_once('/consogazoil/class/consogazoilvehicule.class.php');
+dol_include_once('/consogazoil/class/consogazoildriver.class.php');
 
 $langs->load("consogazoil@consogazoil");
 
@@ -42,7 +42,7 @@ top_httphead();
 
 //print_r($_GET);
 
-$object = new ConsogazoilVehicule($db);
+$object = new ConsogazoilDriver($db);
 
 	/* Array of database columns which should be read and sent back to DataTables. Use a space where
 	 * you want to insert a non-database field (for example a counter or static image)
@@ -50,8 +50,7 @@ $object = new ConsogazoilVehicule($db);
 	$aColumns = array(
 			'rowid',
 			'ref',
-			'immat_veh',
-			'avg_conso'
+			'name'
 			);
 
 	$numColumns = count($aColumns);
@@ -60,7 +59,7 @@ $object = new ConsogazoilVehicule($db);
 	$sIndexColumn = "rowid";
 
 	/* DB table to use */
-	$sTable = MAIN_DB_PREFIX . "consogazoil_vehicule";
+	$sTable = MAIN_DB_PREFIX . "consogazoil_driver";
 
 	/*
 	 * Paging
@@ -108,11 +107,8 @@ $object = new ConsogazoilVehicule($db);
 		$numColumns = count($aColumns);
 		for ( $i=0 ; $i<$numColumns ; $i++ ) {
 			
-			if (($aColumns[$i] == "ref") || ($aColumns[$i] == "immat_veh")) {
+			if (($aColumns[$i] == "ref") || ($aColumns[$i] == "name")) {
 				$sWhere .= $aColumns[$i]." LIKE '%".$db->escape( $_GET['sSearch'] )."%' OR ";	
-			}
-			if (($aColumns[$i] == "avg_conso") && (is_numeric($_GET['sSearch']))) {
-				$sWhere .= $aColumns[$i]." = ".$db->escape( $_GET['sSearch'] )." OR ";	
 			}
 		}
 		$sWhere = substr_replace( $sWhere, "", -3 );
@@ -130,7 +126,7 @@ $object = new ConsogazoilVehicule($db);
 			$sOrder
 			$sLimit
 			";
-	dol_syslog("vehicule-list:: sQuery=".$sQuery, LOG_DEBUG);
+	dol_syslog("driver-list:: sQuery=".$sQuery, LOG_DEBUG);
 	$rResult = $db->query($sQuery);
 	//echo $sQuery;
 

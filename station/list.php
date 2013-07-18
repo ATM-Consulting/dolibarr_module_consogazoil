@@ -17,7 +17,7 @@
 */
 
 /**
- * \file		consogazoil/vehicule/list.php
+ * \file		consogazoil/station/list.php
  * \ingroup	consogazoil
  */
 $res = @include '../../main.inc.php'; // For root directory
@@ -37,11 +37,11 @@ $optioncss = GETPOST ( 'optioncss', 'alpha' );
 * Put here all code to build page
 */
 
-llxHeader ( '', $langs->trans ( 'ConsoGazManageVeh' ) . '-' . $langs->trans ( 'ConsoGazList' ) );
+llxHeader ( '', $langs->trans ( 'ConsoGazManageSta' ) . '-' . $langs->trans ( 'ConsoGazList' ) );
 
 $form = new Form ( $db );
 
-echo load_fiche_titre ( $langs->trans ( 'ConsoGazManageVeh' ) . '-' . $langs->trans ( 'ConsoGazList' ), '', 'consogazoil@consogazoil' );
+echo load_fiche_titre ( $langs->trans ( 'ConsoGazManageSta' ) . '-' . $langs->trans ( 'ConsoGazList' ), '', 'consogazoil@consogazoil' );
 
 include 'tpl/list.tpl.php';
 

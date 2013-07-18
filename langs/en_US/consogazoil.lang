@@ -61,7 +61,7 @@ ConsoGazList=List
 ConsoGazNew=Create
 ConsoGazManageServ=Manage Service
 ConsoGazManageSta=Manage Station
-ConsoGazManageDriv=Manage driver
+ConsoGazManageDriv=Manage Driver
 ConsoGazManageImport=Import
 ConsoGazManageReport=Reports
 ConsoGazReportConso=Conso. Gazoil/Vehicule/Month 
@@ -82,3 +82,20 @@ ConsoGazImmat=Immatriculation
 ConsoGazConsoAvg=Avg. Conso.
 ConsoGazDelete=Delete
 ConsoGazConfirmDelete=Are you sure to delete ?
+ConsoGazIsPref=Preferential Station
+
+#
+# DataTable
+#
+NoRecordsToDisplay= No Record to Display
+NoEntriesToShow= No Lines to show
+FilteredFrom = Filtered From
+TotalEntries = Total Entries
+Entries = Number of lines to display
+First = First
+Last = Last
+FidSearchCustShop = Search Customer or Shop
+FidSearchCust = Search Customer
+FidSearchShop = Search Shop
+Showing=Showing
+FidAll=All

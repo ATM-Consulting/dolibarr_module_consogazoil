@@ -578,10 +578,6 @@ class ConsogazoilVehicule extends CommonObjectConsoGazoil
 	/**
 	 *      Return clicable link of object (with eventually picto)
 	 *
-	 *      @param	int		$withpicto       Add picto into link
-	 *      @param  int		$max             Maxlength of ref
-	 *      @param  int		$short           1=Return just URL
-	 *      @param  string  $moretitle       Add more text to title tooltip
 	 *      @return string 			         String with URL
 	 */
 	function getNomUrl()
@@ -597,45 +593,6 @@ class ConsogazoilVehicule extends CommonObjectConsoGazoil
 		$result='<a href="'.$url.'">'.$label.'</a>';
 		
 		return $result;
-	}
-	
-	/**
-	 *  Give information on the object
-	 *
-	 *  @param	int		$id    Id object
-	 *  @return int          	<0 if KO, >0 if OK
-	 */
-	function info($id)
-	{
-		global $langs;
-	
-		$sql = "SELECT";
-		$sql.= " p.rowid, p.datec, p.tms, p.fk_user_modif, p.fk_user_creat";
-		$sql.= " FROM ".MAIN_DB_PREFIX."consogazoil_vehicule as p";
-		$sql.= " WHERE p.rowid = ".$id;
-	
-		dol_syslog(get_class($this)."::info sql=".$sql, LOG_DEBUG);
-		$resql=$this->db->query($sql);
-		if ($resql)
-		{
-			if ($this->db->num_rows($resql))
-			{
-				$obj = $this->db->fetch_object($resql);
-				$this->id = $obj->rowid;
-				$this->date_creation = $this->db->jdate($obj->datec);
-				$this->date_modification = $this->db->jdate($obj->tms);
-				$this->user_modification = $obj->fk_user_modif;
-				$this->user_creation = $obj->fk_user_creat;
-			}
-			$this->db->free($resql);
-			return 1;
-		}
-		else
-		{
-			$this->error="Error ".$this->db->lasterror();
-			dol_syslog(get_class($this)."::info ".$this->error, LOG_ERR);
-			return -1;
-		}
 	}
 
 }
