@@ -60,7 +60,7 @@ $title = $langs->trans('Module103040Name').'-'.$langs->trans('ConsoGazManageServ
 llxHeader('',$title);
 
 $head = driver_prepare_head($object);
-dol_fiche_head($head, 'info', $title, 0, dol_buildpath('/consogazoil/img/object_consogazoil.png',1),1);
+dol_fiche_head($head, 'info', $title, 0, 'info');
 
 print '<table width="100%"><tr><td>';
 dol_print_object_info($object);

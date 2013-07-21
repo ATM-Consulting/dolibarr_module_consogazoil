@@ -203,7 +203,7 @@ if ($action == 'create' && $user->rights->consogazoil->creer)
 	 * Show object in view mode
 	*/
 	$head = station_prepare_head($object);
-	dol_fiche_head($head, 'card', $title, 0, dol_buildpath('/consogazoil/img/object_consogazoil.png',1),1);
+	dol_fiche_head($head, 'card', $title, 0, 'bill');
 
 	//Confirm form
 	$formconfirm='';

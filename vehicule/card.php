@@ -28,6 +28,8 @@ if (! $res) {
 	$res = @include("../../../main.inc.php"); // From "custom" directory
 }
 require_once '../class/consogazoilvehicule.class.php';
+require_once '../class/consogazoilvehiculeservice.class.php';
+require_once '../class/html.formconsogazoil.class.php';
 require_once '../lib/consogazoil.lib.php';
 
 
@@ -62,6 +64,7 @@ if ((($action=='delete') ||
 */
 
 $object= new ConsogazoilVehicule($db);
+$object_link= new ConsogazoilVehiculeService($db);
 
 $error=0;
 
@@ -101,7 +104,38 @@ if ($action=="create_confirm") {
 			header('Location:'.dol_buildpath('/consogazoil/vehicule/card.php',1).'?id='.$result);
 		}
 	}
+}
+else if ($action=="create_link_serv_confirm") {
+	$dtstart=dol_mktime(0,0,0,GETPOST('dtstmonth','int'),GETPOST('dtstday','int'),GETPOST('dtstyear','int'));
+	$dtend=dol_mktime(0,0,0,GETPOST('dtendmonth','int'),GETPOST('dtendday','int'),GETPOST('dtendyear','int'));
 	
+	if (empty($dtstart) || empty($dtend)) {
+		setEventMessage($langs->trans("ErrorFieldRequired",$langs->transnoentitiesnoconv("ConsoGazDtSt").'/'.$langs->transnoentitiesnoconv("ConsoGazDtEnd"), 'errors'));
+	}else {
+		$object_link->fk_service=GETPOST('service','int');
+		$object_link->fk_vehicule=$object->id;
+		$object_link->date_start=$dtstart;
+		$object_link->date_end=$dtend;
+		$result =$object_link->create($user);
+		if ($result<0) {
+			setEventMessage($object_link->errors,'errors');
+		}else {
+			header('Location:'.dol_buildpath('/consogazoil/vehicule/card.php',1).'?id='.$object->id);
+		}
+	}
+}
+else if ($action == 'confirm_link_delete' && $confirm == 'yes' && $user->rights->consogazoil->supprimer) {
+	$result=$object_link->fetch(GETPOST('id_link','int'));
+	if ($result<0) {
+		setEventMessage($object->errors,'errors');
+	}else {
+		$result=$object_link->delete($user);
+		if ($result<0) {
+			setEventMessage($object->errors,'errors');
+		}else {
+			header('Location:'.dol_buildpath('/consogazoil/vehicule/card.php',1).'?id='.$object->id);
+		}
+	}
 }
 else if ($action=="setref") {
 	if (empty($ref)) {
@@ -154,6 +188,7 @@ if(!empty($object->ref)) $title.='-'.$object->ref;
 llxHeader('',$title);
 
 $form = new Form($db);
+$formconsogaz = new FormConsoGazoil($db);
 
 // Add new 
 if ($action == 'create' && $user->rights->consogazoil->creer)
@@ -206,13 +241,16 @@ if ($action == 'create' && $user->rights->consogazoil->creer)
 	 * Show object in view mode
 	*/
 	$head = vehicule_prepare_head($object);
-	dol_fiche_head($head, 'card', $title, 0, dol_buildpath('/consogazoil/img/object_consogazoil.png',1),1);
+	dol_fiche_head($head, 'card', $title, 0, 'bill');
 
 	//Confirm form
 	$formconfirm='';
 	if ($action == 'delete')
 	{
 		$formconfirm=$form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id, $langs->trans('ConsoGazDelete'), $langs->trans('ConsoGazConfirmDelete'), 'confirm_delete', '', 0, 1);
+	}
+	else if ($action=="delete_link") {
+		$formconfirm=$form->formconfirm($_SERVER["PHP_SELF"].'?id='.$object->id.'&id_link='.GETPOST('id_link','int'), $langs->trans('ConsoGazDelete'), $langs->trans('ConsoGazConfirmDelete'), 'confirm_link_delete', '', 0, 1);
 	}
 	print $formconfirm;
 
@@ -260,7 +298,54 @@ if ($action == 'create' && $user->rights->consogazoil->creer)
 		print '<div class="inline-block divButAction"><font class="butActionRefused" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans("Delete")."</font></div>";
 	}
 	print '</div>';
+	
+	print_fiche_titre($langs->trans('ConsoGazManageServ'),'',dol_buildpath('/consogazoil/img/object_consogazoil.png',1),1);
+	
+	print '<div class="fiche">';
+	print '<form name="add" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'" method="POST">';
+	print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+	print '<input type="hidden" name="action" value="create_link_serv_confirm">';
+	
+	print '<table class="border" width="100%">';
+	print '<tr>';
+	print '<td class="fieldrequired"  width="20%">';
+	print $langs->trans('Label');
+	print '</td>';
+	print '<td>';
+	print $formconsogaz->select_service(GETPOST('service'));
+	print '</td>';
+	print '</tr>';
+	
+	print '<tr>';
+	print '<td class="fieldrequired"  width="20%">';
+	print $langs->trans('ConsoGazDtSt');
+	print '</td>';
+	print '<td>';
+	$form->select_date("", 'dtst','','','','create_link_serv_confirm');
+	print '</td>';
+	print '</tr>';
+	
+	print '<tr>';
+	print '<td class="fieldrequired"  width="20%">';
+	print $langs->trans('ConsoGazDtEnd');
+	print '</td>';
+	print '<td>';
+	$form->select_date("", 'dtend','','','','create_link_serv_confirm');
+	print '</td>';
+	print '</tr>';
+	print '<table>';
+	
+	print '<center>';
+	print '<input type="submit" class="button" value="'.$langs->trans("ConsoGazAssociate").'">';
+	print '</center>';
+	
+	
+	print '</form>';
+	print '</div>';
+	
+	include 'tpl/list_service.tpl.php';
 
+	
 }
 
 // End of page

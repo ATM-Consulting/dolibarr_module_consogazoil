@@ -84,6 +84,9 @@ ConsoGazDelete=
 ConsoGazDelete=Supprimer
 ConsoGazConfirmDelete=Etes vous sure de vouloir supprimer ?
 ConsoGazIsPref=Station préférenciel
+ConsoGazDtSt=Date debut
+ConsoGazDtEnd=Date fin
+ConsoGazAssociate=Associer
 
 #
 # DataTable
@@ -95,8 +98,13 @@ TotalEntries = Total de lignes
 Entries = Nombre de lignes a afficher
 First = Début
 Last = Fin
-FidSearchCustShop = Rechercher Client ou Commercants
-FidSearchCust = Rechercher Client
-FidSearchShop = Rechercher Commercants
 Showing = Afficher
-FidAll=Tous
+
+#
+# Import
+#
+ConsoGazImportQual= Cette ligne ne sera pas importée %s
+ConsoGazImportCdProd= Seul les lignes code produit 03 sont importée
+ConsoGazImportMustBeNumeric=Cette valeur : %s doit être un nombre
+ConsoGazImportQualDtFormat=Le format de date (%s) valide doit être YYYYMMDD
+ConsoGazImportQualHourFormat=Le format valide pour l'heure doit être HHMM (%s)

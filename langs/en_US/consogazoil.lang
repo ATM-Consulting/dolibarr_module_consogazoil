@@ -83,6 +83,9 @@ ConsoGazConsoAvg=Avg. Conso.
 ConsoGazDelete=Delete
 ConsoGazConfirmDelete=Are you sure to delete ?
 ConsoGazIsPref=Preferential Station
+ConsoGazDtSt=Date start
+ConsoGazDtEnd=Date end
+ConsoGazAssociate=Associate
 
 #
 # DataTable
@@ -94,8 +97,13 @@ TotalEntries = Total Entries
 Entries = Number of lines to display
 First = First
 Last = Last
-FidSearchCustShop = Search Customer or Shop
-FidSearchCust = Search Customer
-FidSearchShop = Search Shop
 Showing=Showing
-FidAll=All
+
+#
+# Import
+#
+ConsoGazImportQual=This line will not be import : %s
+ConsoGazImportCdProd=Only code product 03 will be import
+ConsoGazImportMustBeNumeric=This information : %s, must a be valid number
+ConsoGazImportQualDtFormat=The date format must be valid YYYYMMDD (%s)
+ConsoGazImportQualHourFormat=The hour format must be HHMM (%s)
