@@ -22,12 +22,16 @@
  */
 $res = @include '../../main.inc.php'; // For root directory
 if (! $res) $res = @include '../../../main.inc.php'; // For "custom" directory
-                                                   
+
+require_once '../class/html.formconsogazoil.class.php';
+
 // Load translation files required by the page
 $langs->load ( "consogazoil@consogazoil" );
 
 // Security check
 if (! $user->rights->consogazoil->lire) accessforbidden ();
+
+$filterdate=GETPOST('filterdate','alpha');
 
 $optioncss = GETPOST ( 'optioncss', 'alpha' );
 
@@ -40,8 +44,21 @@ $optioncss = GETPOST ( 'optioncss', 'alpha' );
 llxHeader ( '', $langs->trans ( 'ConsoGazManageTake' ) . '-' . $langs->trans ( 'ConsoGazList' ) );
 
 $form = new Form ( $db );
+$formconsogaz = new FormConsoGazoil($db);
 
 echo load_fiche_titre ( $langs->trans ( 'ConsoGazManageTake' ) . '-' . $langs->trans ( 'ConsoGazList' ), '', 'consogazoil@consogazoil' );
+
+print '<form action="'.$_SERVER["PHP_SELF"].'" method="POST" name="filterdate">'."\n";
+print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'" / >';
+print '<table><tr><td>';
+$selectdate=$formconsogaz->select_date_filter('filterdate',$filterdate,'take');
+if ($selectdate!=-1) {
+	print $selectdate;
+} else {
+	setEventMessage($formconsogaz->error,'errors');
+}
+print '</td><td><input type="submit" value="'.$langs->trans('ConsoGazFilterDate').'"/></td></tr></table>';
+print '</form>';
 
 include 'tpl/list.tpl.php';
 

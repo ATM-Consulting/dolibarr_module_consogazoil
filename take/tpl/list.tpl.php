@@ -53,7 +53,7 @@ $(document).ready(function() {
 		"aaSorting": [[9,'desc']],
 		"bProcessing": true,
 		"bServerSide": true,
-		"sAjaxSource": "<?php echo dol_buildpath('/consogazoil/take/ajax/list.php',1); ?>"
+		"sAjaxSource": "<?php echo dol_buildpath('/consogazoil/take/ajax/list.php',1).'?filterdate='.$filterdate; ?>"
 	});
 });
 </script>

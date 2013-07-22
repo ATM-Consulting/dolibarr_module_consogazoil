@@ -22,10 +22,6 @@
  * \brief card of consogazoil
  */
 
-error_reporting(E_ALL);
-ini_set('display_errors', true);
-ini_set('html_errors', false);
-
 // Dolibarr environment
 $res = @include ("../../main.inc.php"); // From htdocs directory
 if (! $res) {

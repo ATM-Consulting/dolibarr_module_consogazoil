@@ -36,6 +36,8 @@ dol_include_once('/consogazoil/class/consogazoilvehtake.class.php');
 
 $langs->load("consogazoil@consogazoil");
 
+$filterdate=GETPOST('filterdate','alpha');
+
 top_httphead();
 
 //print '<!-- Ajax page called with url '.$_SERVER["PHP_SELF"].'?'.$_SERVER["QUERY_STRING"].' -->'."\n";
@@ -137,6 +139,20 @@ $object = new ConsogazoilVehTake($db);
 		}
 		$sWhere = substr_replace( $sWhere, "", -3 );
 		$sWhere .= ')';
+	}
+	
+	//Date filter
+	if (!empty($filterdate)) {
+		//calculate the ma day in the search month
+		$maxday=date('t',strtotime($filterdate.'-01'));
+		
+		
+		if ( $sWhere == "" ){
+			$sWhere = "WHERE (t.dt_hr_take<='".$filterdate."-".$maxday."') AND (t.dt_hr_take>'".$filterdate."-01')";
+		}
+		else{
+			$sWhere .= " AND (t.dt_hr_take<='".$filterdate."-".$maxday."') AND (t.dt_hr_take>'".$filterdate."-01')";
+		}
 	}
 	
 	/*

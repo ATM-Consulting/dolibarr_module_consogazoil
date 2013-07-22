@@ -195,4 +195,69 @@ class FormConsoGazoil extends Form {
 	
 		return $out;
 	}
+	
+	/**
+	 *	Return select filer with date of transaction
+	 *
+	 *  @param	string	$htmlname 		name of input
+	 *  @param	string	$selectedkey	selected default value
+	 *  @param	int		$custid 		customerid
+	 *  @param	int 	$shopid 		shopid
+	 *  @param	string 	$type 			'histoshop' or 'histocust' or ''
+	 *	@return	string					HTML select input
+	 */
+	function select_date_filter($htmlname,$selectedkey,$type='take') {
+	
+		global $langs;
+	
+		$date_array=array();
+	
+		$sql='SELECT DISTINCT dt_hr_take from '.MAIN_DB_PREFIX.'consogazoil_vehtake ';
+		$sql.=' ORDER BY dt_hr_take';
+	
+		dol_syslog(get_class($this)."::select_date_filter sql=".$sql, LOG_DEBUG);
+		$resql=$this->db->query($sql);
+		if ($resql)
+		{
+			$i=0;
+			$num = $this->db->num_rows($resql);
+				
+			while ($i<$num)
+			{
+				$obj = $this->db->fetch_object($resql);
+	
+				$date=$this->db->jdate($obj->dt_hr_take);
+				$keydate=dol_print_date($date,'%Y-%m');
+				$valdate=dol_print_date($date,'%b %Y');
+	
+				if (!array_key_exists($keydate,$date_array)) {
+					$date_array[$keydate]=$valdate;
+				}
+	
+				$i++;
+			}
+	
+		}else {
+			$this->error="Error ".$this->db->lasterror();
+			dol_syslog(get_class($this)."::select_date_filter ".$this->error, LOG_ERR);
+			return -1;
+		}
+	
+		if (count($date_array)>0) {
+			$out='<SELECT name="'.$htmlname.'">';
+			$out.='<OPTION value="">'.$langs->trans('ConsoGazAll').'</OPTION>';
+			foreach ($date_array as $key=>$val) {
+	
+				$selected='';
+				if ($selectedkey==$key) {
+					$selected=' selected="selected" ';
+				}
+	
+				$out.='<OPTION value="'.$key.'"'.$selected.'>'.$val.'</OPTION>';
+			}
+			$out.='</SELECT>';
+		}
+	
+		return $out;
+	}
 }

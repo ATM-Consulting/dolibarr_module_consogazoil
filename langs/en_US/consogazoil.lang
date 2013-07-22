@@ -73,6 +73,7 @@ ConsoGazReportKM=Km/Vehicule
 #
 ConsoGazMustBeNumeric=Field %s must be a numeric
 ConsoGazEdit=Edit
+ConsoGazFilterDate=Date filter
 
 #
 # List

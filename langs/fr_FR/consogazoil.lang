@@ -74,6 +74,7 @@ ConsoGazManageTake=Gérer les prises
 #
 ConsoGazMustBeNumeric=Le champ %s doit être un nombre.
 ConsoGazEdit=Modification
+ConsoGazFilterDate=Filtrer par date
 
 #
 # List
