@@ -50,7 +50,7 @@ $(document).ready(function() {
 				"sNext": "<?php echo $langs->transnoentities('Next'); ?>"
 			}
 		},
-		"aaSorting": [[0,'desc']],
+		"aaSorting": [[9,'desc']],
 		"bProcessing": true,
 		"bServerSide": true,
 		"sAjaxSource": "<?php echo dol_buildpath('/consogazoil/take/ajax/list.php',1); ?>"

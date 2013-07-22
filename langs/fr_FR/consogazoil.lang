@@ -157,3 +157,4 @@ ConsoGazColTraitementStation=Conflit Station
 ConsoGazTraitementDoNothing=Ne pas importer
 ConsoGazColTraitementUpdate=Mettre à jour ref/nom
 ConsoGazColTraitementNew=Crée
+ConsoGazSampleFile=Vous pouvez télécharger le fichier d'exemple pour connaitre le format approprié de cette import

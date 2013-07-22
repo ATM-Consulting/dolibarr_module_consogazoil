@@ -68,7 +68,7 @@ $object = new ConsogazoilVehTake($db);
 	$numColumns = count($aColumns);
 
 	/* Indexed column (used for fast and accurate table cardinality) */
-	$sIndexColumn = "rowid";
+	$sIndexColumn = "t.rowid";
 
 	/* DB table to use */
 	$sTable = MAIN_DB_PREFIX . "consogazoil_vehtake as t ";
@@ -121,9 +121,18 @@ $object = new ConsogazoilVehTake($db);
 		$sWhere = "WHERE (";
 		$numColumns = count($aColumns);
 		for ( $i=0 ; $i<$numColumns ; $i++ ) {
-			
-			if (($aColumns[$i] == "ref") || ($aColumns[$i] == "label")) {
-				$sWhere .= $aColumns[$i]." LIKE '%".$db->escape( $_GET['sSearch'] )."%' OR ";	
+	
+			if (($aColumns[$i] == "t.km_controle") || ($aColumns[$i] == "t.km_declare")) {
+				$sWhere .= $aColumns[$i]." = ".$db->escape( $_GET['sSearch'] )." OR ";	
+			} else if ($aColumns[$i] == "t.volume") {
+				$sWhere .= $aColumns[$i]." = '".$db->escape( $_GET['sSearch'] )."' OR ";
+			} else if (($aColumns[$i] != "t.dt_hr_take") &&
+					($aColumns[$i] != "t.rowid") &&
+					($aColumns[$i] != "t.fk_vehicule") &&
+					($aColumns[$i] != "t.fk_station") &&
+					($aColumns[$i] != "t.fk_driver")){
+
+				$sWhere .= $aColumns[$i]." LIKE '%".$db->escape( $_GET['sSearch'] )."%' OR ";
 			}
 		}
 		$sWhere = substr_replace( $sWhere, "", -3 );
@@ -147,7 +156,7 @@ $object = new ConsogazoilVehTake($db);
 
 	/* Data set length after filtering */
 	$sQuery = "
-		SELECT count(rowid) FROM   $sTable
+		SELECT count(t.rowid) FROM   $sTable
 			$sWhere
 			$sLimit
 			";

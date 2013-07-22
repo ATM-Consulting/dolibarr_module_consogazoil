@@ -239,6 +239,7 @@ if ($step==1 || $step==2) {
 	$var=true;
 
 	print '<tr><td colspan="6">'.$langs->trans("ChooseFileToImport",img_picto('','filenew')).'</td></tr>';
+	print '<tr><td colspan="6">'.$langs->trans("ConsoGazSampleFile").': <a href="sample/sample_consogazoil_import.csv">'.img_picto('','file').'</a></td></tr>';
 
 	print '<tr class="liste_titre"><td colspan="6">'.$langs->trans("FileWithDataToImport").'</td></tr>';
 
