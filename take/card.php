@@ -17,7 +17,7 @@
 */
 
 /**
- * \file consogazoil/service/card.php
+ * \file consogazoil/take/card.php
  * \ingroup consogazoil
  * \brief card of consogazoil
  */
@@ -27,182 +27,88 @@ $res = @include ("../../main.inc.php"); // From htdocs directory
 if (! $res) {
 	$res = @include ("../../../main.inc.php"); // From "custom" directory
 }
-require_once '../class/consogazoilservice.class.php';
+require_once '../class/consogazoilvehtake.class.php';
 require_once '../lib/consogazoil.lib.php';
 
 $langs->load ( "consogazoil@consogazoil" );
 
 $id = GETPOST ( 'id', 'int' );
-$ref = GETPOST ( 'ref', 'alpha' );
-$label = GETPOST ( 'label', 'alpha' );
 $action = GETPOST ( 'action', 'alpha' );
-$confirm = GETPOST ( 'confirm', 'alpha' );
 
 // Security check
 if (empty ( $user->rights->consogazoil->lire )) accessforbidden ();
 
-if ((($action == 'create') || ($action == 'create_confirm')) && (empty ( $user->rights->consogazoil->creer ))) {
+if ((($action == 'edit') || ($action == 'edit_confirm')) && (empty ( $user->rights->consogazoil->modifier ))) {
 	accessforbidden ();
 }
-if ((($action == 'delete') || ($action == 'delete_confirm')) && (empty ( $user->rights->consogazoil->supprimer ))) {
-	accessforbidden ();
-}
+
 
 /*
  * Fetch
 */
 
-$object = new ConsogazoilService ( $db );
+$object = new ConsogazoilVehTake ( $db );
 
 $error = 0;
 
 // Load object
-if (! empty ( $id ) || (! empty ( $ref ))) {
-	$ret = $object->fetch ( $id, $ref );
+if (! empty ( $id )) {
+	$ret = $object->fetch ( $id);
 	if ($ret < 0) setEventMessage ( $object->error, 'errors' );
 }
 
 /*
  * Action
 */
-if ($action == "create_confirm") {
-	if (empty ( $ref )) {
-		setEventMessage ( $langs->trans ( "ErrorFieldRequired", $langs->transnoentitiesnoconv ( "Ref" ) ), 'errors' );
-		$action = 'create';
-		$error ++;
-	}
-	if (empty ( $error )) {
-		$object->ref = $ref;
-		$object->label = $label;
-		
-		$result = $object->create ( $user );
-		if ($result < 0) {
-			setEventMessage ( $object->errors, 'errors' );
-		} else {
-			header ( 'Location:' . dol_buildpath ( '/consogazoil/service/card.php', 1 ) . '?id=' . $result );
-		}
-	}
-} else if ($action == "setref") {
-	if (empty ( $ref )) {
-		setEventMessage ( $langs->trans ( "ErrorFieldRequired", $langs->transnoentitiesnoconv ( "Ref" ) ), 'errors' );
-		$action = 'edit';
-	} else {
-		$object->ref = $ref;
-		
-		$result = $object->update ( $user );
-		if ($result < 0) setEventMessage ( $object->errors, 'errors' );
-	}
-} else if ($action == "setlabel") {
+if ($action == "edit_confirm") {
 	
-	$object->label = $label;
-	
+	$object->km_controle=GETPOST('km_controle','int');
 	$result = $object->update ( $user );
-	if ($result < 0) setEventMessage ( $object->errors, 'errors' );
-} else if ($action == 'confirm_delete' && $confirm == 'yes' && $user->rights->consogazoil->supprimer) {
-	$result = $object->delete ( $user );
 	if ($result < 0) {
 		setEventMessage ( $object->errors, 'errors' );
 	} else {
-		header ( 'Location:' . dol_buildpath ( '/consogazoil/service/list.php', 1 ) );
+		header ( 'Location:' . dol_buildpath ( '/consogazoil/take/list.php', 1 ));
 	}
-}
+
+} 
 
 /*
  * View
 */
-$title = $langs->trans ( 'Module103040Name' ) . '-' . $langs->trans ( 'ConsoGazManageServ' );
-if (! empty ( $object->ref )) $title .= '-' . $object->ref;
+$title = $langs->trans ( 'Module103040Name' ) . '-' . $langs->trans ( 'ConsoGazManageTake' );
 
 llxHeader ( '', $title );
 
 $form = new Form ( $db );
 
 // Add new
-if ($action == 'create' && $user->rights->consogazoil->creer) {
-	print_fiche_titre ( $title . '-' . $langs->trans ( 'ConsoGazNew' ), '', dol_buildpath ( '/consogazoil/img/object_consogazoil.png', 1 ), 1 );
+if ($action == 'edit' && $user->rights->consogazoil->modifier) {
 	
-	print '<form name="add" action="' . $_SERVER ["PHP_SELF"] . '" method="POST">';
+	
+	print '<form name="edit" action="' . $_SERVER ["PHP_SELF"] . '" method="POST">';
 	print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
-	print '<input type="hidden" name="action" value="create_confirm">';
+	print '<input type="hidden" name="action" value="edit_confirm">';
+	print '<input type="hidden" name="id" value="'.$id.'">';
 	
 	print '<table class="border" width="100%">';
 	print '<tr>';
 	print '<td class="fieldrequired"  width="20%">';
-	print $langs->trans ( 'Ref' );
+	print $langs->trans ( 'ConsoGazColKMCtrole' );
 	print '</td>';
 	print '<td>';
-	print '<input type="text" value="' . $ref . '" size="10" name="ref"/>';
-	print '</td>';
-	print '</tr>';
-	print '<tr>';
-	print '<td>';
-	print $langs->trans ( 'Label' );
-	print '</td>';
-	print '<td>';
-	print '<input type="text" value="' . $label . '" size="10" name="label"/>';
+	print '<input type="text" value="' . $object->km_controle . '" size="10" name="km_controle"/>';
 	print '</td>';
 	print '</tr>';
 	
 	print '<table>';
 	
 	print '<center>';
-	print '<input type="submit" class="button" value="' . $langs->trans ( "ConsoGazNew" ) . '">';
+	print '<input type="submit" class="button" value="' . $langs->trans ( "Edit" ) . '">';
 	print '&nbsp;<input type="button" class="button" value="' . $langs->trans ( "Cancel" ) . '" onClick="javascript:history.go(-1)">';
 	print '</center>';
 	
 	print '</form>';
-} else {
-	/*
-	 * Show object in view mode
-	*/
-	$head = service_prepare_head ( $object );
-	dol_fiche_head($head, 'card', $title, 0, 'bill');
-	
-	// Confirm form
-	$formconfirm = '';
-	if ($action == 'delete') {
-		$formconfirm = $form->formconfirm ( $_SERVER ["PHP_SELF"] . '?id=' . $object->id, $langs->trans ( 'ConsoGazDelete' ), $langs->trans ( 'ConsoGazConfirmDelete' ), 'confirm_delete', '', 0, 1 );
-	}
-	print $formconfirm;
-	
-	$linkback = '<a href="' . dol_buildpath ( '/consogazoil/service/list.php', 1 ) . '">' . $langs->trans ( "BackToList" ) . '</a>';
-	
-	print '<table class="border" width="100%">';
-	print '<tr>';
-	print '<td width="20%">';
-	print $langs->trans ( 'Id' );
-	print '</td>';
-	print '<td>';
-	print $form->showrefnav ( $object, 'id', $linkback, 1, 'rowid', 'id', '' );
-	print '</td>';
-	print '</tr>';
-	
-	print '<tr><td>' . $form->editfieldkey ( "Ref", 'ref', $object->ref, $object, $user->rights->consogazoil->modifier, 'string' ) . '</td><td>';
-	print $form->editfieldval ( "Ref", 'ref', $object->ref, $object, $user->rights->consogazoil->modifier, 'string' );
-	
-	print '</td></tr>';
-	
-	print '<tr><td>' . $form->editfieldkey ( "Label", 'label', $object->label, $object, $user->rights->consogazoil->modifier, 'string' ) . '</td><td>';
-	print $form->editfieldval ( "Label", 'label', $object->label, $object, $user->rights->consogazoil->modifier, 'string' );
-	print '</td></tr>';
-	
-	print '</table>';
-	print "</div>\n";
-	
-	/*
-	 * Barre d'actions
-	*
-	*/
-	print '<div class="tabsAction">';
-	
-	// Delete
-	if ($user->rights->consogazoil->supprimer) {
-		print '<div class="inline-block divButAction"><a class="butActionDelete" href="' . $_SERVER ['PHP_SELF'] . '?id=' . $object->id . '&action=delete">' . $langs->trans ( "Delete" ) . "</a></div>\n";
-	} else {
-		print '<div class="inline-block divButAction"><font class="butActionRefused" href="#" title="' . dol_escape_htmltag ( $langs->trans ( "NotEnoughPermissions" ) ) . '">' . $langs->trans ( "Delete" ) . "</font></div>";
-	}
-	print '</div>';
-}
+} 
 
 // End of page
 llxFooter ();
