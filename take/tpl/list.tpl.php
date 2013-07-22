@@ -71,6 +71,10 @@ $(document).ready(function() {
 			<?php echo getTitleFieldOfList($langs->trans('ConsoGazColVol'),1); ?>
 			<?php echo getTitleFieldOfList($langs->trans('ConsoGazColKM'),1); ?>
 			<?php echo getTitleFieldOfList($langs->trans('ConsoGazColKMCtrole'),1); ?>
+			<?php 
+			if ($user->rights->consogazoil->modifier) {
+			 echo getTitleFieldOfList($langs->trans('Edit'),1); 
+			}?>
 		</tr>
 	</thead>
 	<tbody>

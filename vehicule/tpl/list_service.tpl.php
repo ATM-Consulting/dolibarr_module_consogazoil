@@ -64,7 +64,10 @@ $(document).ready(function() {
 			<?php echo getTitleFieldOfList($langs->trans('Label'),1); ?>
 			<?php echo getTitleFieldOfList($langs->trans('ConsoGazDtSt'),1); ?>
 			<?php echo getTitleFieldOfList($langs->trans('ConsoGazDtEnd'),1); ?>
-			<?php echo getTitleFieldOfList($langs->trans('Delete'),1); ?>
+			<?php
+			if ($user->rights->consogazoil->supprimer) {
+			 echo getTitleFieldOfList($langs->trans('Delete'),1);
+			 }  ?>
 		</tr>
 	</thead>
 	<tbody>

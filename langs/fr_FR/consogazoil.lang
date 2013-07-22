@@ -67,12 +67,13 @@ ConsoGazManageReport=Rapport
 ConsoGazReportConso=Suivie Conso. de carburant/véhicule/mois 
 ConsoGazReportTaken=Suivi Prise de carburant
 ConsoGazReportKM=Suivi du KM/véhicule
-ConsoGazManageTake=Voir les prises
+ConsoGazManageTake=Gérer les prises
 
 #
 # Common
 #
 ConsoGazMustBeNumeric=Le champ %s doit être un nombre.
+ConsoGazEdit=Modification
 
 #
 # List
@@ -158,3 +159,10 @@ ConsoGazTraitementDoNothing=Ne pas importer
 ConsoGazColTraitementUpdate=Mettre à jour ref/nom
 ConsoGazColTraitementNew=Crée
 ConsoGazSampleFile=Vous pouvez télécharger le fichier d'exemple pour connaitre le format approprié de cette import
+
+#
+# Report
+#
+ConsoGazState=Etat
+ConsoGazTrimestre=Trimestre
+ConsoGazSemestre=Semestre

@@ -454,7 +454,7 @@ class ConsogazoilStation extends CommonObjectConsoGazoil
 	 *  @param	array		$filter    	  filter output
 	 *  @return int          	<0 if KO, >0 if OK
 	 */
-	function fetch_all($sortorder='DESC', $sortfield='t.ref', $limit, $offset, $filter='')
+	function fetch_all($sortorder='DESC', $sortfield='t.ref', $limit=0, $offset=0, $filter='')
 	{
 		global $langs;
 	
@@ -566,7 +566,7 @@ Class ConsogazoilStationLine {
 	var $fk_user_modif;
 	var $import_key;
 	
-	function __construct($db)
+	function __construct()
 	{
 		return 1;
 	}

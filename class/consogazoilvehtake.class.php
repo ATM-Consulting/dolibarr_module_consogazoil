@@ -22,15 +22,13 @@
  */
 
 // Put here all includes required by your class file
-require_once(DOL_DOCUMENT_ROOT."/core/class/commonobject.class.php");
-//require_once(DOL_DOCUMENT_ROOT."/societe/class/societe.class.php");
-//require_once(DOL_DOCUMENT_ROOT."/product/class/product.class.php");
+require_once 'commonobjectconsogazoil.class.php';
 
 
 /**
  *	Put here description of your class
  */
-class ConsogazoilVehTake extends CommonObject
+class ConsogazoilVehTake extends CommonObjectConsoGazoil
 {
 	var $db;							//!< To store db handler
 	var $error;							//!< To return error code (or message)
@@ -54,6 +52,14 @@ class ConsogazoilVehTake extends CommonObject
 	var $fk_user_creat;
 	var $fk_user_modif;
 	var $import_key;
+	
+	var $station_ref;
+	var $station_name;
+	var $veh_ref;
+	var $veh_immat;
+	var $driv_ref;
+	var $driv_name;
+
 	
 	var $lines=array();
 
@@ -205,10 +211,19 @@ class ConsogazoilVehTake extends CommonObject
 		$sql.= " t.tms,";
 		$sql.= " t.fk_user_creat,";
 		$sql.= " t.fk_user_modif,";
-		$sql.= " t.import_key";
-
+		$sql.= " t.import_key,";
+		
+		$sql.= " station.ref as station_ref,";
+		$sql.= " station.name as station_name,";
+		$sql.= " veh.ref as veh_ref,";
+		$sql.= " veh.immat_veh as veh_immat,";
+		$sql.= " driv.ref as driv_ref,";
+		$sql.= " driv.name as driv_name";
 		
         $sql.= " FROM ".MAIN_DB_PREFIX."consogazoil_vehtake as t";
+        $sql .="		LEFT JOIN ".MAIN_DB_PREFIX . "consogazoil_station as station ON t.fk_station=station.rowid ";
+        $sql .="		LEFT JOIN ".MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON t.fk_vehicule=veh.rowid ";
+        $sql .="		LEFT JOIN ".MAIN_DB_PREFIX . "consogazoil_driver as driv ON t.fk_driver=driv.rowid ";
         $sql.= " WHERE t.rowid = ".$id;
 
     	dol_syslog(get_class($this)."::fetch sql=".$sql, LOG_DEBUG);
@@ -234,6 +249,13 @@ class ConsogazoilVehTake extends CommonObject
 				$this->fk_user_creat = $obj->fk_user_creat;
 				$this->fk_user_modif = $obj->fk_user_modif;
 				$this->import_key = $obj->import_key;
+				
+				$this->station_ref=$obj->station_ref;
+				$this->station_name=$obj->station_name;
+				$this->veh_ref=$obj->veh_ref;
+				$this->veh_immat=$obj->veh_immat;
+				$this->driv_ref=$obj->driv_ref;
+				$this->driv_name=$obj->driv_name;
 
                 
             }
@@ -592,7 +614,7 @@ class ConsogazoilVehTakeLine {
 	var $fk_user_modif;
 	var $import_key;
 	
-	function __construct($db)
+	function __construct()
 	{
 		return 1;
 	}

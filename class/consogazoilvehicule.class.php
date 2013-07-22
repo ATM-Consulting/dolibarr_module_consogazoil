@@ -488,7 +488,7 @@ class ConsogazoilVehicule extends CommonObjectConsoGazoil
 	 *  @param	array		$filter    	  filter output
 	 *  @return int          	<0 if KO, >0 if OK
 	 */
-	function fetch_all($sortorder='DESC', $sortfield='t.ref', $limit, $offset, $filter='')
+	function fetch_all($sortorder='DESC', $sortfield='t.ref', $limit=0, $offset=0, $filter='')
 	{
 		global $langs;
 	
@@ -541,7 +541,7 @@ class ConsogazoilVehicule extends CommonObjectConsoGazoil
 			$num = $this->db->num_rows($resql);
 			while ($obj = $this->db->fetch_object($resql))
 			{
-				$line = new ConsogazoilStationLine();
+				$line = new ConsogazoilVehiculeLine();
 	
 				$line->id    = $obj->rowid;
                 
@@ -616,7 +616,7 @@ class ConsogazoilVehiculeLine
 	var $fk_user_modif;
 	var $import_key;
 	
-	function __construct($db)
+	function __construct()
 	{
 		return 1;
 	}

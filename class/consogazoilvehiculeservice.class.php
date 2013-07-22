@@ -553,7 +553,7 @@ class ConsogazoilVehiculeServiceLine {
 	var $fk_user_modif;
 	var $import_key;
 	
-	function __construct($db)
+	function __construct()
 	{
 		return 1;
 	}

@@ -447,7 +447,7 @@ class ConsogazoilDriver extends CommonObjectConsoGazoil
 	 *  @param	array		$filter    	  filter output
 	 *  @return int          	<0 if KO, >0 if OK
 	 */
-	function fetch_all($sortorder='DESC', $sortfield='t.ref', $limit, $offset, $filter='')
+	function fetch_all($sortorder='DESC', $sortfield='t.ref', $limit=0, $offset=0, $filter='')
 	{
 		global $langs;
 		$sql = "SELECT";
@@ -481,9 +481,8 @@ class ConsogazoilDriver extends CommonObjectConsoGazoil
 		}
 		$sql.= " ORDER BY ".$sortfield." ".$sortorder;
 		if (!empty($limit)) $sql.= $this->db->plimit( $limit + 1 ,$offset);
-		$sql.= " WHERE t.rowid = ".$id;
-	
-			dol_syslog(get_class($this)."::fetch_all sql=".$sql, LOG_DEBUG);
+		
+		dol_syslog(get_class($this)."::fetch_all sql=".$sql, LOG_DEBUG);
 		$resql=$this->db->query($sql);
 		if ($resql)
 		{
@@ -494,7 +493,7 @@ class ConsogazoilDriver extends CommonObjectConsoGazoil
 			{
 				$line = new ConsoGazoilDriverLine();
 				
-				$line->id = $obj->id;
+				$line->id = $obj->rowid;
 				
 				$line->entity = $obj->entity;
 				$line->ref = $obj->ref;
@@ -557,9 +556,8 @@ Class ConsoGazoilDriverLine {
 	var $fk_user_modif;
 	var $import_key;
 	
-	function __construct($db)
+	function __construct()
 	{
 		return 1;
 	}
 }
-?>

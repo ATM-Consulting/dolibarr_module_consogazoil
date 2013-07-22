@@ -215,11 +215,10 @@ $object = new ConsogazoilVehTake($db);
 		//Km declare
 		$row[]=$aRow[7];
 		//km controle
+		$row[]=$aRow[8];
 		if ($user->rights->consogazoil->modifier) {
-			$edit_link='<a href="'.dol_buildpath('/consogazoil/take/card.php',1).'?id='.$aRow[10].'&action=edit">'.$langs->trans("Edit")."</a>\n";
+			$row[]='<a href="'.dol_buildpath('/consogazoil/take/card.php',1).'?id='.$aRow[10].'">'.$langs->trans("Show")."</a>\n";
 		}
-		
-		$row[]=$aRow[8].' '.$edit_link;
 		
 		
 		

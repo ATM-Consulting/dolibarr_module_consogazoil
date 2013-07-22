@@ -56,7 +56,6 @@ class FormConsoGazoil extends Form {
 		
 		if ($num >= 0) {
 			$out .= '<select id="' . $htmlname . '" class="flat" name="' . $htmlname . '">';
-			if ($showempty) $out .= '<option value="-1"></option>';
 			
 			$i = 0;
 
@@ -74,6 +73,126 @@ class FormConsoGazoil extends Form {
 			setEventMessage ( $object->error, 'errors' );
 		}
 		
+		return $out;
+	}
+	
+	/**
+	 * Display select with data available
+	 *
+	 * @param int $selectid à preselectionner
+	 * @param string $htmlname select field
+	 * @return string select field
+	 */
+	function select_vehicule($selectid, $htmlname = 'vehicule') {
+		global $conf, $user, $langs;
+	
+		require_once 'consogazoilvehicule.class.php';
+	
+		$out = '';
+	
+		$object = new ConsogazoilVehicule ( $this->db );
+	
+		$num = $object->fetch_all ();
+	
+		if ($num >= 0) {
+			$out .= '<select id="' . $htmlname . '" class="flat" name="' . $htmlname . '">';
+				
+			$i = 0;
+	
+			foreach ( $object->lines as $line ) {
+	
+				if ($selectid > 0 && $selectid == $line->id) {
+					$out .= '<option value="' . $line->id . '" selected="selected">' . $line->ref.'-'.$line->immat_veh . '</option>';
+				} else {
+					$out .= '<option value="' . $line->id . '">' .$line->ref.'-'.$line->immat_veh . '</option>';
+				}
+			}
+	
+			$out .= '</select>';
+		} else {
+			setEventMessage ( $object->error, 'errors' );
+		}
+	
+		return $out;
+	}
+	
+	/**
+	 * Display select with data available
+	 *
+	 * @param int $selectid à preselectionner
+	 * @param string $htmlname select field
+	 * @return string select field
+	 */
+	function select_station($selectid, $htmlname = 'station') {
+		global $conf, $user, $langs;
+	
+		require_once 'consogazoilstation.class.php';
+	
+		$out = '';
+	
+		$object = new ConsogazoilStation ( $this->db );
+	
+		$num = $object->fetch_all ();
+	
+		if ($num >= 0) {
+			$out .= '<select id="' . $htmlname . '" class="flat" name="' . $htmlname . '">';
+	
+			$i = 0;
+	
+			foreach ( $object->lines as $line ) {
+	
+				if ($selectid > 0 && $selectid == $line->id) {
+					$out .= '<option value="' . $line->id . '" selected="selected">' . $line->ref.'-'.$line->name . '</option>';
+				} else {
+					$out .= '<option value="' . $line->id . '">' .$line->ref.'-'.$line->name . '</option>';
+				}
+			}
+	
+			$out .= '</select>';
+		} else {
+			setEventMessage ( $object->error, 'errors' );
+		}
+	
+		return $out;
+	}
+	
+	/**
+	 * Display select with data available
+	 *
+	 * @param int $selectid à preselectionner
+	 * @param string $htmlname select field
+	 * @return string select field
+	 */
+	function select_driver($selectid, $htmlname = 'driver') {
+		global $conf, $user, $langs;
+	
+		require_once 'consogazoildriver.class.php';
+	
+		$out = '';
+	
+		$object = new ConsogazoilDriver ( $this->db );
+	
+		$num = $object->fetch_all ();
+	
+		if ($num >= 0) {
+			$out .= '<select id="' . $htmlname . '" class="flat" name="' . $htmlname . '">';
+	
+			$i = 0;
+	
+			foreach ( $object->lines as $line ) {
+	
+				if ($selectid > 0 && $selectid == $line->id) {
+					$out .= '<option value="' . $line->id . '" selected="selected">' . $line->ref.'-'.$line->name . '</option>';
+				} else {
+					$out .= '<option value="' . $line->id . '">' .$line->ref.'-'.$line->name . '</option>';
+				}
+			}
+	
+			$out .= '</select>';
+		} else {
+			setEventMessage ( $object->error, 'errors' );
+		}
+	
 		return $out;
 	}
 }

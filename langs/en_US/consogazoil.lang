@@ -72,6 +72,7 @@ ConsoGazReportKM=Km/Vehicule
 # Common
 #
 ConsoGazMustBeNumeric=Field %s must be a numeric
+ConsoGazEdit=Edit
 
 #
 # List
@@ -154,3 +155,10 @@ ConsoGazTraitementDoNothing=Do Nothing
 ConsoGazColTraitementUpdate=Update
 ConsoGazColTraitementNew=Create
 ConsoGazSampleFile=You can download the sample file to know the correct import format
+
+#
+# Report
+#
+ConsoGazState=State
+ConsoGazTrimestre=Trimestre
+ConsoGazSemestre=Mid Year

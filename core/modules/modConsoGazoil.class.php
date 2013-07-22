@@ -566,13 +566,26 @@ class modConsoGazoil extends DolibarrModules
         );
         $r++;
         $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoiltake',
+        	'type'=>'left',
+        	'titre'=>'ConsoGazNew',
+        	'url'=>'/consogazoil/take/card.php?action=create',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>118,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->import',
+        	'target'=>'',
+        	'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
         	'fk_menu'=>'fk_mainmenu=consogazoil',
         	'type'=>'left',
         	'titre'=>'ConsoGazManageReport',
         	'leftmenu'=>'consogazoilreport',
         	'url'=>'/consogazoil/report/conso.php',
         	'langs'=>'consogazoil@consogazoil',
-        	'position'=>118,
+        	'position'=>119,
         	'enabled'=>'$conf->consogazoil->enabled',
         	'perms'=>'$user->rights->consogazoil->import',
         	'target'=>'',
@@ -585,7 +598,7 @@ class modConsoGazoil extends DolibarrModules
         	'titre'=>'ConsoGazReportConso',
         	'url'=>'/consogazoil/report/conso.php',
         	'langs'=>'consogazoil@consogazoil',
-        	'position'=>119,
+        	'position'=>120,
         	'enabled'=>'$conf->consogazoil->enabled',
         	'perms'=>'$user->rights->consogazoil->lire',
         	'target'=>'',
@@ -598,7 +611,7 @@ class modConsoGazoil extends DolibarrModules
         	'titre'=>'ConsoGazReportTaken',
         	'url'=>'/consogazoil/report/taken.php',
         	'langs'=>'consogazoil@consogazoil',
-        	'position'=>120,
+        	'position'=>121,
         	'enabled'=>'$conf->consogazoil->enabled',
         	'perms'=>'$user->rights->consogazoil->lire',
         	'target'=>'',
@@ -611,7 +624,7 @@ class modConsoGazoil extends DolibarrModules
         	'titre'=>'ConsoGazReportKM',
         	'url'=>'/consogazoil/report/km.php',
         	'langs'=>'consogazoil@consogazoil',
-        	'position'=>121,
+        	'position'=>122,
         	'enabled'=>'$conf->consogazoil->enabled',
         	'perms'=>'$user->rights->consogazoil->lire',
         	'target'=>'',

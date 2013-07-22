@@ -17,7 +17,7 @@
 */
 
 /**
- * \file		consogazoil/take/list.php
+ * \file	consogazoil/take/list.php
  * \ingroup	consogazoil
  */
 $res = @include '../../main.inc.php'; // For root directory
