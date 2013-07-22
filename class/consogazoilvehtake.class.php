@@ -45,6 +45,7 @@ class ConsogazoilVehTake extends CommonObject
 	var $fk_vehicule;
 	var $fk_station;
 	var $fk_driver;
+	var $dt_hr_take;
 	var $volume;
 	var $km_declare;
 	var $km_controle;
@@ -95,6 +96,7 @@ class ConsogazoilVehTake extends CommonObject
 		if (isset($this->fk_user_creat)) $this->fk_user_creat=trim($this->fk_user_creat);
 		if (isset($this->fk_user_modif)) $this->fk_user_modif=trim($this->fk_user_modif);
 		if (isset($this->import_key)) $this->import_key=trim($this->import_key);
+		if (isset($this->dt_hr_take)) $this->dt_hr_take=trim($this->dt_hr_take);
 
         
 
@@ -108,6 +110,7 @@ class ConsogazoilVehTake extends CommonObject
 		$sql.= "fk_vehicule,";
 		$sql.= "fk_station,";
 		$sql.= "fk_driver,";
+		$sql.= "dt_hr_take,";
 		$sql.= "volume,";
 		$sql.= "km_declare,";
 		$sql.= "km_controle,";
@@ -123,6 +126,7 @@ class ConsogazoilVehTake extends CommonObject
 		$sql.= " ".(! isset($this->fk_vehicule)?'NULL':"'".$this->fk_vehicule."'").",";
 		$sql.= " ".(! isset($this->fk_station)?'NULL':"'".$this->fk_station."'").",";
 		$sql.= " ".(! isset($this->fk_driver)?'NULL':"'".$this->fk_driver."'").",";
+		$sql.= " ".(! isset($this->dt_hr_take)?'NULL':"'".$this->db->idate($this->dt_hr_take)."'").",";
 		$sql.= " ".(! isset($this->volume)?'NULL':"'".$this->volume."'").",";
 		$sql.= " ".(! isset($this->km_declare)?'NULL':"'".$this->km_declare."'").",";
 		$sql.= " ".(! isset($this->km_controle)?'NULL':"'".$this->km_controle."'").",";
@@ -193,6 +197,7 @@ class ConsogazoilVehTake extends CommonObject
 		$sql.= " t.fk_vehicule,";
 		$sql.= " t.fk_station,";
 		$sql.= " t.fk_driver,";
+		$sql.= " t.dt_hr_take,";
 		$sql.= " t.volume,";
 		$sql.= " t.km_declare,";
 		$sql.= " t.km_controle,";
@@ -220,6 +225,7 @@ class ConsogazoilVehTake extends CommonObject
 				$this->fk_vehicule = $obj->fk_vehicule;
 				$this->fk_station = $obj->fk_station;
 				$this->fk_driver = $obj->fk_driver;
+				$this->dt_hr_take = $obj->dt_hr_take;
 				$this->volume = $obj->volume;
 				$this->km_declare = $obj->km_declare;
 				$this->km_controle = $obj->km_controle;
@@ -268,6 +274,7 @@ class ConsogazoilVehTake extends CommonObject
 		if (isset($this->fk_user_creat)) $this->fk_user_creat=trim($this->fk_user_creat);
 		if (isset($this->fk_user_modif)) $this->fk_user_modif=trim($this->fk_user_modif);
 		if (isset($this->import_key)) $this->import_key=trim($this->import_key);
+		if (isset($this->dt_hr_take)) $this->dt_hr_take=trim($this->dt_hr_take);
 
         
 
@@ -281,6 +288,7 @@ class ConsogazoilVehTake extends CommonObject
 		$sql.= " fk_vehicule=".(isset($this->fk_vehicule)?$this->fk_vehicule:"null").",";
 		$sql.= " fk_station=".(isset($this->fk_station)?$this->fk_station:"null").",";
 		$sql.= " fk_driver=".(isset($this->fk_driver)?$this->fk_driver:"null").",";
+		$sql.= " dt_hr_take=".(isset($this->dt_hr_take)?"'".$this->db->idate($this->dt_hr_take)."'":"null").",";
 		$sql.= " volume=".(isset($this->volume)?$this->volume:"null").",";
 		$sql.= " km_declare=".(isset($this->km_declare)?$this->km_declare:"null").",";
 		$sql.= " km_controle=".(isset($this->km_controle)?$this->km_controle:"null").",";
@@ -459,6 +467,7 @@ class ConsogazoilVehTake extends CommonObject
 		$this->fk_vehicule='';
 		$this->fk_station='';
 		$this->fk_driver='';
+		$this->dt_hr_take='';
 		$this->volume='';
 		$this->km_declare='';
 		$this->km_controle='';
@@ -493,6 +502,7 @@ class ConsogazoilVehTake extends CommonObject
 		$sql.= " t.fk_vehicule,";
 		$sql.= " t.fk_station,";
 		$sql.= " t.fk_driver,";
+		$sql.= " t.dt_hr_take,";
 		$sql.= " t.volume,";
 		$sql.= " t.km_declare,";
 		$sql.= " t.km_controle,";
@@ -537,6 +547,7 @@ class ConsogazoilVehTake extends CommonObject
 				$line->fk_vehicule = $obj->fk_vehicule;
 				$line->fk_station = $obj->fk_station;
 				$line->fk_driver = $obj->fk_driver;
+				$line->dt_hr_take = $obj->dt_hr_take;
 				$line->volume = $obj->volume;
 				$line->km_declare = $obj->km_declare;
 				$line->km_controle = $obj->km_controle;
@@ -572,6 +583,7 @@ class ConsogazoilVehTakeLine {
 	var $fk_station;
 	var $fk_driver;
 	var $volume;
+	var $dt_hr_take;
 	var $km_declare;
 	var $km_controle;
 	var $datec='';

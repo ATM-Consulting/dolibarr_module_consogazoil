@@ -110,7 +110,7 @@ class ConsogazoilStation extends CommonObjectConsoGazoil
 		$sql.= " ".(! isset($this->ref)?'NULL':"'".$this->db->escape($this->ref)."'").",";
 		$sql.= " ".(! isset($this->name)?'NULL':"'".$this->db->escape($this->name)."'").",";
 		$sql.= "'".$this->db->idate(dol_now())."',";
-		$sql.= " ".(! isset($this->is_pref)?'NULL':"'".$this->is_pref."'").",";
+		$sql.= " ".(empty($this->is_pref)?'0':"'".$this->is_pref."'").",";
 		$sql.= " ".$user->id.",";
 		$sql.= " ".$user->id.",";
 		$sql.= " ".(! isset($this->import_key)?'NULL':"'".$this->db->escape($this->import_key)."'")."";
@@ -258,7 +258,7 @@ class ConsogazoilStation extends CommonObjectConsoGazoil
 		$sql.= " entity=".$conf->entity.",";
 		$sql.= " ref=".(isset($this->ref)?"'".$this->db->escape($this->ref)."'":"null").",";
 		$sql.= " name=".(isset($this->name)?"'".$this->db->escape($this->name)."'":"null").",";
-		$sql.= " is_pref=".(isset($this->is_pref)?$this->is_pref:"null").",";
+		$sql.= " is_pref=".(!empty($this->is_pref)?$this->is_pref:"0").",";
 		$sql.= " fk_user_modif=".$user->id.",";
 		$sql.= " import_key=".(isset($this->import_key)?"'".$this->db->escape($this->import_key)."'":"null")."";
 

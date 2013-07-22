@@ -14,4 +14,4 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE llx_consogazoil_vehicule ADD UNIQUE uk_consogazoil_vehicule_ref (ref);
+ALTER TABLE llx_consogazoil_station ADD UNIQUE uk_consogazoil_station_ref (ref);

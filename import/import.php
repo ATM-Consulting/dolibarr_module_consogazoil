@@ -15,6 +15,10 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+error_reporting(E_ALL);
+ini_set('display_errors', true);
+ini_set('html_errors', false);
+
 /**
  *      \file       consogazoil/imports/import.php
  *      \ingroup    consogazoil
@@ -30,6 +34,12 @@ require_once '../class/consogazoildriver.class.php';
 require_once '../class/consogazoilstation.class.php';
 require_once '../class/consogazoilvehicule.class.php';
 require_once '../class/consogazoilvehtake.class.php';
+require_once '../class/consogazoilimport.class.php';
+
+require_once 'ajax/import.ajax.lib.php';
+
+require_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
+
 
 if (!$user->rights->consogazoil->import) accessforbidden();
 
@@ -84,7 +94,7 @@ if ($action == 'confirm_deletefile' && $confirm == 'yes')
 //Check data file look like
 if ($step == 3 && !(empty($filetoimport)))
 {
-	$importobject= new Importb2sCsv($db);
+	$importobject= new ConsogazoilImport($db);
 	
 	$arrayrecords = array();
 	$linearray = array();
@@ -131,7 +141,7 @@ if ($step == 3 && !(empty($filetoimport)))
 //integrate data in temporary tables
 if ($step == 4 && !(empty($filetoimport)))
 {
-	$importobject= new Importb2sCsv($db);
+	$importobject= new ConsogazoilImport($db);
 
 	$arrayrecords = array();
 	$linearray = array();
@@ -157,7 +167,7 @@ if ($step == 4 && !(empty($filetoimport)))
 				
 				if ($importobject->col!=$importobject->nbcol) {
 						$error++;
-						setEventMessage($langs->trans("b2sImportErrorCols",$sourcelinenb), 'errors');
+						setEventMessage($langs->trans("ConsoGazImportErrorCols",$sourcelinenb), 'errors');
 						break;
 				}
 				if (!$error) {
@@ -189,7 +199,7 @@ if ($step == 4 && !(empty($filetoimport)))
 
 if ($step == 5)
 {
-	$importobject= new Importb2sCsv($db);
+	$importobject= new ConsogazoilImport($db);
 	$ret=$importobject->import_data($user);
 	if ($ret<0) {
 		$error++;
@@ -201,9 +211,9 @@ if ($step == 5)
  *	View
 */
 
-llxHeader('',$langs->trans("Module10500Name"));
+llxHeader('',$langs->trans("Module103040Name"));
 
-dol_fiche_head($head, 'business', $langs->trans("InformationOnSourceFile"),0,($object->public?'b2sImport@b2sImport':'b2sImport@b2sImport'));
+dol_fiche_head($head, 'business', $langs->trans("InformationOnSourceFile"),0,($object->public?'consogazoil@consogazoil':'consogazoil@consogazoil'));
 
 $form = new Form($db);
 
@@ -290,35 +300,41 @@ if ($step==3) {
 	print_fiche_titre($langs->trans("InformationOnSourceFile") .' : '. $filetoimport);
 	
 	
-	print '<b>'.$langs->trans("Bub2sSampleFileData").'</b>';	
+	print '<b>'.$langs->trans("ConsoGazoilSampleFileData").'</b>';	
 	print '<table width="100%" cellspacing="0" cellpadding="4" class="border">';
 	print '<tr class="liste_titre">';	
 	
-	print '<td>'.$langs->trans('b2sColnomfichier').'</td>';
-	print '<td>'.$langs->trans('b2sColDTLIVRAISON').'</td>';
-	print '<td>'.$langs->trans('b2sColDTIMPORT').'</td>';
-	print '<td>'.$langs->trans('b2sColStatuttrait').'</td>';
-	print '<td>'.$langs->trans('b2sColNpart').'</td>';
-	print '<td>'.$langs->trans('b2sColcodeactivite').'</td>';
-	print '<td>'.$langs->trans('b2sColsiret').'</td>';
-	print '<td>'.$langs->trans('b2sColraisonsociale').'</td>';
-	print '<td>'.$langs->trans('b2sColcodenaf').'</td>';
-	print '<td>'.$langs->trans('b2sColActiviteEntrepris').'</td>';
-	print '<td>'.$langs->trans('b2sColTypeEts').'</td>';
-	print '<td>'.$langs->trans('b2sColadresse1').'</td>';
-	print '<td>'.$langs->trans('b2sColVide').'</td>';
-	print '<td>'.$langs->trans('b2sColcodepostal').'</td>';
-	print '<td>'.$langs->trans('b2sColDepartement').'</td>';
-	print '<td>'.$langs->trans('b2sColtel').'</td>';
-	print '<td>'.$langs->trans('b2sColfax').'</td>';
-	print '<td>'.$langs->trans('b2sColPACNOM').'</td>';
-	print '<td>'.$langs->trans('b2sColPACPRENOM').'</td>';
-	print '<td>'.$langs->trans('b2sColPACFONCTION').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColContrat').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColCardVeh').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColCardDriv').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColCdProd').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColProd').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColVol').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColDate').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColHour').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColPays').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColNumSta').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColStation').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColDtInvoice').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColNumInvoice').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColTvaTx').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColCurrEnle').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColHT').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColTVA').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColTTC').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColCurrRec').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColHT').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColTVA').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColTTC').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColKM').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColImmat').'</td>';
+	print '<td>'.$langs->trans('ConsoGazColTypePiece').'</td>';
+	
 	
 	print '</tr>';
 	
 	$style='impair';	
-	for ($i=0; $i < 5; $i++) {
+	for ($i=0; $i < $nboflinestmp-1; $i++) {
 		if ($style=='pair') {$style='impair';}
 		else {$style='pair';}
 	
@@ -336,8 +352,8 @@ if ($step==3) {
 	
 	print '<BR>';	
 	print '<table><tr>';
-	print '<td><a class="butAction" href="'.dol_buildpath('/b2sImport/importb2s/import.php',1).'?step=4&filetoimport='.$filetoimport.'">'.$langs->trans("Bub2sokLoadFile",$nboflines-1).'</a></td>';
-	print '<td><a class="butAction" href="'.dol_buildpath('/b2sImport/importb2s/import.php',1).'?step=1">'.$langs->trans("Bub2skoLoadFile").'</a></td>';
+	print '<td><a class="butAction" href="'.$_SERVER["PHP_SELF"].'?step=4&filetoimport='.$filetoimport.'">'.$langs->trans("ConsoGazLoadFileOK",$nboflines-1).'</a></td>';
+	print '<td><a class="butAction" href="'.$_SERVER["PHP_SELF"].'?step=1">'.$langs->trans("ConsoGazLoadFileKO").'</a></td>';
 	print '</tr></table>';
 }
 
@@ -348,32 +364,37 @@ if ($step==4 && $conf->use_javascript_ajax) {
 	$noimport=false;
 	
 	if (count($importobject->lines)>0){
-		print '<b>'.$langs->trans("Bub2sExplanation").'</b>';
+		print '<b>'.$langs->trans("ConsoGazImportExplanation").'</b>';
 		print '<BR>';	
 		print '<table width="100%" cellspacing="0" cellpadding="4" class="border">';
 		print '<tr class="liste_titre">';
-		print '<td><table class="nobordernopadding"><tr><td>'.$langs->trans('b2sColTraitementSoc').'</td><td>'.$form->textwithpicto('',$langs->trans("Bub2sExplanationCol2"),1,'help').'</td></tr></table></td>';
-		print '<td><table class="nobordernopadding"><tr><td>'.$langs->trans('b2sColTraitementContact').'</td><td>'.$form->textwithpicto('',$langs->trans("Bub2sExplanationCol2"),1,'help').'</td></tr></table></td>';
-		print '<td>'.$langs->trans('b2sColnomfichier').'</td>';
-		print '<td>'.$langs->trans('b2sColDTLIVRAISON').'</td>';
-		print '<td>'.$langs->trans('b2sColDTIMPORT').'</td>';
-		print '<td>'.$langs->trans('b2sColStatuttrait').'</td>';
-		print '<td>'.$langs->trans('b2sColNpart').'</td>';
-		print '<td>'.$langs->trans('b2sColcodeactivite').'</td>';
-		print '<td>'.$langs->trans('b2sColsiret').'</td>';
-		print '<td>'.$langs->trans('b2sColraisonsociale').'</td>';
-		print '<td>'.$langs->trans('b2sColcodenaf').'</td>';
-		print '<td>'.$langs->trans('b2sColActiviteEntrepris').'</td>';
-		print '<td>'.$langs->trans('b2sColTypeEts').'</td>';
-		print '<td>'.$langs->trans('b2sColadresse1').'</td>';
-		print '<td>'.$langs->trans('b2sColVide').'</td>';
-		print '<td>'.$langs->trans('b2sColcodepostal').'</td>';
-		print '<td>'.$langs->trans('b2sColDepartement').'</td>';
-		print '<td>'.$langs->trans('b2sColtel').'</td>';
-		print '<td>'.$langs->trans('b2sColfax').'</td>';
-		print '<td>'.$langs->trans('b2sColPACNOM').'</td>';
-		print '<td>'.$langs->trans('b2sColPACPRENOM').'</td>';
-		print '<td>'.$langs->trans('b2sColPACFONCTION').'</td>';
+		print '<td><table class="nobordernopadding"><tr><td>'.$langs->trans('ConsoGazColTraitementVeh').'</td><td>'.$form->textwithpicto('',$langs->trans("ConsoGazExplanationColVeh"),1,'help').'</td></tr></table></td>';
+		print '<td><table class="nobordernopadding"><tr><td>'.$langs->trans('ConsoGazColTraitementStation').'</td><td>'.$form->textwithpicto('',$langs->trans("ConsoGazExplanationColStation"),1,'help').'</td></tr></table></td>';
+		print '<td>'.$langs->trans('ConsoGazColContrat').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColCardVeh').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColCardDriv').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColCdProd').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColProd').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColVol').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColDate').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColHour').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColPays').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColNumSta').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColStation').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColDtInvoice').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColNumInvoice').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColTvaTx').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColCurrEnle').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColHT').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColTVA').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColTTC').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColCurrRec').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColHT').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColTVA').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColTTC').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColKM').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColImmat').'</td>';
+		print '<td>'.$langs->trans('ConsoGazColTypePiece').'</td>';
 		
 		print '</tr>'."\n";
 		
@@ -389,32 +410,32 @@ if ($step==4 && $conf->use_javascript_ajax) {
 				print '<tr class="'.$style.'">';
 				
 				
-				//Action Soc
+				//Action Veh
 				print '<td>';
 				if (empty($line->pb_quality)) {
-					if ($line->conflitsoc) {
-						print'<table class="nobordernopadding"><tr><td>'.img_picto($langs->trans('b2sColTraitementSoc'), 'warning').'</td><td>'.ajax_selectactions($line->id,'soc').'</td></tr></table>';
-						print '<input type="hidden" name="soc_id_conflict_'.$line->id.'" value="'.$line->conflitsocrowid.'"/>';
+					if ($line->conflitveh) {
+						print'<table class="nobordernopadding"><tr><td>'.img_picto($langs->trans('ConsoGazColTraitementVeh'), 'warning').'</td><td>'.ajax_selectactions($line->id,'veh').'</td></tr></table>';
+						print '<input type="hidden" name="veh_id_conflict_'.$line->id.'" value="'.$line->conflitvehrowid.'"/>';
 					}else {
 						print img_picto('', 'tick');
 					}
 				}else {
-					print'<table class="nobordernopadding"><tr><td>'.img_picto($langs->trans("Bub2sExplanationCol1"), 'error').'</td><td>'.$langs->trans('b2sColNoImport').'</td></tr></table>';
+					print'<table class="nobordernopadding"><tr><td>'.img_picto($langs->trans("ConsoGazImportExplanationCol1"), 'error').'</td><td>'.$langs->trans('ConsoGazColNoImport').'<br>'.$line->pb_quality.'</td></tr></table>';
 				}
 				print '</td>'."\n";
 				
-				//Action contact
+				//Action station
 				print '<td>';
 				if (empty($line->pb_quality)) {
-					if ($line->conflitcontact) {
-						print'<table class="nobordernopadding"><tr><td>'.img_picto($langs->trans('b2sColTraitementContact'), 'warning').'</td>';
-						print'<td>'.ajax_selectactions($line->id,'contact').'</td></tr></table>';
-						print '<input type="hidden" name="contact_id_conflict_'.$line->id.'" value="'.$line->conflitcontactrowid.'"/>';
+					if ($line->conflitstation) {
+						print'<table class="nobordernopadding"><tr><td>'.img_picto($langs->trans('ConsoGazColTraitementStation'), 'warning').'</td>';
+						print'<td>'.ajax_selectactions($line->id,'station').'</td></tr></table>';
+						print '<input type="hidden" name="contact_id_conflict_'.$line->id.'" value="'.$line->conflitstationrowid.'"/>';
 					}else {
 						print img_picto('', 'tick');
 					}
 				}else {
-					print'<table class="nobordernopadding"><tr><td>'.img_picto($langs->trans("Bub2sExplanationCol1"), 'error').'</td><td>'.$langs->trans('b2sColNoImport').'</td></tr></table>';
+					print'<table class="nobordernopadding"><tr><td>'.img_picto($langs->trans("ConsoGazImportExplanationCol1"), 'error').'</td><td>'.$langs->trans('ConsoGazColNoImport').'<br>'.$line->pb_quality.'</td></tr></table>';
 				}
 				print '</td>'."\n";
 		
@@ -431,7 +452,7 @@ if ($step==4 && $conf->use_javascript_ajax) {
 			print '<BR>';
 	
 		}else {
-			print '<b>'.$langs->trans("Bub2sNoConsistencyProblem").'</b>';
+			print '<b>'.$langs->trans("ConsoGazNoConsistencyProblem").'</b>';
 		}
 	}else {
 		$nblinesintemptable = $importobject->nb_line_to_import();
@@ -439,24 +460,24 @@ if ($step==4 && $conf->use_javascript_ajax) {
 			setEventMessage($importobject->error, 'errors');
 		}
 		if ($nblinesintemptable>0) {
-			print '<b>'.$langs->trans("Bub2sNoConsistencyProblem").'</b>';
+			print '<b>'.$langs->trans("ConsoGazNoConsistencyProblem").'</b>';
 		} else {
 			$noimport=true;
-			print '<b style="color:red">'.img_picto($langs->trans("Bub2sErrorImport"), 'error').$langs->trans("Bub2sErrorImport").'</b>';
+			print '<b style="color:red">'.img_picto($langs->trans("ConsoGazErrorImport"), 'error').$langs->trans("ConsoGazErrorImport").'</b>';
 		}
 	}
 	
 	dol_fiche_end();
 	
 	print '<BR>';
-	if ($nblineko)	print '<b>'.$langs->trans("Bub2sNbLigneKO",$nblineko).'</b>';
+	if ($nblineko)	print '<b>'.$langs->trans("ConsoGazNbLigneKO",$nblineko).'</b>';
 	print '<BR>';
 	print '<BR>';
 	print '<table><tr>';
 	if (!$noimport) {
-		print '<td><a class="butAction" href="'.dol_buildpath('/b2sImport/importb2s/import.php',1).'?step=5">'.$langs->trans("Bub2sNextStep").'</a></td>';
+		print '<td><a class="butAction" href="'.$_SERVER["PHP_SELF"].'?step=5">'.$langs->trans("ConsoGazNextStep").'</a></td>';
 	}
-	print '<td><a class="butAction" href="'.dol_buildpath('/b2sImport/importb2s/import.php',1).'?step=1">'.$langs->trans("Bub2skoLoadFile").'</a></td>';
+	print '<td><a class="butAction" href="'.$_SERVER["PHP_SELF"].'?step=1">'.$langs->trans("ConsoGazLoadFileKO").'</a></td>';
 	print '</tr></table>';
 }
 
