@@ -57,6 +57,8 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 	var $driv_name;
 	var $lines = array ();
 	
+	var $lines_immat = array ();
+	
 	/**
 	 * Constructor
 	 * 
@@ -605,6 +607,45 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		
 		return 1;
 	}
+	
+	
+	/**
+	 * Load object in memory from the database
+	 *
+	 * @param int	$year	Year filter
+	 * @return int <0 if KO, >0 if OK
+	 */
+	function fetch_immat($year) {
+		
+		$this->lines_immat=array();
+		
+		
+		$sql = "SELECT";
+		$sql .= " DISTINCT veh.immat_veh";
+		
+		$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule";
+		$sql .= " WHERE date_format(t.dt_hr_take,'%Y') = '" . $year . "'";
+		$sql .= " ORDER BY veh.immat_veh DESC";
+		
+		dol_syslog ( get_class ( $this ) . "::fetch_immat sql=" . $sql, LOG_DEBUG );
+		$resql = $this->db->query ( $sql );
+		if ($resql) {
+			$num = $this->db->num_rows ( $resql );
+			while ( $obj = $this->db->fetch_object ( $resql ) ) {		
+				$this->lines_immat[]=$obj->immat_veh;
+			}
+				
+			$this->db->free ( $resql );
+			
+			return $num;
+		} else {
+			$this->error = "Error " . $this->db->lasterror ();
+			dol_syslog ( get_class ( $this ) . "::fetch_immat " . $this->error, LOG_ERR );
+			return - 1;
+		}
+	}
+	
 }
 
 

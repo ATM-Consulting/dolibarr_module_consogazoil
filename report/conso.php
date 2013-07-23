@@ -26,6 +26,8 @@ $res=@include("../../main.inc.php");					// For root directory
 if (! $res) $res=@include("../../../main.inc.php");	// For "custom" directory
 if (! $res) die("Include of main fails");
 
+require_once '../class/consogazoilvehtake.class.php';
+
 // Security check
 if (empty ( $user->rights->consogazoil->lire )) accessforbidden ();
 
@@ -34,6 +36,8 @@ $langs->load('consogazoil@consogazoil');
 $year_filter=GETPOST('yearfilter','int');
 
 llxHeader('',$langs->trans("ConsoGazReportConso"));
+
+$object = new ConsogazoilVehTake ( $db );
 
 //Build array t display
 if (empty($year_filter))
@@ -62,13 +66,28 @@ for ($month=1;$month<=12;$month++) {
 print '</tr>';
 
 
-$var=!$var;
-print '<tr'. $bc[$var].'>';
-print '</tr>';
+$result=$object->fetch_immat($year_filter);
+if ($result < 0) setEventMessage ( $object->error, 'errors' );
+
+foreach($object->lines_immat as $lineimat) {
+	$var=!$var;
+	print '<tr '.$bc[$var].'>';
+	print '<td>'.$lineimat.'</td>';
+	
+	$result=$object->fetch_report_conso($year_filter,$lineimat);
+	if ($result < 0) setEventMessage ( $object->error, 'errors' );
+	
+	foreach($object->lines_immat as $lineimat) {
+		print '<td>'.$lineimat.'</td>';
+	}
+	
+	
+	print '</tr>';
+}
 
 print '</table>';
 
-$form = new Form($db);
+
 
 llxFooter();
 $db->close();
