@@ -65,7 +65,7 @@ ConsoGazManageDriv=Gérer les conducteurs
 ConsoGazManageImport=Import fichier
 ConsoGazManageReport=Rapport
 ConsoGazReportConso=Suivie Conso. de carburant/véhicule/mois 
-ConsoGazReportTaken=Suivi Prise de carburant
+ConsoGazReportTakeNoPref=Suivie de prise en station non préférentielle
 ConsoGazReportKM=Suivi du KM/véhicule
 ConsoGazManageTake=Gérer les prises
 
@@ -96,6 +96,7 @@ ConsoGazVeh=Vehicule
 ConsoGazColKMCtrole=Km controle
 ConsoGazIsPrefNo=Station non préférentiel
 ConsoGazIsPrefYes=Station préférentiel
+ConsoGazServ=Service
 
 #
 # DataTable
@@ -169,3 +170,5 @@ ConsoGazSampleFile=Vous pouvez télécharger le fichier d'exemple pour connaitre
 ConsoGazState=Etat
 ConsoGazTrimestre=Trimestre
 ConsoGazSemestre=Semestre
+ConsoGazAvgMonth=Moyenne mensuelle
+ConsoGazLstKmKnown=Dernier kilométrage connu

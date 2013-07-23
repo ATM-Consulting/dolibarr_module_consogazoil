@@ -23,3 +23,5 @@ ALTER TABLE llx_consogazoil_vehtake ADD CONSTRAINT fk_consogazoil_vehtake_fk_sta
 
 ALTER TABLE llx_consogazoil_vehtake ADD INDEX idx_consogazoil_vehtake_fk_driver (fk_driver);
 ALTER TABLE llx_consogazoil_vehtake ADD CONSTRAINT fk_consogazoil_vehtake_fk_driver FOREIGN KEY (fk_driver)    REFERENCES llx_consogazoil_driver (rowid);
+
+ALTER TABLE llx_consogazoil_vehtake ADD INDEX idx_consogazoil_vehtake_dt_hr_take (dt_hr_take);

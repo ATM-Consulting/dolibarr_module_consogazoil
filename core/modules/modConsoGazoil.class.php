@@ -608,8 +608,8 @@ class modConsoGazoil extends DolibarrModules
         $this->menu[$r]=array(
         	'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoilreport',
         	'type'=>'left',
-        	'titre'=>'ConsoGazReportTaken',
-        	'url'=>'/consogazoil/report/taken.php',
+        	'titre'=>'ConsoGazReportKM',
+        	'url'=>'/consogazoil/report/km.php',
         	'langs'=>'consogazoil@consogazoil',
         	'position'=>121,
         	'enabled'=>'$conf->consogazoil->enabled',
@@ -621,8 +621,8 @@ class modConsoGazoil extends DolibarrModules
         $this->menu[$r]=array(
         	'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoilreport',
         	'type'=>'left',
-        	'titre'=>'ConsoGazReportKM',
-        	'url'=>'/consogazoil/report/km.php',
+        	'titre'=>'ConsoGazReportTakeNoPref',
+        	'url'=>'/consogazoil/report/takepref.php',
         	'langs'=>'consogazoil@consogazoil',
         	'position'=>122,
         	'enabled'=>'$conf->consogazoil->enabled',

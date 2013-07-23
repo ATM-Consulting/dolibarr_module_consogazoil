@@ -16,7 +16,7 @@
 */
 
 /**
- *      \file       consogazoil/report/conso.php
+ *      \file       consogazoil/report/km.php
  *      \ingroup    consogazoil
  *      \brief      Pages of report
  */
@@ -69,16 +69,10 @@ print '<td>'.$langs->trans('ConsoGazImmat').'</td>';
 for ($month=1;$month<=12;$month++) {
 	
 	print '<td>'.dol_print_date(dol_mktime(12,0,0,$month,1,$year_filter),"%B").'</td>';
-	print '<td>'.$langs->trans('ConsoGazState').'</td>';
-	if ((($month % 3)==0)) {
-		print '<td>'.$langs->trans('ConsoGazTrimestre').'</td>';
-	}
-	if ((($month % 6)==0)) {
-		print '<td>'.$langs->trans('ConsoGazSemestre').'</td>';
-	}
 }
 
-print '<td>'.$langs->trans('Total').'</td>';
+print '<td>'.$langs->trans('ConsoGazAvgMonth').'</td>';
+print '<td>'.$langs->trans('ConsoGazLstKmKnown').'</td>';
 print '</tr>';
 
 
@@ -90,7 +84,7 @@ foreach($object->lines_immat as $lineimat) {
 	print '<tr '.$bc[$var].'>';
 	print '<td>'.$lineimat.'</td>';
 	
-	$result=$object->fetch_report_conso($year_filter,$lineimat);
+	$result=$object->fetch_report_km($year_filter,$lineimat);
 	if ($result < 0) setEventMessage ( $object->error, 'errors' );
 	
 	foreach($object->lines_report as $linereport) {
@@ -112,16 +106,9 @@ print '<td>'.$langs->trans('ConsoGazServ').'</td>';
 for ($month=1;$month<=12;$month++) {
 
 	print '<td>'.dol_print_date(dol_mktime(12,0,0,$month,1,$year_filter),"%B").'</td>';
-	print '<td></td>';
-	if ((($month % 3)==0)) {
-		print '<td>'.$langs->trans('ConsoGazTrimestre').'</td>';
-	}
-	if ((($month % 6)==0)) {
-		print '<td>'.$langs->trans('ConsoGazSemestre').'</td>';
-	}
 }
 
-print '<td>'.$langs->trans('Total').'</td>';
+print '<td>'.$langs->trans('ConsoGazAvgMonth').'</td>';
 print '</tr>';
 
 
@@ -133,7 +120,7 @@ foreach($object->lines_service as $keyserv=>$lineserv) {
 	print '<tr '.$bc[$var].'>';
 	print '<td>'.$lineserv.'</td>';
 
-	$result=$object->fetch_report_conso_service($year_filter,$keyserv);
+	$result=$object->fetch_report_km_service($year_filter,$keyserv);
 	if ($result < 0) setEventMessage ( $object->error, 'errors' );
 
 	foreach($object->lines_report as $linereport) {
@@ -148,7 +135,7 @@ foreach($object->lines_service as $keyserv=>$lineserv) {
 $var=!$var;
 print '<tr '.$bc[$var].'>';
 print '<td>'.$langs->trans('Total').'</td>';
-$result=$object->fetch_report_conso_service($year_filter,0);
+$result=$object->fetch_report_km_service($year_filter,0);
 if ($result < 0) setEventMessage ( $object->error, 'errors' );
 
 foreach($object->lines_report as $linereport) {

@@ -260,4 +260,64 @@ class FormConsoGazoil extends Form {
 	
 		return $out;
 	}
+	
+	/**
+	 *	Return select filer with date of transaction
+	 *
+	 *  @param	string	$htmlname 		name of input
+	 *  @param	string	$selectedkey	selected default value
+	 *  @param	int		$custid 		customerid
+	 *  @param	int 	$shopid 		shopid
+	 *  @param	string 	$type 			'histoshop' or 'histocust' or ''
+	 *	@return	string					HTML select input
+	 */
+	function select_year_report($htmlname,$selectedkey) {
+	
+		global $langs;
+	
+		$date_array=array();
+	
+		$sql="SELECT DISTINCT date_format(dt_hr_take,'%Y') as yeardt from ".MAIN_DB_PREFIX."consogazoil_vehtake ";
+		$sql.=" ORDER BY date_format(dt_hr_take,'%Y')";
+	
+		dol_syslog(get_class($this)."::select_year_report sql=".$sql, LOG_DEBUG);
+		$resql=$this->db->query($sql);
+		if ($resql)
+		{
+			$i=0;
+			$num = $this->db->num_rows($resql);
+	
+			while ($i<$num)
+			{
+				$obj = $this->db->fetch_object($resql);
+	
+				if (!array_key_exists($keydate,$date_array)) {
+					$date_array[$obj->yeardt]=$obj->yeardt;
+				}
+	
+				$i++;
+			}
+	
+		}else {
+			$this->error="Error ".$this->db->lasterror();
+			dol_syslog(get_class($this)."::select_year_report ".$this->error, LOG_ERR);
+			return -1;
+		}
+	
+		if (count($date_array)>0) {
+			$out='<SELECT name="'.$htmlname.'">';
+			foreach ($date_array as $key=>$val) {
+	
+				$selected='';
+				if ($selectedkey==$key) {
+					$selected=' selected="selected" ';
+				}
+	
+				$out.='<OPTION value="'.$key.'"'.$selected.'>'.$val.'</OPTION>';
+			}
+			$out.='</SELECT>';
+		}
+	
+		return $out;
+	}
 }

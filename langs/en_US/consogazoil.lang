@@ -65,7 +65,7 @@ ConsoGazManageDriv=Manage Driver
 ConsoGazManageImport=Import
 ConsoGazManageReport=Reports
 ConsoGazReportConso=Conso. Gazoil/Vehicule/Month 
-ConsoGazReportTaken=Gazoil Taken
+ConsoGazReportTakeNoPref=Gazoil no prefered station
 ConsoGazReportKM=Km/Vehicule
 
 #
@@ -94,6 +94,7 @@ ConsoGazVeh=Vehicule
 ConsoGazColKMCtrole=Km controle
 ConsoGazIsPrefNo=No Prefered Station
 ConsoGazIsPrefYes=Prefered Station
+ConsoGazServ=Service
 
 #
 # DataTable
@@ -165,3 +166,5 @@ ConsoGazSampleFile=You can download the sample file to know the correct import f
 ConsoGazState=State
 ConsoGazTrimestre=Trimestre
 ConsoGazSemestre=Mid Year
+ConsoGazAvgMonth=Monthly average
+ConsoGazLstKmKnown=Lask Km know
