@@ -68,6 +68,7 @@ $(document).ready(function() {
 			<?php echo getTitleFieldOfList($langs->trans('ConsoGazVeh').' '.$langs->trans('ConsoGazImmat'),1); ?>
 			<?php echo getTitleFieldOfList($langs->trans('ConsoGazDriver').' '.$langs->trans('Ref'),1); ?>
 			<?php echo getTitleFieldOfList($langs->trans('ConsoGazDriver').' '.$langs->trans('Name'),1); ?>
+			<?php echo getTitleFieldOfList($langs->trans('ConsoGazConsoAvg'),1); ?>
 			<?php echo getTitleFieldOfList($langs->trans('ConsoGazColVol'),1); ?>
 			<?php echo getTitleFieldOfList($langs->trans('ConsoGazColKM'),1); ?>
 			<?php echo getTitleFieldOfList($langs->trans('ConsoGazColKMCtrole'),1); ?>

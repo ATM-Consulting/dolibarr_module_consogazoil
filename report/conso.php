@@ -54,13 +54,17 @@ for ($month=1;$month<=12;$month++) {
 	if ((($month % 3)==0) && $month!=12) {
 		print '<td>'.$langs->trans('ConsoGazTrimestre').'</td>';
 	}
-	if ((($month % 6)==0) && $month!=12) {
+	if ((($month % 6)==0)) {
 		print '<td>'.$langs->trans('ConsoGazSemestre').'</td>';
 	}
 }
 
 print '</tr>';
 
+
+$var=!$var;
+print '<tr'. $bc[$var].'>';
+print '</tr>';
 
 print '</table>';
 

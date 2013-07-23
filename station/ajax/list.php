@@ -162,9 +162,9 @@ while ( $aRow = $db->fetch_array ( $rResult ) ) {
 			$row [] = $object->getNomUrl ();
 		} else if ($aColumns [$i] == "is_pref") {
 			if (! empty ( $aRow [$aColumns [$i]] )) {
-				$row [] = img_picto ( $langs->trans ( 'ConsoGazIsPref' ), 'on' );
+				$row [] = img_picto ( $langs->trans ( 'ConsoGazIsPrefYes' ), dol_buildpath('/consogazoil/img/flaggreen.png',1),'',1 );
 			} else {
-				$row [] = img_picto ( $langs->trans ( 'ConsoGazIsPref' ), 'off' );
+				$row [] = img_picto ( $langs->trans ( 'ConsoGazIsPrefNo' ), dol_buildpath('/consogazoil/img/flagred.png',1),'',1 );
 			}
 		} else if ($aColumns [$i] != "rowid") {
 			$row [] = $aRow [$aColumns [$i]];

@@ -92,6 +92,8 @@ ConsoGazStation=Station
 ConsoGazDriver=Driver
 ConsoGazVeh=Vehicule
 ConsoGazColKMCtrole=Km controle
+ConsoGazIsPrefNo=No Prefered Station
+ConsoGazIsPrefYes=Prefered Station
 
 #
 # DataTable

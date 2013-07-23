@@ -685,14 +685,23 @@ class ConsogazoilImport {
 							$to_import = true;
 						} else if (! empty ( $obj->veh_conflit ) && ! empty ( $obj->veh_conflit_action )) {
 							if ($obj->veh_conflit_action == 'new') {
-								$to_import = true;
-								$vehicule->ref = $obj->carte_vehicule;
-								$vehicule->immat_veh = $obj->immat_veh;
-								$veh_id = $vehicule->create ( $user );
-								if ($veh_id < 0) {
-									$this->error = $vehicule->error;
-									dol_syslog ( get_class ( $this ) . "::import_data " . $vehicule->error, LOG_ERR );
+								//fetch to be sure that this station wasn't created before in the same import set
+								$result = $vehicule->fetch ( 0, $obj->carte_vehicule );
+								if ($result < 0) {
+									$this->error = $station->error;
+									dol_syslog ( get_class ( $this ) . "::import_data " . $station->error, LOG_ERR );
 									$error ++;
+								}
+								if (empty($vehicule->id)) {
+									$to_import = true;
+									$vehicule->ref = $obj->carte_vehicule;
+									$vehicule->immat_veh = $obj->immat_veh;
+									$veh_id = $vehicule->create ( $user );
+									if ($veh_id < 0) {
+										$this->error = $vehicule->error;
+										dol_syslog ( get_class ( $this ) . "::import_data " . $vehicule->error, LOG_ERR );
+										$error ++;
+									}
 								}
 							}
 						}
@@ -702,14 +711,23 @@ class ConsogazoilImport {
 							$to_import = true;
 						} else if (! empty ( $obj->station_conflit ) && ! empty ( $obj->station_conflit_action )) {
 							if ($obj->station_conflit_action == 'new') {
-								$to_import = true;
-								$station->ref = $obj->id_station;
-								$station->name = $obj->label_station;
-								$sta_id = $station->create ( $user );
-								if ($veh_id < 0) {
+								//fetch to be sure that this station wasn't created before in the same import set
+								$result = $station->fetch ( 0, $obj->id_station );
+								if ($result < 0) {
 									$this->error = $station->error;
 									dol_syslog ( get_class ( $this ) . "::import_data " . $station->error, LOG_ERR );
 									$error ++;
+								}
+								$to_import = true;
+								if (empty($station->id)) {
+									$station->ref = $obj->id_station;
+									$station->name = $obj->label_station;
+									$sta_id = $station->create ( $user );
+									if ($veh_id < 0) {
+										$this->error = $station->error;
+										dol_syslog ( get_class ( $this ) . "::import_data " . $station->error, LOG_ERR );
+										$error ++;
+									}
 								}
 							} else if ($obj->station_conflit_action == 'update') {
 								$result = $station->fetch ( 0, $obj->id_station );
