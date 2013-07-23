@@ -159,6 +159,7 @@ ConsoGazTraitementDoNothing=Do Nothing
 ConsoGazColTraitementUpdate=Update
 ConsoGazColTraitementNew=Create
 ConsoGazSampleFile=You can download the sample file to know the correct import format
+ConsoGazSendEmail=Send Email
 
 #
 # Report

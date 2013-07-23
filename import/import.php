@@ -203,6 +203,58 @@ if ($step == 5)
 	}
 }
 
+if ($step == 6 && $action='send') {
+
+	$langs->load('mails');
+			    
+	$sendto = GETPOST('sendto');
+			
+	if (!empty($sendto))
+	{
+		$from = GETPOST('fromname') . ' <' . GETPOST('frommail') .'>';
+		$message = GETPOST('message');
+
+		if (dol_strlen(GETPOST('subject'))) $subject=GETPOST('subject');
+		
+		// Send mail
+		require_once DOL_DOCUMENT_ROOT.'/core/class/CMailFile.class.php';
+		$mailfile = new CMailFile($subject,$sendto,$from,$message);
+		if ($mailfile->error)
+		{
+			setEventMessage($mailfile->error,'errors');
+			$error++;
+		}
+		else
+		{
+			$result=$mailfile->sendfile();
+			if ($result)
+			{
+				$mesg=$langs->trans('MailSuccessfulySent',$mailfile->getValidAddress($from,2),$mailfile->getValidAddress($sendto,2));	// Must not contains "
+				setEventMessage($mesg,'mesgs');
+			}
+			else
+			{
+				$langs->load("other");
+				if ($mailfile->error)
+				{
+					$mesg.=$langs->trans('ErrorFailedToSendMail',$from,$sendto);
+					$mesg.='<br>'.$mailfile->error;
+				}
+				else
+				{
+					$mesg.='No mail sent. Feature is disabled by option MAIN_DISABLE_ALL_MAILS';
+				}
+				setEventMessage($mesg,'errors');
+				$error++;
+			}
+		}
+	}else {
+		setEventMessage($langs->trans('ErrorMailRecipientIsEmpty'),'errors');
+		$error++;
+	}
+			
+}
+
 /*
  *	View
 */
@@ -481,8 +533,40 @@ if ($step==4 && $conf->use_javascript_ajax) {
 //Check data file look like
 if ($step==5) {
 	print_fiche_titre($langs->trans("InformationResult") .' : '. $filetoimport);
-	if (!$error) {print '<b>'.$langs->trans("InformationResultSuccess").'</b>';}
+	if (!$error) {
+		print '<b>'.$langs->trans("InformationResultSuccess").'</b>';
+	
+		print_titre($langs->trans('ConsoGazSendEmail'));
+		
+		// Cree l'objet formulaire mail
+		include_once DOL_DOCUMENT_ROOT.'/core/class/html.formmail.class.php';
+		$formmail = new FormMail($db);
+		$formmail->fromtype = 'user';
+		$formmail->fromid   = $user->id;
+		$formmail->fromname = $user->getFullName($langs);
+		$formmail->frommail = $user->email;
+		$formmail->withfrom=1;
+		$formmail->withto=$conf->global->GAZOIL_EMAIL_EXPLOIT;;
+		$formmail->withbody=1;
+		$formmail->withcancel=1;
+		$formmail->withtopic=$langs->trans('ConsoGazMailExploitSubject');
+		$formmail->withbody=$langs->trans('ConsoGazMailExploitMail');
+		$formmail->param['action']='send';
+		$formmail->param['returnurl']=$_SERVER["PHP_SELF"].'?step=6';
+		
+		// Show form
+		$formmail->show_form();
+	
+	
+	
+	}
 	dol_fiche_end();
+}
+
+if ($step==6) {
+	if (!$error) {
+		print '<b>'.$langs->trans("InformationResultSuccess").'</b>';
+	}
 }
 
 llxFooter();
