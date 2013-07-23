@@ -124,32 +124,32 @@ if ($action == "create_confirm") {
 } else if ($action == "edit_confirm") {
 	if (empty ( $id_veh )) {
 		setEventMessage ( $langs->trans ( "ErrorFieldRequired", $langs->transnoentitiesnoconv ( "ConsoGazVeh" ) ), 'errors' );
-		$action = 'create';
+		$action = 'edit';
 		$error ++;
 	}
 	if (empty ( $id_sta )) {
 		setEventMessage ( $langs->trans ( "ErrorFieldRequired", $langs->transnoentitiesnoconv ( "ConsoGazStation" ) ), 'errors' );
-		$action = 'create';
+		$action = 'edit';
 		$error ++;
 	}
 	if (empty ( $id_driv )) {
 		setEventMessage ( $langs->trans ( "ErrorFieldRequired", $langs->transnoentitiesnoconv ( "ConsoGazDriver" ) ), 'errors' );
-		$action = 'create';
+		$action = 'edit';
 		$error ++;
 	}
 	if (empty ( $vol )) {
 		setEventMessage ( $langs->trans ( "ErrorFieldRequired", $langs->transnoentitiesnoconv ( "ConsoGazColVol" ) ), 'errors' );
-		$action = 'create';
+		$action = 'edit';
 		$error ++;
 	}
 	if (empty ( $km_declare )) {
 		setEventMessage ( $langs->trans ( "ErrorFieldRequired", $langs->transnoentitiesnoconv ( "ConsoGazColKM" ) ), 'errors' );
-		$action = 'create';
+		$action = 'edit';
 		$error ++;
 	}
 	if (empty ( $dt_take )) {
 		setEventMessage ( $langs->trans ( "ErrorFieldRequired", $langs->transnoentitiesnoconv ( "Date" ) ), 'errors' );
-		$action = 'create';
+		$action = 'edit';
 		$error ++;
 	}
 	if (empty ( $error )) {

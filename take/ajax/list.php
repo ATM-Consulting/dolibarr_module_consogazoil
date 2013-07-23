@@ -243,9 +243,9 @@ while ( $aRow = $db->fetch_array ( $rResult ) ) {
 	if (! empty ( $aRow [8] ) &&
 			 ! empty ( $aRow [7] )) {
 		if (($aRow [7] - $aRow [8]) < $conf->global->GAZOIL_THRESOLD_KM) {
-			$km_ctrl_picto = img_picto ( $langs->trans ( 'ConsoGazIsPref' ), dol_buildpath ( '/consogazoil/img/flaggreen.png', 1 ), '', 1 );
+			$km_ctrl_picto = img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flaggreen.png', 1 ), '', 1 );
 		} else {
-			$km_ctrl_picto = img_picto ( $langs->trans ( 'ConsoGazIsPref' ), dol_buildpath ( '/consogazoil/img/flagred.png', 1 ), '', 1 );
+			$km_ctrl_picto = img_picto ( 'KO', dol_buildpath ( '/consogazoil/img/flagred.png', 1 ), '', 1 );
 		}
 	}
 	// km controle

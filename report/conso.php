@@ -55,7 +55,7 @@ for ($month=1;$month<=12;$month++) {
 	
 	print '<td>'.dol_print_date(dol_mktime(12,0,0,$month,1,$year_filter),"%B").'</td>';
 	print '<td>'.$langs->trans('ConsoGazState').'</td>';
-	if ((($month % 3)==0) && $month!=12) {
+	if ((($month % 3)==0)) {
 		print '<td>'.$langs->trans('ConsoGazTrimestre').'</td>';
 	}
 	if ((($month % 6)==0)) {
@@ -63,6 +63,7 @@ for ($month=1;$month<=12;$month++) {
 	}
 }
 
+print '<td>'.$langs->trans('Total').'</td>';
 print '</tr>';
 
 
@@ -77,8 +78,8 @@ foreach($object->lines_immat as $lineimat) {
 	$result=$object->fetch_report_conso($year_filter,$lineimat);
 	if ($result < 0) setEventMessage ( $object->error, 'errors' );
 	
-	foreach($object->lines_immat as $lineimat) {
-		print '<td>'.$lineimat.'</td>';
+	foreach($object->lines_report as $linereport) {
+		print '<td>'.$linereport.'</td>'."\n";
 	}
 	
 	

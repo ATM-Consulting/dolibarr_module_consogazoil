@@ -532,7 +532,7 @@ class ConsogazoilService extends CommonObjectConsoGazoil
 	
 		$url = dol_buildpath('/consogazoil/service/card.php',1).'?id='.$this->id;
 	
-		$label=$langs->trans("Show").': '.$this->ref;
+		$label=$langs->trans("Show").': '.$this->ref.'-'.$this->label;
 	
 		$result='<a href="'.$url.'">'.$label.'</a>';
 	
