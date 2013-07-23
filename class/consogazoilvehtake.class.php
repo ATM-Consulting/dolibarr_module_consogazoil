@@ -61,6 +61,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 	var $lines_immat = array ();
 	var $lines_report=array();
 	var $lines_service=array();
+	var $lines_driver=array();
 		
 	/**
 	 * Constructor
@@ -652,7 +653,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 	}
 	
 	/**
-	 * Populate lines_immat with immat
+	 * Populate lines_service with service
 	 *
 	 * @param int	$year	Year filter
 	 * @return int <0 if KO, >0 if OK
@@ -688,6 +689,91 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 			dol_syslog ( get_class ( $this ) . "::fetch_service " . $this->error, LOG_ERR );
 			return - 1;
 		}
+	}
+	
+	/**
+	 * Populate lines_driver with driver
+	 *
+	 * @param int	$year	Year filter
+	 * @return int <0 if KO, >0 if OK
+	 */
+	function fetch_driver($year) {
+	
+		$this->lines_driver=array();
+	
+	
+		$sql = "SELECT";
+		$sql .= " DISTINCT driv.rowid,driv.ref,driv.name";
+	
+		$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_driver as driv ON driv.rowid=t.fk_driver";
+		$sql .= " WHERE date_format(t.dt_hr_take,'%Y') = '" . $year . "'";
+		$sql .= " ORDER BY driv.ref";
+	
+		dol_syslog ( get_class ( $this ) . "::fetch_driver sql=" . $sql, LOG_DEBUG );
+		$resql = $this->db->query ( $sql );
+		if ($resql) {
+			$num = $this->db->num_rows ( $resql );
+			while ( $obj = $this->db->fetch_object ( $resql ) ) {
+				$this->lines_driver[$obj->rowid]=$obj->ref.'-'.$obj->name;
+			}
+	
+			$this->db->free ( $resql );
+	
+			return $num;
+		} else {
+			$this->error = "Error " . $this->db->lasterror ();
+			dol_syslog ( get_class ( $this ) . "::fetch_driver " . $this->error, LOG_ERR );
+			return - 1;
+		}
+	}
+	
+	/**
+	 * Load array to display in reports
+	 *
+	 * @param int		$year		Year filter
+	 * @param string	$idservice	Idservice
+	 * @return int <0 if KO, >0 if OK
+	 */
+	function fetch_report_takepref($year,$iddriv) {
+		//This array will be populated as report
+		//$this->lines_report[1]=nb take no pref January
+		//$this->lines_report[2]=nb take no pref Febuary
+		//...
+		
+		$this->lines_report=array();
+		
+		//Populate with 0 if for each month
+		for ($month=1;$month<=12;$month++) {
+			$this->lines_report[$month]=0;
+		}
+		
+		$sql = "SELECT";
+		$sql .= " count(t.rowid) as nbnopref,";
+		$sql .= " date_format(t.dt_hr_take,'%m') as dtmonth";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_driver as driv ON driv.rowid=t.fk_driver AND driv.rowid=".$iddriv;
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_station as sta ON sta.rowid=t.fk_station AND (sta.is_pref=0 OR sta.is_pref IS NULL)";
+		$sql .= " WHERE date_format(t.dt_hr_take,'%Y') = '" . $year . "'";
+		$sql .= " GROUP BY date_format(t.dt_hr_take,'%m')";
+		
+		dol_syslog ( get_class ( $this ) . "::fetch_report_takepref sql=" . $sql, LOG_DEBUG );
+		$resql = $this->db->query ( $sql );
+		if ($resql) {
+			while($obj = $this->db->fetch_object ( $resql )) {
+				$this->lines_report[intval($obj->dtmonth)]=$obj->nbnopref;
+			}
+		} else {
+			$this->error = "Error " . $this->db->lasterror ();
+			dol_syslog ( get_class ( $this ) . "::fetch_report_takepref " . $this->error, LOG_ERR );
+			return - 1;
+		}
+		
+		for ($month=1;$month<=12;$month++) {
+			$this->lines_report[13]+=$this->lines_report[$month];
+		}
+		
+		
 	}
 	
 	

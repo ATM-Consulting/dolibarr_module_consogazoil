@@ -16,7 +16,7 @@
 */
 
 /**
- *      \file       consogazoil/report/km.php
+ *      \file       consogazoil/report/takepref.php
  *      \ingroup    consogazoil
  *      \brief      Pages of report
  */
@@ -36,7 +36,7 @@ $langs->load('consogazoil@consogazoil');
 
 $year_filter=GETPOST('yearfilter','int');
 
-llxHeader('',$langs->trans("ConsoGazReportKM"));
+llxHeader('',$langs->trans("ConsoGazReportTakeNoPref"));
 
 $object = new ConsogazoilVehTake ( $db );
 
@@ -47,7 +47,7 @@ if (empty($year_filter))
 	$year_filter = strftime("%Y",dol_now());
 
 
-print_fiche_titre ( $langs->trans ( 'ConsoGazReportKM' ), '', dol_buildpath ( '/consogazoil/img/object_consogazoil.png', 1 ), 1 );
+print_fiche_titre ( $langs->trans ( 'ConsoGazReportTakeNoPref' ), '', dol_buildpath ( '/consogazoil/img/object_consogazoil.png', 1 ), 1 );
 
 print '<form action="'.$_SERVER["PHP_SELF"].'" method="POST" name="filterdate">'."\n";
 print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'" / >';
@@ -64,86 +64,36 @@ print '</form>';
 
 print '<table class="noborder" width="100%">';
 print '<tr class="liste_titre">';
-print '<td>'.$langs->trans('ConsoGazImmat').'</td>';
+print '<td>'.$langs->trans('ConsoGazDriver').'</td>';
 
 for ($month=1;$month<=12;$month++) {
 	
 	print '<td>'.dol_print_date(dol_mktime(12,0,0,$month,1,$year_filter),"%B").'</td>';
 }
 
-print '<td>'.$langs->trans('ConsoGazAvgMonth').'</td>';
-print '<td>'.$langs->trans('ConsoGazLstKmKnown').'</td>';
-print '</tr>';
-
-
-$result=$object->fetch_immat($year_filter);
-if ($result < 0) setEventMessage ( $object->error, 'errors' );
-
-foreach($object->lines_immat as $lineimat) {
-	$var=!$var;
-	print '<tr '.$bc[$var].'>';
-	print '<td>'.$lineimat.'</td>';
-	
-	$result=$object->fetch_report_km($year_filter,$lineimat);
-	if ($result < 0) setEventMessage ( $object->error, 'errors' );
-	
-	foreach($object->lines_report as $linereport) {
-		print '<td>'.$linereport.'</td>'."\n";
-	}
-	
-	
-	print '</tr>';
-}
-
-print '</table>';
-
-print '<br>';
-
-print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre">';
-print '<td>'.$langs->trans('ConsoGazServ').'</td>';
-
-for ($month=1;$month<=12;$month++) {
-
-	print '<td>'.dol_print_date(dol_mktime(12,0,0,$month,1,$year_filter),"%B").'</td>';
-}
-
-print '<td>'.$langs->trans('ConsoGazAvgMonth').'</td>';
-print '</tr>';
-
-
-$result=$object->fetch_service($year_filter);
-if ($result < 0) setEventMessage ( $object->error, 'errors' );
-
-foreach($object->lines_service as $keyserv=>$lineserv) {
-	$var=!$var;
-	print '<tr '.$bc[$var].'>';
-	print '<td>'.$lineserv.'</td>';
-
-	$result=$object->fetch_report_km_service($year_filter,$keyserv);
-	if ($result < 0) setEventMessage ( $object->error, 'errors' );
-
-	foreach($object->lines_report as $linereport) {
-		print '<td>'.$linereport.'</td>'."\n";
-	}
-
-
-	print '</tr>';
-}
-
-//Total soc
-$var=!$var;
-print '<tr '.$bc[$var].'>';
 print '<td>'.$langs->trans('Total').'</td>';
-$result=$object->fetch_report_km_service($year_filter,0);
+print '</tr>';
+
+
+$result=$object->fetch_driver($year_filter);
 if ($result < 0) setEventMessage ( $object->error, 'errors' );
 
-foreach($object->lines_report as $linereport) {
-	print '<td>'.$linereport.'</td>'."\n";
+foreach($object->lines_driver as $key=>$val) {
+	$var=!$var;
+	print '<tr '.$bc[$var].'>';
+	print '<td>'.$val.'</td>';
+	
+	$result=$object->fetch_report_takepref($year_filter,$key);
+	if ($result < 0) setEventMessage ( $object->error, 'errors' );
+	
+	foreach($object->lines_report as $linereport) {
+		print '<td>'.$linereport.'</td>'."\n";
+	}
+	
+	print '</tr>';
 }
 
 print '</table>';
-
 
 llxFooter();
 $db->close();
