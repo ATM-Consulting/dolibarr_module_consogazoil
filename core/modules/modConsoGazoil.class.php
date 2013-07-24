@@ -61,7 +61,7 @@ class modConsoGazoil extends DolibarrModules
         // (where XXX is value of numeric property 'numero' of module)
         $this->description = "Description of module ConsoGazoil";
         // Possible values for version are: 'development', 'experimental' or version
-        $this->version = '0.1';
+        $this->version = '1.0';
         // Key used in llx_const table to save module status enabled/disabled
         // (where MYMODULE is value of property name of module in uppercase)
         $this->const_name = 'MAIN_MODULE_' . strtoupper($this->name);
@@ -630,6 +630,33 @@ class modConsoGazoil extends DolibarrModules
         	'target'=>'',
         	'user'=>2
         );
+       /* $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil',
+        	'type'=>'left',
+        	'titre'=>'Admin',
+        	'leftmenu'=>'consogazoiladmin',
+        	'url'=>'/consogazoil/admin/admin_consogazoil.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>123,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->lire',
+        	'target'=>'',
+        	'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
+        	'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoiladmin',
+        	'type'=>'left',
+        	'titre'=>'Admin',
+        	'url'=>'/consogazoil/admin/admin_consogazoil.php',
+        	'langs'=>'consogazoil@consogazoil',
+        	'position'=>124,
+        	'enabled'=>'$conf->consogazoil->enabled',
+        	'perms'=>'$user->rights->consogazoil->lire',
+        	'target'=>'',
+        	'user'=>2
+        );*/
         //
         // Example to declare a Left Menu entry into an existing Top menu entry:
         //$this->menu[$r]=array(

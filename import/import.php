@@ -69,7 +69,7 @@ if ($step == 2 && $action=='sendit')
 		else
 		{
 			$langs->load("errors");
-			setEventMessage($langs->trans("Bub2sMissingfile"), 'errors');
+			setEventMessage($langs->trans("Missingfile"), 'errors');
 			setEventMessage($langs->trans("ErrorFailedToSaveFile"), 'errors');
 		}
 	}

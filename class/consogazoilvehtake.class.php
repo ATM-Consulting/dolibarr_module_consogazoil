@@ -649,7 +649,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 			return - 1;
 		}
 		
-		//$this->lines_immat[]='RD7013';
+		//$this->lines_immat[]='RD7021';
 	}
 	
 	/**
@@ -979,14 +979,15 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 			$debug_string.=' $arry_last_km_prevmonth['.$month.']=' . $arry_last_km_prevmonth[$month];
 			
 			if (($arry_last_km_month[$month]-$arry_last_km_prevmonth[$month]) != 0) {
-		
-				
-		
 				$array_consoavg_month[$month]=($arry_sum_vol_month[$month]-$arry_last_vol_month[$month]+$arry_last_vol_prevmonth[$month])/(($arry_last_km_month[$month]-$arry_last_km_prevmonth[$month])/100);
 			}else {
-				$array_consoavg_month[$month]='0';
+				$array_consoavg_month[$month]=0;
 			}
 			$array_consoavg_month[$month]=price2num($array_consoavg_month[$month],2,1);
+			
+			if ($array_consoavg_month[$month]<0) {
+				$array_consoavg_month[$month]=0;
+			}
 			
 			$debug_string.=' $array_consoavg_month[$month]['.$month.']=' . $array_consoavg_month[$month];
 			dol_syslog ( get_class ( $this ) . '::fetch_report_conso_service '.$debug_string, LOG_DEBUG );
@@ -1274,19 +1275,27 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		for ($month=1;$month<=12;$month++) {
 			if (($arry_last_km_month[$month]-$arry_last_km_prevmonth[$month]) != 0) {
 				
-				$debug_string=' $immat='.$immat;
-				$debug_string.=' $arry_sum_vol_month['.$month.']=' . $arry_sum_vol_month[$month];
-				$debug_string.=' $arry_last_vol_month['.$month.']=' . $arry_last_vol_month[$month];
-				$debug_string.=' $arry_last_vol_prevmonth['.$month.']=' . $arry_last_vol_prevmonth[$month];
-				$debug_string.=' $arry_last_km_month['.$month.']=' . $arry_last_km_month[$month];
-				$debug_string.=' $arry_last_km_prevmonth['.$month.']=' . $arry_last_km_prevmonth[$month];
 				
-				dol_syslog ( get_class ( $this ) . '::fetch_report_conso '.$debug_string, LOG_DEBUG );
 				$array_consoavg_month[$month]=($arry_sum_vol_month[$month]-$arry_last_vol_month[$month]+$arry_last_vol_prevmonth[$month])/(($arry_last_km_month[$month]-$arry_last_km_prevmonth[$month])/100);
 			}else {
 				$array_consoavg_month[$month]='0';
 			}
 			$array_consoavg_month[$month]=price2num($array_consoavg_month[$month],2,1);
+			
+			if ($array_consoavg_month[$month]<0) {
+				$array_consoavg_month[$month]=0;
+			}
+			
+			$debug_string=' $immat='.$immat;
+			$debug_string.=' $arry_sum_vol_month['.$month.']=' . $arry_sum_vol_month[$month];
+			$debug_string.=' $arry_last_vol_month['.$month.']=' . $arry_last_vol_month[$month];
+			$debug_string.=' $arry_last_vol_prevmonth['.$month.']=' . $arry_last_vol_prevmonth[$month];
+			$debug_string.=' $arry_last_km_month['.$month.']=' . $arry_last_km_month[$month];
+			$debug_string.=' $arry_last_km_prevmonth['.$month.']=' . $arry_last_km_prevmonth[$month];
+			
+			$debug_string.=' $array_consoavg_month['.$month.']=' . $array_consoavg_month[$month];
+			
+			dol_syslog ( get_class ( $this ) . '::fetch_report_conso '.$debug_string, LOG_DEBUG );
 		}
 		
 		//get avg conso vehicule
