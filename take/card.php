@@ -405,6 +405,14 @@ else {
 	print '</tr>';
 	
 	print '<td  width="20%">';
+	print $langs->trans ( 'ConsoGazConsoAvg' );
+	print '</td>';
+	print '<td>';
+	print $object->conso_calc;
+	print '</td>';
+	print '</tr>';
+	
+	print '<td  width="20%">';
 	print $langs->trans ( 'ConsoGazColKMCtrole' );
 	print '</td>';
 	print '<td>';

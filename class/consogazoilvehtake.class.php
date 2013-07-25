@@ -228,7 +228,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 				$this->fk_vehicule = $obj->fk_vehicule;
 				$this->fk_station = $obj->fk_station;
 				$this->fk_driver = $obj->fk_driver;
-				$this->dt_hr_take = $obj->dt_hr_take;
+				$this->dt_hr_take = $this->db->jdate ( $obj->dt_hr_take );
 				$this->volume = $obj->volume;
 				$this->km_declare = $obj->km_declare;
 				$this->km_controle = $obj->km_controle;
@@ -554,13 +554,15 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 	 * Calculate the average consomation per line
 	 * 
 	 * @param user $user
+	 * @param int	$calcnext	launch calc next conso
 	 * @return int <0 if KO, >0 if OK
 	 */
-	function calc_conso($user) {
+	function calc_conso($user,$calcnext=1) {
 		global $conf;
 		
 		// Find immat of current vehicule
 		$sql = "SELECT immat_veh FROM " . MAIN_DB_PREFIX . "consogazoil_vehicule WHERE rowid=" . $this->fk_vehicule;
+		dol_syslog ( get_class ( $this ) . "::calc_conso sql=" . $sql, LOG_DEBUG );
 		$resql = $this->db->query ( $sql );
 		if ($resql) {
 			if ($this->db->num_rows ( $resql )) {
@@ -588,6 +590,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 			$sql .= " WHERE t.fk_vehicule IN (SELECT rowid FROM " . MAIN_DB_PREFIX . "consogazoil_vehicule WHERE immat_veh='" . $immat_veh . "')";
 			$sql .= " AND t.dt_hr_take < '" . $this->db->idate ($this->dt_hr_take) . "'";
 			$sql .= " ORDER BY t.dt_hr_take DESC";
+			$sql .= " LIMIT 1";
 			
 			dol_syslog ( get_class ( $this ) . "::calc_conso sql=" . $sql, LOG_DEBUG );
 			$resql = $this->db->query ( $sql );
@@ -595,9 +598,20 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 				if ($this->db->num_rows ( $resql )) {
 					$obj = $this->db->fetch_object ( $resql );
 					
-					if (! empty ( $obj->volume ) && !empty($this->km_declare) && !empty($obj->km_declare)) {
-						$this->conso_calc = price2num(($this->km_declare - $obj->km_declare) / $obj->volume,2,1);
-						$this->update ( $user, 1 );
+					dol_syslog ( get_class ( $this ) . '::calc_conso $this->volume=' . $this->volume .'/(($this->km_declare='.$this->km_declare.'-$obj->km_declare='.$obj->km_declare.') / 100)', LOG_DEBUG );
+					
+					if (! empty ( $obj->volume ) && !empty($this->km_declare) && !empty($obj->km_declare) && ($this->km_declare - $obj->km_declare)!=0) {
+						$this->conso_calc = price2num(($this->volume / (($this->km_declare - $obj->km_declare) / 100)) ,2,1);
+					} else {
+						$this->conso_calc = 0;
+					}
+					if ($this->conso_calc<0) {
+						$this->conso_calc=0;
+					}
+					$result=$this->update ( $user, 1 );
+					if ($result<0) {
+						dol_syslog ( get_class ( $this ) . "::calc_conso " . $this->error, LOG_ERR );
+						return - 1;
 					}
 				}
 				$this->db->free ( $resql );
@@ -607,6 +621,46 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 				dol_syslog ( get_class ( $this ) . "::calc_conso " . $this->error, LOG_ERR );
 				return - 1;
 			}
+			
+			if (!empty($calcnext)) {
+				//Find the next take to recalculate the avg conso
+				$sql = "SELECT";
+				$sql .= " t.rowid";
+					
+				$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
+				$sql .= " WHERE t.fk_vehicule IN (SELECT rowid FROM " . MAIN_DB_PREFIX . "consogazoil_vehicule WHERE immat_veh='" . $immat_veh . "')";
+				$sql .= " AND t.dt_hr_take > '" . $this->db->idate ($this->dt_hr_take) . "'";
+				$sql .= " ORDER BY t.dt_hr_take ASC";
+				$sql .= " LIMIT 1";
+				dol_syslog ( get_class ( $this ) . "::calc_conso sql=" . $sql, LOG_DEBUG );
+				$resql = $this->db->query ( $sql );
+				if ($resql) {
+					if ($this->db->num_rows ( $resql )) {
+						$obj = $this->db->fetch_object ( $resql );
+							
+						$nexttake = new ConsogazoilVehTake($this->db);
+						$result=$nexttake->fetch($obj->rowid);
+						if ($result<0) {
+							dol_syslog ( get_class ( $this ) . "::calc_conso " . $this->error, LOG_ERR );
+							return - 1;
+						}
+						if (!empty($nexttake->id)) {
+							$result=$nexttake->calc_conso($user,0);
+							if ($result<0) {
+								dol_syslog ( get_class ( $this ) . "::calc_conso " . $this->error, LOG_ERR );
+								return - 1;
+							}
+						}
+					}
+					$this->db->free ( $resql );
+				
+				} else {
+					$this->error = "Error " . $this->db->lasterror ();
+					dol_syslog ( get_class ( $this ) . "::calc_conso " . $this->error, LOG_ERR );
+					return - 1;
+				}
+			}
+			
 		}
 		
 		return 1;
@@ -970,18 +1024,10 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		
 		
 		for ($month=1;$month<=12;$month++) {
-			
-			$debug_string=' $idservice='.$idservice;
-			$debug_string.=' $arry_sum_vol_month['.$month.']=' . $arry_sum_vol_month[$month];
-			$debug_string.=' $arry_last_vol_month['.$month.']=' . $arry_last_vol_month[$month];
-			$debug_string.=' $arry_last_vol_prevmonth['.$month.']=' . $arry_last_vol_prevmonth[$month];
-			$debug_string.=' $arry_last_km_month['.$month.']=' . $arry_last_km_month[$month];
-			$debug_string.=' $arry_last_km_prevmonth['.$month.']=' . $arry_last_km_prevmonth[$month];
-			
 			if (($arry_last_km_month[$month]-$arry_last_km_prevmonth[$month]) != 0) {
 				$array_consoavg_month[$month]=($arry_sum_vol_month[$month]-$arry_last_vol_month[$month]+$arry_last_vol_prevmonth[$month])/(($arry_last_km_month[$month]-$arry_last_km_prevmonth[$month])/100);
 			}else {
-				$array_consoavg_month[$month]=0;
+				$array_consoavg_month[$month]='0';
 			}
 			$array_consoavg_month[$month]=price2num($array_consoavg_month[$month],2,1);
 			
@@ -989,8 +1035,16 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 				$array_consoavg_month[$month]=0;
 			}
 			
-			$debug_string.=' $array_consoavg_month[$month]['.$month.']=' . $array_consoavg_month[$month];
-			dol_syslog ( get_class ( $this ) . '::fetch_report_conso_service '.$debug_string, LOG_DEBUG );
+			$debug_string=' $immat='.$immat;
+			$debug_string.=' $arry_sum_vol_month['.$month.']=' . $arry_sum_vol_month[$month];
+			$debug_string.=' $arry_last_vol_month['.$month.']=' . $arry_last_vol_month[$month];
+			$debug_string.=' $arry_last_vol_prevmonth['.$month.']=' . $arry_last_vol_prevmonth[$month];
+			$debug_string.=' $arry_last_km_month['.$month.']=' . $arry_last_km_month[$month];
+			$debug_string.=' $arry_last_km_prevmonth['.$month.']=' . $arry_last_km_prevmonth[$month];
+			
+			$debug_string.=' $array_consoavg_month['.$month.']=' . $array_consoavg_month[$month];
+			
+			dol_syslog ( get_class ( $this ) . '::fetch_report_conso '.$debug_string, LOG_DEBUG );
 		}
 		
 		
@@ -1274,8 +1328,6 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		
 		for ($month=1;$month<=12;$month++) {
 			if (($arry_last_km_month[$month]-$arry_last_km_prevmonth[$month]) != 0) {
-				
-				
 				$array_consoavg_month[$month]=($arry_sum_vol_month[$month]-$arry_last_vol_month[$month]+$arry_last_vol_prevmonth[$month])/(($arry_last_km_month[$month]-$arry_last_km_prevmonth[$month])/100);
 			}else {
 				$array_consoavg_month[$month]='0';
