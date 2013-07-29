@@ -879,8 +879,8 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		
 		//Get sum volume on a periode
 		$sql = "SELECT";
-		$sql .= " sum(t.volume) as sumvol,";
-		$sql .= " date_format(t.dt_hr_take,'%m') as dtmonth";
+		$sql .= " sum(t.volume) as sumvol";
+		$sql .= " ,date_format(t.dt_hr_take,'%m') as dtmonth";
 		$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
 		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule";
 		if (!empty($idservice)) $sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehiculeservice as servveh ON servveh.fk_vehicule=t.fk_vehicule";
@@ -905,22 +905,22 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		foreach($arry_sum_vol_month as $key=>$val) {
 			$firstday_month=dol_mktime(0, 0, 0, $key, 1, $year);
 			$sql = "SELECT";
-			$sql .= " t.volume as vollasttake";
+			$sql .= " sum(t.volume) as vollasttake";
 			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule";
 			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehiculeservice as servveh ON servveh.fk_vehicule=t.fk_vehicule";
 			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_service as serv ON serv.rowid=servveh.fk_service AND serv.rowid=".$idservice;
 			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
 			if (!empty($idservice))$sql .= " AND t.dt_hr_take BETWEEN servveh.date_start AND servveh.date_end";
-			$sql .= " ORDER BY t.dt_hr_take desc ";
-			$sql .= "LIMIT 1 ";
+			$sql .= " AND t.dt_hr_take= (SELECT MAX(dt_hr_take) FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake WHERE date_format(dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			$sql .= " AND fk_vehicule=veh.rowid)";
 			
 			dol_syslog ( get_class ( $this ) . "::fetch_report_conso_service sql=" . $sql, LOG_DEBUG );
 			$resql = $this->db->query ( $sql );
 			if ($resql) {
-				$obj = $this->db->fetch_object ( $resql );
-				$arry_last_vol_month[$key]=$obj->vollasttake;
-				
+				while($obj = $this->db->fetch_object ( $resql )) {
+					$arry_last_vol_month[$key]+=$obj->vollasttake;
+				}
 			} else {
 				$this->error = "Error " . $this->db->lasterror ();
 				dol_syslog ( get_class ( $this ) . "::fetch_report_conso_service " . $this->error, LOG_ERR );
@@ -934,21 +934,22 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 			$firstday_prevmonth=dol_time_plus_duree($firstday_month,-1,m);
 			
 			$sql = "SELECT";
-			$sql .= " t.volume as vollasttakeprevmonth ";
+			$sql .= " sum(t.volume) as vollasttakeprevmonth ";
 			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule";
 			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehiculeservice as servveh ON servveh.fk_vehicule=t.fk_vehicule";
 			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_service as serv ON serv.rowid=servveh.fk_service AND serv.rowid=".$idservice;
 			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_prevmonth,'%Y-%m') . "'";
 			if (!empty($idservice))$sql .= " AND t.dt_hr_take BETWEEN servveh.date_start AND servveh.date_end";
-			$sql .= " ORDER BY t.dt_hr_take desc ";
-			$sql .= "LIMIT 1 ";
+			$sql .= " AND t.dt_hr_take=(SELECT MAX(dt_hr_take) FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake WHERE date_format(dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_prevmonth,'%Y-%m') . "'";
+			$sql .= " AND fk_vehicule=veh.rowid)";
 			
 			dol_syslog ( get_class ( $this ) . "::fetch_report_conso_service sql=" . $sql, LOG_DEBUG );
 			$resql = $this->db->query ( $sql );
 			if ($resql) {
-				$obj = $this->db->fetch_object ( $resql );
-				$arry_last_vol_prevmonth[$key]=$obj->vollasttakeprevmonth;
+				while($obj = $this->db->fetch_object ( $resql )) {
+					$arry_last_vol_prevmonth[$key]+=$obj->vollasttakeprevmonth;
+				}
 			} else {
 				$this->error = "Error " . $this->db->lasterror ();
 				dol_syslog ( get_class ( $this ) . "::fetch_report_conso_service " . $this->error, LOG_ERR );
@@ -960,22 +961,22 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		foreach($arry_sum_vol_month as $key=>$val) {
 			$firstday_month=dol_mktime(0, 0, 0, $key, 1, $year);
 			$sql = "SELECT";
-			$sql .= " t.km_declare as kmlasttake,";
-			$sql .= " date_format(t.dt_hr_take,'%m') as dtmonth";
+			$sql .= " sum(t.km_declare) as kmlasttake";
 			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule";
 			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehiculeservice as servveh ON servveh.fk_vehicule=t.fk_vehicule";
 			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_service as serv ON serv.rowid=servveh.fk_service AND serv.rowid=".$idservice;
 			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
 			if (!empty($idservice))$sql .= " AND t.dt_hr_take BETWEEN servveh.date_start AND servveh.date_end";
-			$sql .= " ORDER BY t.dt_hr_take desc ";
-			$sql .= "LIMIT 1 ";
+			$sql .= " AND t.dt_hr_take=(SELECT MAX(dt_hr_take) FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake WHERE date_format(dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			$sql .= " AND fk_vehicule=veh.rowid)";
 			
 			dol_syslog ( get_class ( $this ) . "::fetch_report_conso_service sql=" . $sql, LOG_DEBUG );
 			$resql = $this->db->query ( $sql );
 			if ($resql) {
-				$obj = $this->db->fetch_object ( $resql );
-				$arry_last_km_month[intval($obj->dtmonth)]=$obj->kmlasttake;
+				while($obj = $this->db->fetch_object ( $resql )) {
+					$arry_last_km_month[$key]+=$obj->kmlasttake;
+				}
 			} else {
 				$this->error = "Error " . $this->db->lasterror ();
 				dol_syslog ( get_class ( $this ) . "::fetch_report_conso_service " . $this->error, LOG_ERR );
@@ -989,15 +990,15 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 			$firstday_prevmonth=dol_time_plus_duree($firstday_month,-1,m);
 				
 			$sql = "SELECT";
-			$sql .= " t.km_declare as kmlasttakeprevmonth ";
+			$sql .= " sum(t.km_declare) as kmlasttakeprevmonth ";
 			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule";
 			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehiculeservice as servveh ON servveh.fk_vehicule=t.fk_vehicule";
 			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_service as serv ON serv.rowid=servveh.fk_service AND serv.rowid=".$idservice;
 			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_prevmonth,'%Y-%m') . "'";
 			if (!empty($idservice))$sql .= " AND t.dt_hr_take BETWEEN servveh.date_start AND servveh.date_end";
-			$sql .= " ORDER BY t.dt_hr_take desc ";
-			$sql .= "LIMIT 1 ";
+			$sql .= " AND t.dt_hr_take=(SELECT MAX(dt_hr_take) FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake WHERE date_format(dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_prevmonth,'%Y-%m') . "'";
+			$sql .= " AND fk_vehicule=veh.rowid)";
 				
 			dol_syslog ( get_class ( $this ) . "::fetch_report_conso_service sql=" . $sql, LOG_DEBUG );
 			$resql = $this->db->query ( $sql );
@@ -1035,7 +1036,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 				$array_consoavg_month[$month]=0;
 			}
 			
-			$debug_string=' $immat='.$immat;
+			$debug_string=' $service='.$idservice;
 			$debug_string.=' $arry_sum_vol_month['.$month.']=' . $arry_sum_vol_month[$month];
 			$debug_string.=' $arry_last_vol_month['.$month.']=' . $arry_last_vol_month[$month];
 			$debug_string.=' $arry_last_vol_prevmonth['.$month.']=' . $arry_last_vol_prevmonth[$month];
