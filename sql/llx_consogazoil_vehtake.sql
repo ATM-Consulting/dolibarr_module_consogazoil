@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS llx_consogazoil_vehtake (
   volume		real NOT NULL,
   km_declare		integer NOT NULL,
   km_controle		integer NULL,
+  km_drive		integer NULL,
   conso_calc		real NULL,
   amount		real NULL,
   dt_hr_take		datetime NULL,
