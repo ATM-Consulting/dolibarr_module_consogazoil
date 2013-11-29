@@ -115,9 +115,9 @@ class ConsogazoilImport {
 		
 		$arrayres = array ();
 		if (version_compare ( phpversion (), '5.2' ) < 0) {
-			$arrayres = fgetcsv ( $this->handle, 100000, ',', '"' );
+			$arrayres = fgetcsv ( $this->handle, 100000, ';', '"' );
 		} else {
-			$arrayres = fgetcsv ( $this->handle, 100000, ',', '"', '"' );
+			$arrayres = fgetcsv ( $this->handle, 100000, ';', '"', '"' );
 		}
 		
 		// var_dump($this->handle);
@@ -827,6 +827,7 @@ class ConsogazoilImport {
 							$take->fk_driver = $driv_id;
 							$take->km_declare = $obj->km_take;
 							$take->volume = $obj->volume_gaz;
+							$take->amount = $obj->amount_ht_payment;
 							
 							$hour_dt = substr ( $obj->hour_take, 0, 2 );
 							$min_dt = substr ( $obj->hour_take, - 2 );

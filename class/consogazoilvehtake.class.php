@@ -44,6 +44,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 	var $volume;
 	var $km_declare;
 	var $km_controle;
+	var $amount;
 	var $datec = '';
 	var $tms = '';
 	var $fk_user_creat;
@@ -114,6 +115,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		$sql .= "km_declare,";
 		$sql .= "km_controle,";
 		$sql .= "conso_calc,";
+		$sql .= "amount,";
 		$sql .= "datec,";
 		$sql .= "fk_user_creat,";
 		$sql .= "fk_user_modif,";
@@ -129,6 +131,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		$sql .= " " . (empty ( $this->volume ) ? '0' : "'" . $this->volume . "'") . ",";
 		$sql .= " " . (empty ( $this->km_declare ) ? '0' :  $this->km_declare ) . ",";
 		$sql .= " " . (empty ( $this->km_controle ) ? 'NULL' :   $this->km_controle ) . ",";
+		$sql .= " " . (empty ( $this->conso_calc ) ? 'NULL' : "'" . $this->conso_calc . "'") . ",";
 		$sql .= " " . (empty ( $this->conso_calc ) ? 'NULL' : "'" . $this->conso_calc . "'") . ",";
 		$sql .= "'" . $this->db->idate ( dol_now () ) . "',";
 		$sql .= " " . $user->id . ",";
@@ -196,6 +199,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		$sql .= " t.volume,";
 		$sql .= " t.km_declare,";
 		$sql .= " t.km_controle,";
+		$sql .= " t.amount,";
 		$sql .= " t.conso_calc,";
 		$sql .= " t.datec,";
 		$sql .= " t.tms,";
@@ -232,6 +236,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 				$this->volume = $obj->volume;
 				$this->km_declare = $obj->km_declare;
 				$this->km_controle = $obj->km_controle;
+				$this->amount = $obj->amount;
 				$this->datec = $this->db->jdate ( $obj->datec );
 				$this->tms = $this->db->jdate ( $obj->tms );
 				$this->fk_user_creat = $obj->fk_user_creat;
@@ -1068,9 +1073,8 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 
 		
 		//Trimestre
-		for ($month=1;$month<=3;$month++) {
-			$this->lines_report[7]+=$array_consoavg_month[$month];
-		}
+		$this->lines_report[7]=($arry_sum_vol_month[1]+$arry_sum_vol_month[2]+$arry_sum_vol_month[3])/($arry_last_km_month[3]-$arry_last_km_prevmonth[1]);
+		
 		
 		//April
 		$month=4;
@@ -1088,9 +1092,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		$this->lines_report[13]='';
 		
 		//Trimestre
-		for ($month=4;$month<=6;$month++) {
-			$this->lines_report[14]+=$array_consoavg_month[$month];
-		}
+		$this->lines_report[14]=($arry_sum_vol_month[4]+$arry_sum_vol_month[5]+$arry_sum_vol_month[6])/($arry_last_km_month[6]-$arry_last_km_prevmonth[4]);
 		
 		//Semestre
 		for ($month=1;$month<=6;$month++) {
@@ -1113,9 +1115,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		$this->lines_report[21]='';
 		
 		//Trimestre
-		for ($month=7;$month<=9;$month++) {
-			$this->lines_report[22]+=$array_consoavg_month[$month];
-		}
+		$this->lines_report[22]=($arry_sum_vol_month[7]+$arry_sum_vol_month[8]+$arry_sum_vol_month[9])/($arry_last_km_month[9]-$arry_last_km_prevmonth[7]);
 		
 		//Octobre
 		$month=10;
@@ -1133,9 +1133,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		$this->lines_report[28]='';
 		
 		//Trimestre
-		for ($month=10;$month<=12;$month++) {
-			$this->lines_report[29]+=$array_consoavg_month[$month];
-		}
+		$this->lines_report[29]=($arry_sum_vol_month[10]+$arry_sum_vol_month[11]+$arry_sum_vol_month[12])/($arry_last_km_month[12]-$arry_last_km_prevmonth[10]);
 		
 		//Semestre
 		for ($month=7;$month<=12;$month++) {
@@ -1413,9 +1411,20 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		}
 		
 		//Trimestre
-		for ($month=1;$month<=3;$month++) {
-			$this->lines_report[7]+=$array_consoavg_month[$month];
+		$last = 0;
+		$prev = 99999999;
+		$liter = 0;
+		For($month=1;$month<=3;$month++){
+			if($arry_last_km_month[$month]!=0 AND $arry_last_km_month[$month] > $last){
+				$last = $arry_last_km_month[$month];
+			}
+			if($arry_last_km_prevmonth[$month]!=0 AND $arry_last_km_prevmonth[$month] < $prev){
+				$prev = $arry_last_km_prevmonth[$month];
+			}
+			$liter+=$arry_sum_vol_month[$month];
 		}
+		
+		$this->lines_report[7]=round(($liter/(($last-$prev)/100)),2);
 		
 		//April
 		$month=4;
@@ -1460,14 +1469,36 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		}
 		
 		//Trimestre
-		for ($month=4;$month<=6;$month++) {
-			$this->lines_report[14]+=$array_consoavg_month[$month];
+		$last = 0;
+		$prev = 99999999;
+		$liter = 0;
+		For($month=4;$month<=6;$month++){
+			if($arry_last_km_month[$month]!=0 AND $arry_last_km_month[$month] > $last){
+				$last = $arry_last_km_month[$month];
+			}
+			if($arry_last_km_prevmonth[$month]!=0 AND $arry_last_km_prevmonth[$month] < $prev){
+				$prev = $arry_last_km_prevmonth[$month];
+			}
+			$liter+=$arry_sum_vol_month[$month];
 		}
 		
+		$this->lines_report[14]=round(($liter/(($last-$prev)/100)),2);
+		
 		//Semestre
-		for ($month=1;$month<=6;$month++) {
-			$this->lines_report[15]+=$array_consoavg_month[$month];
+		$last = 0;
+		$prev = 99999999;
+		$liter = 0;
+		For($month=1;$month<=6;$month++){
+			if($arry_last_km_month[$month]!=0 AND $arry_last_km_month[$month] > $last){
+				$last = $arry_last_km_month[$month];
+			}
+			if($arry_last_km_prevmonth[$month]!=0 AND $arry_last_km_prevmonth[$month] < $prev){
+				$prev = $arry_last_km_prevmonth[$month];
+			}
+			$liter+=$arry_sum_vol_month[$month];
 		}
+		
+		$this->lines_report[15]=round(($liter/(($last-$prev)/100)),2);
 		
 		//Jully
 		$month=7;
@@ -1512,9 +1543,20 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		}
 		
 		//Trimestre
-		for ($month=7;$month<=9;$month++) {
-			$this->lines_report[22]+=$array_consoavg_month[$month];
+		$last = 0;
+		$prev = 99999999;
+		$liter = 0;
+		For($month=7;$month<=9;$month++){
+			if($arry_last_km_month[$month]!=0 AND $arry_last_km_month[$month] > $last){
+				$last = $arry_last_km_month[$month];
+			}
+			if($arry_last_km_prevmonth[$month]!=0 AND $arry_last_km_prevmonth[$month] < $prev){
+				$prev = $arry_last_km_prevmonth[$month];
+			}
+			$liter+=$arry_sum_vol_month[$month];
 		}
+		
+		$this->lines_report[22]=round(($liter/(($last-$prev)/100)),2);
 		
 		//Octobre
 		$month=10;
@@ -1559,19 +1601,53 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		}
 		
 		//Trimestre
-		for ($month=10;$month<=12;$month++) {
-			$this->lines_report[29]+=$array_consoavg_month[$month];
+		$last = 0;
+		$prev = 99999999;
+		$liter = 0;
+		For($month=10;$month<=12;$month++){
+			if($arry_last_km_month[$month]!=0 AND $arry_last_km_month[$month] > $last){
+				$last = $arry_last_km_month[$month];
+			}
+			if($arry_last_km_prevmonth[$month]!=0 AND $arry_last_km_prevmonth[$month] < $prev){
+				$prev = $arry_last_km_prevmonth[$month];
+			}
+			$liter+=$arry_sum_vol_month[$month];
 		}
+		
+		$this->lines_report[29]=round(($liter/(($last-$prev)/100)),2);
 		
 		//Semestre
-		for ($month=7;$month<=12;$month++) {
-			$this->lines_report[30]+=$array_consoavg_month[$month];
+		$last = 0;
+		$prev = 99999999;
+		$liter = 0;
+		For($month=7;$month<=12;$month++){
+			if($arry_last_km_month[$month]!=0 AND $arry_last_km_month[$month] > $last){
+				$last = $arry_last_km_month[$month];
+			}
+			if($arry_last_km_prevmonth[$month]!=0 AND $arry_last_km_prevmonth[$month] < $prev){
+				$prev = $arry_last_km_prevmonth[$month];
+			}
+			$liter+=$arry_sum_vol_month[$month];
 		}
 		
+		$this->lines_report[30]=round(($liter/(($last-$prev)/100)),2);
+
+		
 		//Total
-		for ($month=0;$month<=12;$month++) {
-			$this->lines_report[31]+=$array_consoavg_month[$month];
+		$last = 0;
+		$prev = 99999999;
+		$liter = 0;
+		For($month=1;$month<=12;$month++){
+			if($arry_last_km_month[$month]!=0 AND $arry_last_km_month[$month] > $last){
+				$last = $arry_last_km_month[$month];
+			}
+			if($arry_last_km_prevmonth[$month]!=0 AND $arry_last_km_prevmonth[$month] < $prev){
+				$prev = $arry_last_km_prevmonth[$month];
+			}
+			$liter+=$arry_sum_vol_month[$month];
 		}
+		
+		$this->lines_report[31]=round(($liter/(($last-$prev)/100)),2);
 		
 		
 		return 1;

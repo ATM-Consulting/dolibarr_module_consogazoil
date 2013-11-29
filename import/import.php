@@ -98,6 +98,7 @@ if ($step == 3 && !(empty($filetoimport)))
 	$file=$dir.'/'.$filetoimport;
 	
 	$result=$importobject->import_open_file($file);
+	$importobject->separator =";";
 	if ($result > 0)
 	{
 		$nboflines=dol_count_nb_of_line($file);
@@ -145,6 +146,7 @@ if ($step == 4 && !(empty($filetoimport)))
 	$file=$dir.'/'.$filetoimport;
 
 	$result=$importobject->import_open_file($file);
+	$importobject->separator =";";
 	if ($result > 0)
 	{
 		$importobject->truncate_temp_table();

@@ -100,11 +100,12 @@ class FormConsoGazoil extends Form {
 			$i = 0;
 	
 			foreach ( $object->lines as $line ) {
-	
-				if ($selectid > 0 && $selectid == $line->id) {
-					$out .= '<option value="' . $line->id . '" selected="selected">' . $line->ref.'-'.$line->immat_veh . '</option>';
-				} else {
-					$out .= '<option value="' . $line->id . '">' .$line->ref.'-'.$line->immat_veh . '</option>';
+			 if($line->activ == 1){
+					if ($selectid > 0 && $selectid == $line->id) {
+						$out .= '<option value="' . $line->id . '" selected="selected">' . $line->ref.'-'.$line->immat_veh . '</option>';
+					} else {
+						$out .= '<option value="' . $line->id . '">' .$line->ref.'-'.$line->immat_veh . '</option>';
+					}
 				}
 			}
 	

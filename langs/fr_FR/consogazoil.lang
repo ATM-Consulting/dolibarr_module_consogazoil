@@ -20,53 +20,53 @@
 
 # Module label 'ModuleXXXName'
 # (where XXX is value of numeric property 'numero' of module)
-Module103040Name = Consomation Gazoil
+Module103040Name = Consommation Gazoil
 # Module description 'ModuleXXXDesc'
 # (where XXX is value of numeric property 'numero' of module)
-Module103040Desc = Controle de Consomation Gazoil
-Permission103041=Voir les données Consomation Gazoil
-Permission103042=Modifier les données Consomation Gazoil
-Permission103043=Crée les données Consomation Gazoil
-Permission103044=Supprimer les données Consomation Gazoil
-Permission103045=Importer les données Consomation Gazoil
-Permission103046=Exporter les données Consomation Gazoil
+Module103040Desc = Contrôle de Consommation Gazoil
+Permission103041=Voir les données Consommation Gazoil
+Permission103042=Modifier les données Consommation Gazoil
+Permission103043=Crée les données Consommation Gazoil
+Permission103044=Supprimer les données Consommation Gazoil
+Permission103045=Importer les données Consommation Gazoil
+Permission103046=Exporter les données Consommation Gazoil
 
 #
 # Page d'administration
 #
-ConsoGazoilSetup = Configuration du module Consomation Gazoil
+ConsoGazoilSetup = Configuration du module Consommation Gazoil
 Settings = Réglages
-ConsoGazoilSetupPage = Page de réglage de Consomation Gazoil
+ConsoGazoilSetupPage = Page de réglage de Consommation Gazoil
 ConsoGazThresoldConso=Seuil d'alerte dans le rapport consommation de carburant par véhicule par mois 
 ConsoGazThresoldKM=Seuil d'alerte dans le rapport de prise de carburant
-ConsoGazMailExploit=Liste des emails auquel sera envoyé un message a la fin de l'import du fichier
+ConsoGazMailExploit=Liste des emails auquel sera envoyé un message à la fin de l'import du fichier
 ConsoGazMailExploitHelp=Les adresses email doivent être séparé par <b>virgule</b>
-ConsoGazMailExploitSubject=[Consomation Gazoil] : Nouvel import de fichier
-ConsoGazMailExploitMail=Chère M/Mme, Un fichier de consommation de Gazoil viens d'être importé, veuillez regardez les données
-ConsoGazVehNoImport=Liste des Id de véhicule a ne pas importer
-ConsoGazVehNoImportHelp=Les Id de véhicule doivent être séparé par <b>virgule</b>
+ConsoGazMailExploitSubject=[Consommation Gazoil] : Nouvel import de fichier
+ConsoGazMailExploitMail=Chère M/Mme, Un fichier de consommation de Gazoil vient d'être importé, veuillez regardez les données
+ConsoGazVehNoImport=Liste des Id de véhicules à ne pas importer
+ConsoGazVehNoImportHelp=Les Id de véhicules doivent être séparés par <b>virgule</b>
 
 #
 # Page À propos
 #
 About = À propos
-ConsoGazoilAbout = À propos de Consomation Gazoil
-ConsoGazoilAboutPage = Page à propos de Consomation Gazoil
+ConsoGazoilAbout = À propos de Consommation Gazoil
+ConsoGazoilAboutPage = Page à propos de Consommation Gazoil
 
 #
 # Menu
 #
-ConsoGazManageVeh=Gérer les véhicules
+ConsoGazManageVeh=Gérer les Véhicules
 ConsoGazList=Liste
-ConsoGazNew=Creé
+ConsoGazNew=Créer
 ConsoGazManageServ=Gérer les Services
 ConsoGazManageSta=Gérer les Stations
-ConsoGazManageDriv=Gérer les conducteurs
+ConsoGazManageDriv=Gérer les Conducteurs
 ConsoGazManageImport=Import fichier
 ConsoGazManageReport=Rapport
-ConsoGazReportConso=Suivie Conso. de carburant/véhicule/mois 
-ConsoGazReportTakeNoPref=Suivie de prise en station non préférentielle
-ConsoGazReportKM=Suivi du KM/véhicule
+ConsoGazReportConso=Suivi Conso. de carburant/ véhicule/ mois 
+ConsoGazReportTakeNoPref=Suivi de prise en station non préférentielle
+ConsoGazReportKM=Suivi du KM/ véhicule
 ConsoGazManageTake=Gérer les prises
 
 #
@@ -85,27 +85,27 @@ ConsoGazImmat=Immatriculation
 ConsoGazConsoAvg=Conso. Moy.
 ConsoGazDelete=
 ConsoGazDelete=Supprimer
-ConsoGazConfirmDelete=Etes vous sure de vouloir supprimer ?
-ConsoGazIsPref=Station préférenciel
-ConsoGazDtSt=Date debut
+ConsoGazConfirmDelete=Etes-vous sûre de vouloir supprimer ?
+ConsoGazIsPref=Station préférentielle
+ConsoGazDtSt=Date début
 ConsoGazDtEnd=Date fin
 ConsoGazAssociate=Associer
 ConsoGazStation=Station
 ConsoGazDriver=Chauffeur
-ConsoGazVeh=Vehicule
-ConsoGazColKMCtrole=Km controle
-ConsoGazIsPrefNo=Station non préférentiel
-ConsoGazIsPrefYes=Station préférentiel
+ConsoGazVeh=Véhicule
+ConsoGazColKMCtrole=Km contrôle
+ConsoGazIsPrefNo=Station non préférentielle
+ConsoGazIsPrefYes=Station préférentielle
 ConsoGazServ=Service
 
 #
 # DataTable
 #
-NoRecordsToDisplay= Aucune lignes a afficher
-NoEntriesToShow= Aucune lignes a afficher 
-FilteredFrom = Filtré sur 
+NoRecordsToDisplay= Aucune ligne à afficher
+NoEntriesToShow= Aucune ligne à afficher 
+FilteredFrom = Filtrer sur 
 TotalEntries = Total de lignes
-Entries = Nombre de lignes a afficher
+Entries = Nombre de lignes à afficher
 First = Début
 Last = Fin
 Showing = Afficher
@@ -114,11 +114,11 @@ Showing = Afficher
 # Import
 #
 ConsoGazImportQual= Cette ligne ne sera pas importée %s
-ConsoGazImportCdProd= Seul les lignes code produit 03 sont importée
+ConsoGazImportCdProd= Seules les lignes code produit 03 sont importées
 ConsoGazImportMustBeNumeric=Cette valeur : %s doit être un nombre
 ConsoGazImportQualDtFormat=Le format de date (%s) valide doit être YYYYMMDD
 ConsoGazImportQualHourFormat=Le format valide pour l'heure doit être HHMM (%s)
-ConsoGazoilSampleFileData=Voici 5 premiéres ligne du fichier. Si les données ne correspondent pas au titre, merci de revoir votre fichier.
+ConsoGazoilSampleFileData=Voici les 5 premières lignes du fichier. Si les données ne correspondent pas au titre, merci de revoir votre fichier.
 ConsoGazColContrat=Contrat
 ConsoGazColCardVeh=Carte véhicule
 ConsoGazColCardDriv=Carte chauffeur
@@ -138,31 +138,31 @@ ConsoGazColHT=Hors TVA
 ConsoGazColTVA=TVA
 ConsoGazColTTC=TTC
 ConsoGazColCurrRec=Devise Règlement
-ConsoGazColKM=Kilomètres declarer
+ConsoGazColKM=Kilomètres declarés
 ConsoGazColImmat=Immatriculation
 ConsoGazColTypePiece=Type de pièce
 ConsoGazLoadFileOK=C'est bon, je continue. Dolibarr va importer %s lignes dans une table temporaire
-ConsoGazLoadFileKO=Les données ne correspondent pas je dois revoir mon fichier
-ConsoGazImportErrorCols = A la ligne %s, il semble que des données manques.Vérifier avec un éditeur de texte que vous avez bien tout les champs présent (séparé par des virgules)
+ConsoGazLoadFileKO=Les données ne correspondent pas, je dois revoir mon fichier
+ConsoGazImportErrorCols = A la ligne %s, il semble que des données manquent.Vérifier avec un éditeur de texte que vous avez bien tous les champs présents (séparés par des virgules)
 InformationDataConsistency=Vérification des données
-ConsoGazImportExplanation=Cette écran restitue les problémes de données, regarder l'aide de chaque colonne <BR> et choisiez les action qui vous conviennent avant de passer a l'étape suivante. (bouton en bas à gauche)
-ConsoGazImportExplanationCol1=Si il y a des probléme de qualité de donnée l'importation de la ligne ne se fera pas.
-ConsoGazExplanationColVeh=Un véhicule avec la même immatriculation exite sous une autre référence, que voulez vous faire ?
-ConsoGazExplanationColStation=Une station existe avec le même code mais un nom différent, que voulez vous faire ?
-ConsoGazExplanationCol2=Apparament une donnée similaires existe déja dans l'outils, vous pouvez choisir de ne pas l'importer ou de la mettre a jours.
+ConsoGazImportExplanation=Cette écran restitue les problémes de données, regardez l'aide de chaque colonne <BR> et choissisez les actions qui vous conviennent avant de passer à l'étape suivante. (bouton en bas à gauche)
+ConsoGazImportExplanationCol1=S'il y a des problèmes de qualité de données l'importation de la ligne ne se fera pas.
+ConsoGazExplanationColVeh=Un véhicule avec la même immatriculation exite sous une autre référence, que voulez-vous faire ?
+ConsoGazExplanationColStation=Une station existe avec le même code mais un nom différent, que voulez-vous faire ?
+ConsoGazExplanationCol2=Apparament une donnée similaire existe déja dans l'outil, vous pouvez choisir de ne pas l'importer ou de la mettre à jour.
 ConsoGazColNoImport=Ligne non importable, vérifier la qualité des données
-ConsoGazNoConsistencyProblem=Il n'y a pas de probléme (qualité/doublon)détecté dans vos données a importé
-ConsoGazErrorImport = Ils y a eu une/des errreurs. Aucune lignes n'est prétes a être importées
-ConsoGazNbLigneKO=Il y a %s ligne non importables, vérifier l'explication
+ConsoGazNoConsistencyProblem=Il n'y a pas de problémes (qualité/doublon) détectés dans vos données à importer
+ConsoGazErrorImport = Il y a eu une/des errreur(s). Aucune ligne n'est prête à être importée
+ConsoGazNbLigneKO=Il y a %s lignes non importables, vérifier l'explication
 ConsoGazNextStep=Etape suivante, importation les lignes correctes en base
 InformationResult=Résultat de l'importation
-InformationResultSuccess=L'importation des données a été réalisées avec succés
-ConsoGazColTraitementVeh=Conflit vehicule
+InformationResultSuccess=L'importation des données a été réalisée avec succés
+ConsoGazColTraitementVeh=Conflit véhicule
 ConsoGazColTraitementStation=Conflit Station
 ConsoGazTraitementDoNothing=Ne pas importer
-ConsoGazColTraitementUpdate=Mettre à jour ref/nom
-ConsoGazColTraitementNew=Crée
-ConsoGazSampleFile=Vous pouvez télécharger le fichier d'exemple pour connaitre le format approprié de cette import
+ConsoGazColTraitementUpdate=Mettre à jour réf/nom
+ConsoGazColTraitementNew=Créer
+ConsoGazSampleFile=Vous pouvez télécharger le fichier d'exemple pour connaître le format approprié de cette import
 ConsoGazSendEmail=Envoie d'Email
 
 #

@@ -270,32 +270,72 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 	print '<input type="hidden" name="token" value="' . $_SESSION ['newtoken'] . '">';
 	print '<input type="hidden" name="action" value="edit_confirm">';
 	
-	print '<table class="border" width="100%">';
-	print '<tr>';
-	print '<td class="fieldrequired"  width="20%">';
-	print $langs->trans ( 'ConsoGazVeh' );
-	print '</td>';
-	print '<td>';
-	print $formconsogaz->select_vehicule($object->fk_vehicule,'id_veh');
-	print '</td>';
-	print '</tr>';
 	
-	print '<td class="fieldrequired"  width="20%">';
-	print $langs->trans ( 'ConsoGazStation' );
-	print '</td>';
-	print '<td>';
-	print $formconsogaz->select_station($object->fk_station,'id_sta');
-	print '</td>';
-	print '</tr>';
+	If($user->rights->consogazoil->import){
+		print '<table class="border" width="100%">';
+		print '<tr>';
+		print '<td class="fieldrequired"  width="20%">';
+		print $langs->trans ( 'ConsoGazVeh' );
+		print '</td>';
+		print '<td>';
+		print $formconsogaz->select_vehicule($object->fk_vehicule,'id_veh');
+		print '</td>';
+		print '</tr>';
+		}
+	Else{
+		print '<table class="border" width="100%">';
+		print '<tr>';
+		print '<td class="fieldrequired"  width="20%">';
+		print $langs->trans ( 'ConsoGazVeh' );
+		print '</td>';
+		print '<td>';
+		print $object->veh_ref.'-'.$object->veh_immat;
+		print '<input type="hidden" name="id_veh" value="'.$object->fk_vehicule.'">';
+		print '</td>';
+		print '</tr>';;
+		}
 	
-	print '<td class="fieldrequired"  width="20%">';
-	print $langs->trans ( 'ConsoGazDriver' );
-	print '</td>';
-	print '<td>';
-	print $formconsogaz->select_driver($object->fk_driver,'id_driv');
-	print '</td>';
-	print '</tr>';
 	
+	If($user->rights->consogazoil->import){
+		print '<td class="fieldrequired"  width="20%">';
+		print $langs->trans ( 'ConsoGazStation' );
+		print '</td>';
+		print '<td>';
+		print $formconsogaz->select_station($object->fk_station,'id_sta');
+		print '</td>';
+		print '</tr>';
+		}
+	Else{
+		print '<td class="fieldrequired"  width="20%">';
+		print $langs->trans ( 'ConsoGazStation' );
+		print '</td>';
+		print '<td>';
+		print $object->station_ref.'-'.$object->station_name;
+		print '<input type="hidden" name="id_sta" value="'.$object->fk_station.'">';
+		print '</td>';
+		print '</tr>';
+		}
+		
+  If($user->rights->consogazoil->import){
+		print '<td class="fieldrequired"  width="20%">';
+		print $langs->trans ( 'ConsoGazDriver' );
+		print '</td>';
+		print '<td>';
+		print $formconsogaz->select_driver($object->fk_driver,'id_driv');
+		print '</td>';
+		print '</tr>';
+		}
+	Else{
+		print '<td  width="20%">';
+		print $langs->trans ( 'ConsoGazDriver' );
+		print '</td>';
+		print '<td>';
+		print $object->driv_ref.'-'.$object->driv_name;
+		print '<input type="hidden" name="id_driv" value="'.$object->fk_driver.'">';
+		print '</td>';
+		print '</tr>';
+		}
+  If($user->rights->consogazoil->import){		
 	print '<td class="fieldrequired"  width="20%">';
 	print $langs->trans ( 'ConsoGazColVol' );
 	print '</td>';
@@ -303,6 +343,17 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 	print '<input type="text" value="'.$object->volume.'" size="10" name="vol"/>';
 	print '</td>';
 	print '</tr>';
+	}
+	Else{
+		print '<td   width="20%">';
+		print $langs->trans ( 'ConsoGazColVol' );
+		print '</td>';
+		print '<td>';
+		print $object->volume;
+		print '<input type="hidden" name="vol" value="'.$object->volume.'">';
+		print '</td>';
+		print '</tr>';
+		}	
 	
 	print '<td class="fieldrequired"  width="20%">';
 	print $langs->trans ( 'ConsoGazColKM' );
@@ -327,8 +378,7 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 	$form->select_date($object->dt_hr_take, 'dttake',1,1,'','add');
 	print '</td>';
 	print '</tr>';
-	
-	
+		
 	print '<table>';
 	
 	print '<center>';

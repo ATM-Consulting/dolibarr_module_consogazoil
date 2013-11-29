@@ -51,6 +51,7 @@ class ConsogazoilVehicule extends CommonObjectConsoGazoil
 	var $tms='';
 	var $fk_user_creat;
 	var $fk_user_modif;
+	var $activ;
 	var $import_key;
 	
 	var $lines=array();
@@ -93,6 +94,7 @@ class ConsogazoilVehicule extends CommonObjectConsoGazoil
 		if (isset($this->avg_conso)) $this->avg_conso=trim($this->avg_conso);
 		if (isset($this->fk_user_creat)) $this->fk_user_creat=trim($this->fk_user_creat);
 		if (isset($this->fk_user_modif)) $this->fk_user_modif=trim($this->fk_user_modif);
+		if (isset($this->activ)) $this->fk_user_modif=trim($this->activ);
 		if (isset($this->import_key)) $this->import_key=trim($this->import_key);
 
         
@@ -114,6 +116,7 @@ class ConsogazoilVehicule extends CommonObjectConsoGazoil
 		$sql.= "datec,";
 		$sql.= "fk_user_creat,";
 		$sql.= "fk_user_modif,";
+		$sql.= "activ,";
 		$sql.= "import_key";
 
 		
@@ -130,6 +133,7 @@ class ConsogazoilVehicule extends CommonObjectConsoGazoil
 		$sql.= "'".$this->db->idate(dol_now())."',";
 		$sql.= " ".$user->id.",";
 		$sql.= " ".$user->id.",";
+		$sql.= " ".(! isset($this->activ)?'1':"'".$this->activ."'").",";
 		$sql.= " ".(! isset($this->import_key)?'NULL':"'".$this->db->escape($this->import_key)."'")."";
 
         
@@ -203,6 +207,7 @@ class ConsogazoilVehicule extends CommonObjectConsoGazoil
 		$sql.= " t.tms,";
 		$sql.= " t.fk_user_creat,";
 		$sql.= " t.fk_user_modif,";
+		$sql.= " t.activ,";
 		$sql.= " t.import_key";
 
 		
@@ -233,6 +238,7 @@ class ConsogazoilVehicule extends CommonObjectConsoGazoil
 				$this->tms = $this->db->jdate($obj->tms);
 				$this->fk_user_creat = $obj->fk_user_creat;
 				$this->fk_user_modif = $obj->fk_user_modif;
+				$this->activ = $obj->activ;
 				$this->import_key = $obj->import_key;
 
                 
@@ -273,6 +279,7 @@ class ConsogazoilVehicule extends CommonObjectConsoGazoil
 		if (isset($this->avg_conso)) $this->avg_conso=trim($this->avg_conso);
 		if (isset($this->fk_user_creat)) $this->fk_user_creat=trim($this->fk_user_creat);
 		if (isset($this->fk_user_modif)) $this->fk_user_modif=trim($this->fk_user_modif);
+		if (isset($this->activ)) $this->activ=trim($this->activ);
 		if (isset($this->import_key)) $this->import_key=trim($this->import_key);
 
         
@@ -292,6 +299,7 @@ class ConsogazoilVehicule extends CommonObjectConsoGazoil
 		$sql.= " commercial_name_veh=".(isset($this->commercial_name_veh)?"'".$this->db->escape($this->commercial_name_veh)."'":"null").",";
 		$sql.= " avg_conso=".(isset($this->avg_conso)?$this->avg_conso:"null").",";
 		$sql.= " fk_user_modif=".$user->id.",";
+		$sql.= " activ=".(isset($this->activ)?$this->activ:"1").",";
 		$sql.= " import_key=".(isset($this->import_key)?"'".$this->db->escape($this->import_key)."'":"null")."";
 
         
@@ -474,6 +482,7 @@ class ConsogazoilVehicule extends CommonObjectConsoGazoil
 		$this->tms='';
 		$this->fk_user_creat='';
 		$this->fk_user_modif='';
+		$this->activ='';
 		$this->import_key='';
 	}
 	
@@ -507,6 +516,7 @@ class ConsogazoilVehicule extends CommonObjectConsoGazoil
 		$sql.= " t.tms,";
 		$sql.= " t.fk_user_creat,";
 		$sql.= " t.fk_user_modif,";
+		$sql.= " t.activ,";
 		$sql.= " t.import_key";
 
 		
@@ -557,6 +567,7 @@ class ConsogazoilVehicule extends CommonObjectConsoGazoil
 				$line->tms = $this->db->jdate($obj->tms);
 				$line->fk_user_creat = $obj->fk_user_creat;
 				$line->fk_user_modif = $obj->fk_user_modif;
+				$line->activ = $obj->activ;
 				$line->import_key = $obj->import_key;
 	
 	
@@ -614,6 +625,7 @@ class ConsogazoilVehiculeLine
 	var $tms='';
 	var $fk_user_creat;
 	var $fk_user_modif;
+	var $activ;
 	var $import_key;
 	
 	function __construct()

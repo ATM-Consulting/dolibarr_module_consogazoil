@@ -41,6 +41,7 @@ $immat_veh=GETPOST('immat_veh','alpha');
 $avg_conso=GETPOST('avg_conso','alpha');
 $action=GETPOST('action','alpha');
 $confirm=GETPOST('confirm','alpha');
+$active=GETPOST('activ','int');
 
 
 // Security check
@@ -168,6 +169,14 @@ else if ($action=="setimmat_veh") {
 		if ($result<0)
 			setEventMessage($object->errors,'errors');
 }
+else if ($action=="setactiv") {
+
+		$object->activ=$active;
+
+		$result=$object->update($user);
+		if ($result<0)
+			setEventMessage($object->errors,'errors');
+}
 else if ($action == 'confirm_delete' && $confirm == 'yes' && $user->rights->consogazoil->supprimer) {
 	$result=$object->delete($user);
 	if ($result<0) {
@@ -224,6 +233,15 @@ if ($action == 'create' && $user->rights->consogazoil->creer)
 	print '<input type="text" value="'.$avg_conso.'" size="10" name="avg_conso"/>';
 	print '</td>';
 	print '</tr>';
+	print '<tr>';
+	print '<td>';
+	print $langs->trans('active');
+	print '</td>';
+	print '<td>';
+	$arrval=array('0'=>$langs->trans("No"),	'1'=>$langs->trans("Yes"));
+	print $form->selectarray("activ",$arrval,$active);
+	print '</td>';
+	print '</tr>';
 	
 	print '<table>';
 
@@ -277,6 +295,10 @@ if ($action == 'create' && $user->rights->consogazoil->creer)
 	
 	print '<tr><td>'.$form->editfieldkey("ConsoGazConsoAvg",'avg_conso',$object->avg_conso,$object,$user->rights->consogazoil->modifier,'string').'</td><td>';
 	print $form->editfieldval("ConsoGazConsoAvg",'avg_conso',$object->avg_conso,$object,$user->rights->consogazoil->modifier ,'string');
+	print '</td></tr>';
+	
+	print '<tr><td>'.$form->editfieldkey("activ",'activ',$object->activ,$object,$user->rights->consogazoil->modifier,'select;1:'.$langs->trans("Yes").',0:'.$langs->trans("No")).'</td><td>';
+	print $form->editfieldval("activ",'activ',$object->activ,$object,$user->rights->consogazoil->modifier ,'select;1:'.$langs->trans("Yes").',0:'.$langs->trans("No"));
 	print '</td></tr>';
 	
 	print '</table>';

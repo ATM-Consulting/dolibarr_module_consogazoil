@@ -206,7 +206,7 @@ class modConsoGazoil extends DolibarrModules
         // (replace 'x' by type of category (0=product, 1=supplier, 2=customer, 3=member)
         // Dictionnaries
         if (! isset($conf->consogazoil->enabled)) {
-            $conf->consogazoil=new stdClass();
+            $conf->consogazoil=(object) array();
             $conf->consogazoil->enabled = 0;
         }
         $this->dictionnaries = array();
@@ -547,7 +547,7 @@ class modConsoGazoil extends DolibarrModules
         	'langs'=>'consogazoil@consogazoil',
         	'position'=>116,
         	'enabled'=>'$conf->consogazoil->enabled',
-        	'perms'=>'$user->rights->consogazoil->import',
+        	'perms'=>'$user->rights->consogazoil->lire',
         	'target'=>'',
         	'user'=>2
         );
@@ -560,7 +560,7 @@ class modConsoGazoil extends DolibarrModules
         	'langs'=>'consogazoil@consogazoil',
         	'position'=>117,
         	'enabled'=>'$conf->consogazoil->enabled',
-        	'perms'=>'$user->rights->consogazoil->import',
+        	'perms'=>'$user->rights->consogazoil->lire',
         	'target'=>'',
         	'user'=>2
         );
@@ -573,7 +573,7 @@ class modConsoGazoil extends DolibarrModules
         	'langs'=>'consogazoil@consogazoil',
         	'position'=>118,
         	'enabled'=>'$conf->consogazoil->enabled',
-        	'perms'=>'$user->rights->consogazoil->import',
+        	'perms'=>'$user->rights->consogazoil->lire',
         	'target'=>'',
         	'user'=>2
         );
@@ -587,7 +587,7 @@ class modConsoGazoil extends DolibarrModules
         	'langs'=>'consogazoil@consogazoil',
         	'position'=>119,
         	'enabled'=>'$conf->consogazoil->enabled',
-        	'perms'=>'$user->rights->consogazoil->import',
+        	'perms'=>'$user->rights->consogazoil->lire',
         	'target'=>'',
         	'user'=>2
         );

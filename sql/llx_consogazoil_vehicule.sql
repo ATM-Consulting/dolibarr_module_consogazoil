@@ -28,5 +28,6 @@ CREATE TABLE IF NOT EXISTS llx_consogazoil_vehicule (
   tms 			timestamp NOT NULL,
   fk_user_creat 	integer NOT NULL,
   fk_user_modif 	integer NOT NULL,
+  activ				integer  NOT NULL DEFAULT 1,
   import_key		varchar(14)
 ) ENGINE=InnoDB;
