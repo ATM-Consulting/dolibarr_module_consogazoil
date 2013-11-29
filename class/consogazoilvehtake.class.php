@@ -1015,7 +1015,8 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		for ($month=1;$month<=12;$month++) {
 			if ($arry_km_drive[$month] != 0) {
 				//$array_consoavg_month[$month]=($arry_sum_vol_month[$month]-$arry_last_vol_month[$month]+$arry_last_vol_prevmonth[$month])/(($arry_last_km_month[$month]-$arry_last_km_prevmonth[$month])/100);
-				$array_consoavg_month[$month]=(($arry_sum_vol_month[$month]/$arry_km_drive[$month])/100);
+				$array_consoavg_month[$month]=($arry_sum_vol_month[$month]-$arry_last_vol_month[$month]+$arry_last_vol_prevmonth[$month])/(($arry_km_drive[$month])/100);
+				//$array_consoavg_month[$month]=(($arry_sum_vol_month[$month])/($arry_km_drive[$month]/100));
 			}else {
 				$array_consoavg_month[$month]='0';
 			}
@@ -1029,10 +1030,10 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 			$debug_string.=' $arry_sum_vol_month['.$month.']=' . $arry_sum_vol_month[$month];
 			$debug_string.=' $arry_last_vol_month['.$month.']=' . $arry_last_vol_month[$month];
 			$debug_string.=' $arry_last_vol_prevmonth['.$month.']=' . $arry_last_vol_prevmonth[$month];
-			$debug_string.=' $$arry_km_drive['.$month.']=' . $arry_km_drive[$month];
+			$debug_string.=' $arry_km_drive['.$month.']=' . $arry_km_drive[$month];
 			$debug_string.=' $array_consoavg_month['.$month.']=' . $array_consoavg_month[$month];
 			
-			dol_syslog ( get_class ( $this ) . '::fetch_report_conso '.$debug_string, LOG_DEBUG );
+			dol_syslog ( get_class ( $this ) . '::fetch_report_conso_service '.$debug_string, LOG_DEBUG );
 		}
 		
 		

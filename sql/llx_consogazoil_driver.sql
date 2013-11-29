@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS llx_consogazoil_driver (
   entity 		integer NOT NULL DEFAULT 1,
   ref			varchar(30) NULL,
   name			varchar(100) NULL,
+  activ			integer  NOT NULL DEFAULT 1,
   datec			datetime NOT NULL,
   tms 			timestamp NOT NULL,
   fk_user_creat 	integer NOT NULL,
