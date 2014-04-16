@@ -105,9 +105,11 @@ NoRecordsToDisplay= Aucune ligne à afficher
 NoEntriesToShow= Aucune ligne à afficher 
 FilteredFrom = Filtrer sur 
 TotalEntries = Total de lignes
-Entries = Nombre de lignes à afficher
+Entries = Lignes à afficher
 First = Début
 Last = Fin
+To=à
+ConsoGazOf=de
 Showing = Afficher
 
 #

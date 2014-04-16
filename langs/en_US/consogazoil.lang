@@ -106,6 +106,7 @@ TotalEntries = Total Entries
 Entries = Number of lines to display
 First = First
 Last = Last
+ConsoGazOf=Of
 Showing=Showing
 
 #

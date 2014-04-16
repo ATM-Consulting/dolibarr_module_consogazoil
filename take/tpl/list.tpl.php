@@ -42,7 +42,7 @@ $(document).ready(function() {
 			"sZeroRecords": "<?php echo $langs->trans('NoRecordsToDisplay'); ?>",
 			"sInfoEmpty": "<?php echo $langs->trans('NoEntriesToShow'); ?>",
 			"sInfoFiltered": "(<?php echo $langs->trans('FilteredFrom'); ?> _MAX_ <?php echo $langs->trans('TotalEntries'); ?>)",
-			"sInfo": "<?php echo $langs->trans('Showing'); ?> _START_ <?php echo $langs->trans('To'); ?> _END_ <?php echo $langs->trans('Of'); ?> _TOTAL_ <?php echo $langs->trans('Entries'); ?>",
+			"sInfo": "<?php echo $langs->trans('Showing'); ?> _START_ <?php echo $langs->trans('To'); ?> _END_ <?php echo $langs->trans('ConsoGazOf'); ?> _TOTAL_ <?php echo $langs->trans('Entries'); ?>",
 			"oPaginate": {
 				"sFirst": "<?php echo $langs->transnoentities('First'); ?>",
 				"sLast": "<?php echo $langs->transnoentities('Last'); ?>",
