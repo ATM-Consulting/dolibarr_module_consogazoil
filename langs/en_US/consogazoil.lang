@@ -45,6 +45,8 @@ ConsoGazMailExploitMail=Dear Mr/Ms, a gazoil file have just been imported, pleas
 ConsoGazMailExploitHelp=Separated by coma
 ConsoGazVehNoImport=Id of vehicule to never import
 ConsoGazVehNoImportHelp=Separated by coma
+ConsoProductCodeUseIntoReport=Product Code imported
+ConsoProductCodeUseIntoReportHelp=Product code must be quoted and separate by coma. By exemple '03','04'
 
 #
 # About page

@@ -1,4 +1,4 @@
--- Consomation Gazoil 
+-- Consomation Gazoil
 -- Copyright (C) 2013 florian Henry <florian.henry@open-concept.pro>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS llx_consogazoil_vehtake (
   fk_station		integer NOT NULL,
   fk_driver		integer NOT NULL,
   volume		real NOT NULL,
+  produit		varchar(50),
+  code_produit	varchar(50),
   km_declare		integer NOT NULL,
   km_controle		integer NULL,
   km_drive		integer NULL,

@@ -45,6 +45,8 @@ ConsoGazMailExploitSubject=[Consommation Gazoil] : Nouvel import de fichier
 ConsoGazMailExploitMail=Chère M/Mme, Un fichier de consommation de Gazoil vient d'être importé, veuillez regardez les données
 ConsoGazVehNoImport=Liste des Id de véhicules à ne pas importer
 ConsoGazVehNoImportHelp=Les Id de véhicules doivent être séparés par <b>virgule</b>
+ConsoProductCodeUseIntoReport=Code des produit a importé et a utilisé dans les rapport
+ConsoProductCodeUseIntoReportHelp=Les code produit doivent être séparés par <b>virgule</b> et entouré par <b>simple guillemet</b> par exemple '03','04'
 
 #
 # Page À propos
@@ -105,7 +107,7 @@ NoRecordsToDisplay= Aucune ligne à afficher
 NoEntriesToShow= Aucune ligne à afficher 
 FilteredFrom = Filtrer sur 
 TotalEntries = Total de lignes
-Entries = Lignes à afficher
+Entries = Nombre de lignes à afficher
 First = Début
 Last = Fin
 To=à
@@ -116,7 +118,7 @@ Showing = Afficher
 # Import
 #
 ConsoGazImportQual= Cette ligne ne sera pas importée %s
-ConsoGazImportCdProd= Seules les lignes code produit 03 sont importées
+ConsoGazImportCdProd= Seules les lignes code produit %s sont importées
 ConsoGazImportMustBeNumeric=Cette valeur : %s doit être un nombre
 ConsoGazImportQualDtFormat=Le format de date (%s) valide doit être YYYYMMDD
 ConsoGazImportQualHourFormat=Le format valide pour l'heure doit être HHMM (%s)
@@ -145,18 +147,18 @@ ConsoGazColImmat=Immatriculation
 ConsoGazColTypePiece=Type de pièce
 ConsoGazLoadFileOK=C'est bon, je continue. Dolibarr va importer %s lignes dans une table temporaire
 ConsoGazLoadFileKO=Les données ne correspondent pas, je dois revoir mon fichier
-ConsoGazImportErrorCols = A la ligne %s, il semble que des données manquent.Vérifier avec un éditeur de texte que vous avez bien tous les champs présents (séparés par des virgules)
+ConsoGazImportErrorCols = A la ligne %s, il semble que des données manquent.Vérifiez avec un éditeur de texte que vous avez bien tous les champs présents (séparés par des virgules)
 InformationDataConsistency=Vérification des données
-ConsoGazImportExplanation=Cette écran restitue les problémes de données, regardez l'aide de chaque colonne <BR> et choissisez les actions qui vous conviennent avant de passer à l'étape suivante. (bouton en bas à gauche)
+ConsoGazImportExplanation=Cette écran restitue les problémes de données, regardez l'aide de chaque colonne <BR> et choisissez les actions qui vous conviennent avant de passer à l'étape suivante. (bouton en bas à gauche)
 ConsoGazImportExplanationCol1=S'il y a des problèmes de qualité de données l'importation de la ligne ne se fera pas.
 ConsoGazExplanationColVeh=Un véhicule avec la même immatriculation exite sous une autre référence, que voulez-vous faire ?
 ConsoGazExplanationColStation=Une station existe avec le même code mais un nom différent, que voulez-vous faire ?
-ConsoGazExplanationCol2=Apparament une donnée similaire existe déja dans l'outil, vous pouvez choisir de ne pas l'importer ou de la mettre à jour.
-ConsoGazColNoImport=Ligne non importable, vérifier la qualité des données
+ConsoGazExplanationCol2=Apparemment une donnée similaire existe déjà dans l'outil, vous pouvez choisir de ne pas l'importer ou de la mettre à jour.
+ConsoGazColNoImport=Ligne non importable, vérifiez la qualité des données
 ConsoGazNoConsistencyProblem=Il n'y a pas de problémes (qualité/doublon) détectés dans vos données à importer
 ConsoGazErrorImport = Il y a eu une/des errreur(s). Aucune ligne n'est prête à être importée
-ConsoGazNbLigneKO=Il y a %s lignes non importables, vérifier l'explication
-ConsoGazNextStep=Etape suivante, importation les lignes correctes en base
+ConsoGazNbLigneKO=Il y a %s lignes non importables, vérifiez l'explication
+ConsoGazNextStep=Etape suivante, importation des lignes correctes en base
 InformationResult=Résultat de l'importation
 InformationResultSuccess=L'importation des données a été réalisée avec succés
 ConsoGazColTraitementVeh=Conflit véhicule

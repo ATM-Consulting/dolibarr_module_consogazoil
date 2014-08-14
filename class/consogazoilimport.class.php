@@ -115,9 +115,9 @@ class ConsogazoilImport {
 		
 		$arrayres = array ();
 		if (version_compare ( phpversion (), '5.2' ) < 0) {
-			$arrayres = fgetcsv ( $this->handle, 100000, ';', '"' );
+			$arrayres = fgetcsv ( $this->handle, 100000, ',', '"' );
 		} else {
-			$arrayres = fgetcsv ( $this->handle, 100000, ';', '"', '"' );
+			$arrayres = fgetcsv ( $this->handle, 100000, ',', '"', '"' );
 		}
 		
 		// var_dump($this->handle);
@@ -259,7 +259,8 @@ class ConsogazoilImport {
 		// Update volume gaz to be a numeric
 		if (! $error) {
 			$sqlnum = "UPDATE " . MAIN_DB_PREFIX . "consogazoil_tmp";
-			$sqlnum .= " SET volume_gaz='" . price2num ( $linearray [5] ['val'] ) . "'";
+			$sqlnum .= " SET volume_gaz='" . price2num ( $linearray [5] ['val'] ) . "',";
+			$sqlnum .= " amount_ht_payment='" . price2num ( $linearray [19] ['val'] ) . "'";
 			$sqlnum .= " WHERE rowid=" . $this->id;
 			
 			dol_syslog ( get_class ( $this ) . "::import_file_in_temp_table sqlnum=" . $sqlnum, LOG_DEBUG );
@@ -360,7 +361,7 @@ class ConsogazoilImport {
 							// Check if vehicule exists with same immat but different ref
 							$sqlveh = "SELECT rowid,ref,immat_veh FROM " . MAIN_DB_PREFIX . "consogazoil_vehicule ";
 							$sqlveh .= " WHERE immat_veh='" . trim ( $arrayres ['immat_veh'] ) . "'";
-							$sqlveh .= " AND ref <> '" . $this->db->escape ( trim ( $arrayres ['carte_vehicule'] ) ) . "'";
+							$sqlveh .= " AND ref <> '" . $this->db->escape ( trim ( $arrayres ['carte_vehicule'] ) ) . "' AND activ = 1";
 							
 							dol_syslog ( get_class ( $this ) . "::import_check_data vehicule lineid=" . $id . " sql=" . $sqlveh, LOG_DEBUG );
 							$resqlveh = $this->db->query ( $sqlveh );
@@ -471,12 +472,19 @@ class ConsogazoilImport {
 					}
 					
 					// Test product code
-					// Do not import line with other code than 03 - gazoil
+					// Do not import line with other code than spécified in admin module part
 					$msg_product_code = '';
 					if (! empty ( $arrayres ['code_produit'] )) {
-						if ($arrayres ['code_produit'] != '03') {
-							$addline = false;
-							// $msg_product_code=$langs->transnoentities("ConsoGazImportQual",$langs->transnoentities("ConsoGazImportCdProd"));
+						$product_code_allowed=array();
+						$product_code_allowed_brut = explode(',',$conf->global->GAZOIL_PROD_CODE_REPORT);
+						if (is_array($product_code_allowed_brut) && count($product_code_allowed_brut)>0) {
+							foreach($product_code_allowed_brut as $code_allowed) {
+								$product_code_allowed[]=str_replace("'","",$code_allowed);
+							}
+						}
+						if (!in_array($arrayres ['code_produit'],$product_code_allowed)) {
+							//$addline = false;
+							$msg_product_code=$langs->transnoentities("ConsoGazImportQual",$langs->transnoentities("ConsoGazImportCdProd",$conf->global->GAZOIL_PROD_CODE_REPORT));
 						}
 					}
 					
@@ -748,6 +756,8 @@ class ConsogazoilImport {
 								}
 							}
 						}
+					} else {
+						$to_import=false;
 					}
 					
 					if (! $error) {
@@ -827,6 +837,8 @@ class ConsogazoilImport {
 							$take->fk_driver = $driv_id;
 							$take->km_declare = $obj->km_take;
 							$take->volume = $obj->volume_gaz;
+							$take->produit = $obj->produit;
+							$take->code_produit = $obj->code_produit;
 							$take->amount = $obj->amount_ht_payment;
 							
 							$hour_dt = substr ( $obj->hour_take, 0, 2 );

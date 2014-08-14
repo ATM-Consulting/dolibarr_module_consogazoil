@@ -413,7 +413,6 @@ if ($step==4 && $conf->use_javascript_ajax) {
 	print_fiche_titre($langs->trans("InformationDataConsistency") .' : '. $filetoimport);
 	
 	$noimport=false;
-	
 	if (count($importobject->lines)>0){
 		print '<b>'.$langs->trans("ConsoGazImportExplanation").'</b>';
 		print '<BR>';	
@@ -451,6 +450,7 @@ if ($step==4 && $conf->use_javascript_ajax) {
 		
 		$style='impair';
 		$nblineko=0;
+		
 		if (!empty($importobject->error)) {
 			foreach ($importobject->lines as $line) {
 				if ($style=='pair') {$style='impair';}

@@ -38,6 +38,7 @@ $id_veh = GETPOST ( 'id_veh', 'int' );
 $id_sta = GETPOST ( 'id_sta', 'int' );
 $id_driv = GETPOST ( 'id_driv', 'int' );
 $vol = GETPOST ( 'vol', 'alpha' );
+$prod = GETPOST ( 'prod', 'alpha');
 $km_declare = GETPOST ( 'km_declare', 'int' );
 $km_controle = GETPOST ( 'km_controle', 'int' );
 $dt_take = dol_mktime(GETPOST ( 'dttakehour', 'int' ),GETPOST ( 'dttakemin', 'int' ),0,GETPOST ( 'dttakemonth', 'int' ),GETPOST ( 'dttakeday', 'int' ),GETPOST ( 'dttakeyear', 'int' ));
@@ -95,6 +96,16 @@ if ($action == "create_confirm") {
 		$action = 'create';
 		$error ++;
 	}
+	if (empty ( $prod )) {
+		setEventMessage ( $langs->trans ( "ErrorFieldRequired", $langs->transnoentitiesnoconv ( "ConsoGazColProd" ) ), 'errors' );
+		$action = 'create';
+		$error ++;
+	} else {
+		$prod_label_code=array();
+		$prod_label_code=explode('&',$prod);
+		$prod_code=$prod_label_code[0];
+		$prod_label=$prod_label_code[1];
+	}
 	if (empty ( $km_declare )) {
 		setEventMessage ( $langs->trans ( "ErrorFieldRequired", $langs->transnoentitiesnoconv ( "ConsoGazColKM" ) ), 'errors' );
 		$action = 'create';
@@ -110,6 +121,8 @@ if ($action == "create_confirm") {
 		$object->fk_station = $id_sta;
 		$object->fk_vehicule = $id_veh;
 		$object->volume = $vol;
+		$object->code_produit = $prod_code;
+		$object->produit = $prod_label;
 		$object->km_declare = $km_declare;
 		$object->km_controle = $km_controle;
 		$object->dt_hr_take = $dt_take;
@@ -142,6 +155,16 @@ if ($action == "create_confirm") {
 		$action = 'edit';
 		$error ++;
 	}
+	if (empty ( $prod )) {
+		setEventMessage ( $langs->trans ( "ErrorFieldRequired", $langs->transnoentitiesnoconv ( "ConsoGazColProd" ) ), 'errors' );
+		$action = 'edit';
+		$error ++;
+	} else {
+		$prod_label_code=array();
+		$prod_label_code=explode('&',$prod);
+		$prod_code=$prod_label_code[0];
+		$prod_label=$prod_label_code[1];
+	}
 	if (empty ( $km_declare )) {
 		setEventMessage ( $langs->trans ( "ErrorFieldRequired", $langs->transnoentitiesnoconv ( "ConsoGazColKM" ) ), 'errors' );
 		$action = 'edit';
@@ -157,6 +180,8 @@ if ($action == "create_confirm") {
 		$object->fk_station = $id_sta;
 		$object->fk_vehicule = $id_veh;
 		$object->volume = $vol;
+		$object->code_produit = $prod_code;
+		$object->produit = $prod_label;
 		$object->km_declare = $km_declare;
 		$object->km_controle = $km_controle;
 		$object->dt_hr_take = $dt_take;
@@ -226,6 +251,14 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 	print '</td>';
 	print '<td>';
 	print '<input type="text" value="'.$vol.'" size="10" name="vol"/>';
+	print '</td>';
+	print '</tr>';
+	
+	print '<td class="fieldrequired"  width="20%">';
+	print $langs->trans ( 'ConsoGazProd' );
+	print '</td>';
+	print '<td>';
+	print $formconsogaz->select_prod($prod,'prod');
 	print '</td>';
 	print '</tr>';
 	
@@ -355,6 +388,26 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 		print '</tr>';
 		}	
 	
+	If($user->rights->consogazoil->import){		
+	print '<td class="fieldrequired"  width="20%">';
+	print $langs->trans ( 'ConsoGazColProd' );
+	print '</td>';
+	print '<td>';
+	print $formconsogaz->select_prod($object->produit,'prod');
+	print '</td>';
+	print '</tr>';
+	}
+	Else{
+		print '<td   width="20%">';
+		print $langs->trans ( 'ConsoGazColProd' );
+		print '</td>';
+		print '<td>';
+		print $object->produit;
+		print '<input type="hidden" name="prod" value="'.$object->produit.'">';
+		print '</td>';
+		print '</tr>';
+		}	
+	
 	print '<td class="fieldrequired"  width="20%">';
 	print $langs->trans ( 'ConsoGazColKM' );
 	print '</td>';
@@ -443,6 +496,14 @@ else {
 	print '</td>';
 	print '<td>';
 	print $object->volume;
+	print '</td>';
+	print '</tr>';
+	
+	print '<td   width="20%">';
+	print $langs->trans ( 'ConsoGazColProd' );
+	print '</td>';
+	print '<td>';
+	print $object->code_produit.'-'.$object->produit;
 	print '</td>';
 	print '</tr>';
 	

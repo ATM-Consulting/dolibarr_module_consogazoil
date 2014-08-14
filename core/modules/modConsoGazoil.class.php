@@ -176,6 +176,15 @@ class modConsoGazoil extends DolibarrModules
 		$this->const[$r][4] = 	0;
 		$this->const[$r][5] = 	'allentities';
 		$this->const[$r][6] = 	1;
+		
+		$r++;
+		$this->const[$r][0] = 	'GAZOIL_PROD_CODE_REPORT';
+		$this->const[$r][1] = 	'chaine';
+		$this->const[$r][2] = 	"'03'";
+		$this->const[$r][3] = 	'product code to use into report';
+		$this->const[$r][4] = 	0;
+		$this->const[$r][5] = 	'current';
+		$this->const[$r][6] = 	1;
 
         // Array to add new pages in new tabs
         // Example:
@@ -304,6 +313,10 @@ class modConsoGazoil extends DolibarrModules
 		$this->rights[$r][3] = 0;
 		$this->rights[$r][4] = 'export';
         
+        $this->rights[$r][0] = 103047;
+		$this->rights[$r][1] = 'finance';
+		$this->rights[$r][3] = 0;
+		$this->rights[$r][4] = 'finance';
         
         // Main menu entries
         $this->menus = array(); // List of menus to add

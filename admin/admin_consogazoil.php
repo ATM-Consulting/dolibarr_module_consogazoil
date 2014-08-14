@@ -68,6 +68,11 @@ if ($action == 'setvar')
 	$res = dolibarr_set_const($db, 'GAZOIL_ID_VEH_NO_IMPORT', $val,'chaine',0,'',$conf->entity);
 	if (! $res > 0) $error++;
 	
+	$val=GETPOST('GAZOIL_PROD_CODE_REPORT','alpha');
+	$res = dolibarr_set_const($db, 'GAZOIL_PROD_CODE_REPORT', $val,'chaine',0,'',$conf->entity);
+	if (! $res > 0) $error++;
+	
+	
 	if (! $error)
 	{
 		setEventMessage($langs->trans("SetupSaved"),'mesgs');
@@ -151,6 +156,15 @@ print '<td align="left">';
 print '<textarea wrap="soft" cols="70" rows="2"  name="GAZOIL_ID_VEH_NO_IMPORT">'.$conf->global->GAZOIL_ID_VEH_NO_IMPORT.'</textarea></td>';
 print '<td align="center">';
 print $form->textwithpicto('',$langs->trans("ConsoGazVehNoImportHelp"),1,'help');
+print '</td>';
+print '</tr>';
+
+//GAZOIL_ID_VEH_NO_IMPORT
+print '<tr class="pair"><td>'.$langs->trans("ConsoProductCodeUseIntoReport").'</td>';
+print '<td align="left">';
+print '<input type="text"  name="GAZOIL_PROD_CODE_REPORT"  size="10" value="'.$conf->global->GAZOIL_PROD_CODE_REPORT.'"></td>';
+print '<td align="center">';
+print $form->textwithpicto('',$langs->trans("ConsoProductCodeUseIntoReportHelp"),1,'help');
 print '</td>';
 print '</tr>';
 

@@ -147,6 +147,7 @@ class FormConsoGazoil extends Form {
 				} else {
 					$out .= '<option value="' . $line->id . '">' .$line->ref.'-'.$line->name . '</option>';
 				}
+				
 			}
 	
 			$out .= '</select>';
@@ -181,11 +182,12 @@ class FormConsoGazoil extends Form {
 			$i = 0;
 	
 			foreach ( $object->lines as $line ) {
-	
-				if ($selectid > 0 && $selectid == $line->id) {
-					$out .= '<option value="' . $line->id . '" selected="selected">' . $line->ref.'-'.$line->name . '</option>';
-				} else {
-					$out .= '<option value="' . $line->id . '">' .$line->ref.'-'.$line->name . '</option>';
+				if($line->activ == 1){
+					if ($selectid > 0 && $selectid == $line->id) {
+						$out .= '<option value="' . $line->id . '" selected="selected">' . $line->ref.'-'.$line->name . '</option>';
+					} else {
+						$out .= '<option value="' . $line->id . '">' .$line->ref.'-'.$line->name . '</option>';
+					}
 				}
 			}
 	
@@ -311,6 +313,64 @@ class FormConsoGazoil extends Form {
 	
 				$selected='';
 				if ($selectedkey==$key) {
+					$selected=' selected="selected" ';
+				}
+	
+				$out.='<OPTION value="'.$key.'"'.$selected.'>'.$val.'</OPTION>';
+			}
+			$out.='</SELECT>';
+		}
+	
+		return $out;
+	}
+	
+	/**
+	 * Display select with Service available
+	 * 
+	 * @param int $selectid à preselectionner
+	 * @param string $htmlname select field
+	 * @return string select field
+	 */
+	function select_prod($prod, $htmlname = 'prod') {
+		global $conf, $user, $langs;
+		
+		$out = '';
+		
+		$prod_array=array();
+		
+		$sql="SELECT DISTINCT code_produit,produit as produit from ".MAIN_DB_PREFIX."consogazoil_vehtake ";
+		$sql.=" GROUP BY code_produit,produit";
+		$sql.=" ORDER BY produit";
+			
+		$resql=$this->db->query($sql);
+		
+		if ($resql)
+		{
+			$i=0;
+			$num = $this->db->num_rows($resql);
+	
+			while ($i<$num)
+			{
+				$obj = $this->db->fetch_object($resql);
+	
+				if (!array_key_exists($produit,$prod_array)) {
+					$prod_array[$obj->code_produit.'&'.$obj->produit]=$obj->produit;
+				}
+	
+				$i++;
+			}
+	
+		}else {
+			
+			return -1;
+		}
+		
+		if (count($prod_array)>0) {
+			$out='<SELECT name="'.$htmlname.'">';
+			foreach ($prod_array as $key=>$val) {
+	
+				$selected='';
+				if ($prod==$key) {
 					$selected=' selected="selected" ';
 				}
 	

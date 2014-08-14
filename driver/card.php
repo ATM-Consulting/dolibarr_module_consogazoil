@@ -37,6 +37,7 @@ $ref = GETPOST ( 'ref', 'alpha' );
 $name = GETPOST ( 'name', 'alpha' );
 $action = GETPOST ( 'action', 'alpha' );
 $confirm = GETPOST ( 'confirm', 'alpha' );
+$activ=GETPOST('activ','int');
 
 // Security check
 if (empty ( $user->rights->consogazoil->lire )) accessforbidden ();
@@ -74,6 +75,7 @@ if ($action == "create_confirm") {
 	if (empty ( $error )) {
 		$object->ref = $ref;
 		$object->name = $name;
+		$object->activ = $activ;
 		
 		$result = $object->create ( $user );
 		if ($result < 0) {
@@ -95,6 +97,12 @@ if ($action == "create_confirm") {
 } else if ($action == "setname") {
 	
 	$object->name = $name;
+	
+	$result = $object->update ( $user );
+	if ($result < 0) setEventMessage ( $object->errors, 'errors' );
+}else if ($action == "setactiv") {
+	
+	$object->activ = $activ;
 	
 	$result = $object->update ( $user );
 	if ($result < 0) setEventMessage ( $object->errors, 'errors' );
@@ -142,6 +150,15 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 	print '<input type="text" value="' . $name . '" size="10" name="name"/>';
 	print '</td>';
 	print '</tr>';
+	print '<tr>';
+	print '<td>';
+	print $langs->trans('active');
+	print '</td>';
+	print '<td>';
+	$arrval=array('0'=>$langs->trans("No"),	'1'=>$langs->trans("Yes"));
+	print $form->selectarray("activ",$arrval,$active);
+	print '</td>';
+	print '</tr>';
 	
 	print '<table>';
 	
@@ -184,6 +201,10 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 	
 	print '<tr><td>' . $form->editfieldkey ( "Name", 'name', $object->name, $object, $user->rights->consogazoil->modifier, 'string' ) . '</td><td>';
 	print $form->editfieldval ( "Name", 'name', $object->name, $object, $user->rights->consogazoil->modifier, 'string' );
+	print '</td></tr>';
+	
+	print '<tr><td>'.$form->editfieldkey("activ",'activ',$object->activ,$object,$user->rights->consogazoil->modifier,'select;1:'.$langs->trans("Yes").',0:'.$langs->trans("No")).'</td><td>';
+	print $form->editfieldval("activ",'activ',$object->activ,$object,$user->rights->consogazoil->modifier ,'select;1:'.$langs->trans("Yes").',0:'.$langs->trans("No"));
 	print '</td></tr>';
 	
 	print '</table>';

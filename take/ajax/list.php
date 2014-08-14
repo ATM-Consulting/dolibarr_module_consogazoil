@@ -64,7 +64,8 @@ $aColumns = array (
 	't.fk_station',
 	't.fk_driver',
 	't.conso_calc',
-	'station.is_pref' 
+	'station.is_pref',
+	't.produit'
 );
 
 $numColumns = count ( $aColumns );
@@ -236,6 +237,8 @@ while ( $aRow = $db->fetch_array ( $rResult ) ) {
 	$row [] = $aRow [14];
 	// Volume
 	$row [] = $aRow [6];
+	// produit
+	$row [] = $aRow [16];
 	// Km declare
 	$row [] = $aRow [7];
 	// Picto km control status
