@@ -50,6 +50,8 @@ ConsoProductCodeUseIntoReportHelp=Product code must be quoted and separate by co
 ConsoSecurityKey=Security key used by script to update all consumption
 ConsoGazoilLaunchGlobalCalcualtion=Global computation of consumption
 ConsoScriptLink=Or use this link in other tool to luanch global calculation 
+ConsoProductCodePossible=Product List
+ConsoProductCodePossibleHelp=Product list use in manual take creation (must be code-label<ENTER>)
 
 #
 # About page

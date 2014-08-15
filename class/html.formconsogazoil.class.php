@@ -338,28 +338,12 @@ class FormConsoGazoil extends Form {
 		
 		$prod_array=array();
 		
-		$sql="SELECT DISTINCT code_produit,produit as produit from ".MAIN_DB_PREFIX."consogazoil_vehtake ";
-		$sql.=" GROUP BY code_produit,produit";
-		$sql.=" ORDER BY produit";
-			
-		$resql=$this->db->query($sql);
-		
-		if ($resql)
-		{
-			$i=0;
-			$num = $this->db->num_rows($resql);
-	
-			while ($i<$num)
-			{
-				$obj = $this->db->fetch_object($resql);
-	
-				if (!array_key_exists($produit,$prod_array)) {
-					$prod_array[$obj->code_produit.'&'.$obj->produit]=$obj->produit;
-				}
-	
-				$i++;
-			}
-	
+		$prod_type=explode("\n",$conf->global->GAZOIL_PROD_TYPE);
+		if (is_array($prod_type) && count($prod_type)>0) {
+			foreach($prod_type as $value) {
+				$prod=explode('-',$value);
+				$prod_array[$prod[0]]=$prod[1];
+			}	
 		}else {
 			
 			return -1;

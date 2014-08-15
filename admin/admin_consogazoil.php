@@ -76,6 +76,10 @@ if ($action == 'setvar')
 	$res = dolibarr_set_const($db, 'GAZOIL_KEY_SCRIPT', $val,'chaine',0,'',$conf->entity);
 	if (! $res > 0) $error++;
 	
+	$val=GETPOST('GAZOIL_PROD_TYPE','alpha');
+	$res = dolibarr_set_const($db, 'GAZOIL_PROD_TYPE', $val,'chaine',0,'',$conf->entity);
+	if (! $res > 0) $error++;
+	
 	
 	if (! $error)
 	{
@@ -177,6 +181,15 @@ print '<td align="left">';
 print '<textarea wrap="soft" cols="70" rows="2"  name="GAZOIL_ID_VEH_NO_IMPORT">'.$conf->global->GAZOIL_ID_VEH_NO_IMPORT.'</textarea></td>';
 print '<td align="center">';
 print $form->textwithpicto('',$langs->trans("ConsoGazVehNoImportHelp"),1,'help');
+print '</td>';
+print '</tr>';
+
+//GAZOIL_PROD_TYPE
+print '<tr class="pair"><td>'.$langs->trans("ConsoProductCodePossible").'</td>';
+print '<td align="left">';
+print '<textarea wrap="soft" cols="70" rows="2"  name="GAZOIL_PROD_TYPE">'.$conf->global->GAZOIL_PROD_TYPE.'</textarea></td>';
+print '<td align="center">';
+print $form->textwithpicto('',$langs->trans("ConsoProductCodePossibleHelp"),1,'help');
 print '</td>';
 print '</tr>';
 

@@ -195,6 +195,15 @@ class modConsoGazoil extends DolibarrModules
 		$this->const[$r][5] = 	'allentities';
 		$this->const[$r][6] = 	1;
 		
+		$r++;
+		$this->const[$r][0] = 	'GAZOIL_PROD_TYPE';
+		$this->const[$r][1] = 	'chaine';
+		$this->const[$r][2] = 	"03-Gazole\n10-AD Blue";
+		$this->const[$r][3] = 	'Secutity key to call update all conso';
+		$this->const[$r][4] = 	0;
+		$this->const[$r][5] = 	'allentities';
+		$this->const[$r][6] = 	1;
+		
 		
         // Array to add new pages in new tabs
         // Example:

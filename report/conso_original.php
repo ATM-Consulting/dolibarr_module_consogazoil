@@ -36,7 +36,7 @@ $langs->load('consogazoil@consogazoil');
 
 $year_filter=GETPOST('yearfilter','int');
 
-llxHeader('',$langs->trans("ConsoGazReportConso"));
+llxHeader('',$langs->trans("ConsoGazReportConso"),'','','','',array(),array('/consogazoil/css/gazoil.css'));
 
 $object = new ConsogazoilVehTake ( $db );
 
@@ -87,14 +87,30 @@ if ($result < 0) setEventMessage ( $object->error, 'errors' );
 
 foreach($object->lines_immat as $lineimat) {
 	$var=!$var;
+	if ($var) $ligne_style='';
+	else $ligne_style='bis';
+	
 	print '<tr '.$bc[$var].'>';
 	print '<td>'.$lineimat.'</td>';
 	
 	$result=$object->fetch_report_conso_original($year_filter,$lineimat);
 	if ($result < 0) setEventMessage ( $object->error, 'errors' );
 	
-	foreach($object->lines_report as $linereport) {
-		print '<td>'.$linereport.'</td>'."\n";
+	foreach($object->lines_report as $key=>$linereport) {
+		if ($key>=1 && $key<=7) {
+			$columnstyle='trim1'.$ligne_style;
+		} elseif ($key>=8 && $key<=14) {
+			$columnstyle='trim2'.$ligne_style;
+		} elseif ($key>=16 && $key<=22) {
+			$columnstyle='trim3'.$ligne_style;
+		} elseif ($key>=23 && $key<=29) {
+			$columnstyle='trim4'.$ligne_style;
+		} elseif ($key==15 || $key==30) {
+			$columnstyle='semestre'.$ligne_style;
+		} elseif ($key==31) {
+			$columnstyle='total'.$ligne_style;
+		}
+		print '<td class="'.$columnstyle.'">'.$linereport.'</td>'."\n";
 	}
 	
 	
@@ -130,14 +146,30 @@ if ($result < 0) setEventMessage ( $object->error, 'errors' );
 
 foreach($object->lines_service as $keyserv=>$lineserv) {
 	$var=!$var;
+	if ($var) $ligne_style='';
+	else $ligne_style='bis';
+	
 	print '<tr '.$bc[$var].'>';
 	print '<td>'.$lineserv.'</td>';
 
-	$result=$object->fetch_report_conso_service($year_filter,$keyserv);
+	$result=$object->fetch_report_conso_service_original($year_filter,$keyserv);
 	if ($result < 0) setEventMessage ( $object->error, 'errors' );
 
-	foreach($object->lines_report as $linereport) {
-		print '<td>'.$linereport.'</td>'."\n";
+	foreach($object->lines_report as $key=>$linereport) {
+		if ($key>=1 && $key<=7) {
+			$columnstyle='trim1'.$ligne_style;
+		} elseif ($key>=8 && $key<=14) {
+			$columnstyle='trim2'.$ligne_style;
+		} elseif ($key>=16 && $key<=22) {
+			$columnstyle='trim3'.$ligne_style;
+		} elseif ($key>=23 && $key<=29) {
+			$columnstyle='trim4'.$ligne_style;
+		} elseif ($key==15 || $key==30) {
+			$columnstyle='semestre'.$ligne_style;
+		} elseif ($key==31) {
+			$columnstyle='total'.$ligne_style;
+		}
+		print '<td class="'.$columnstyle.'">'.$linereport.'</td>'."\n";
 	}
 
 
@@ -146,13 +178,28 @@ foreach($object->lines_service as $keyserv=>$lineserv) {
 
 //Total soc
 $var=!$var;
+if ($var) $ligne_style='';
+else $ligne_style='bis';
 print '<tr '.$bc[$var].'>';
 print '<td>'.$langs->trans('Total').'</td>';
 $result=$object->fetch_report_conso_service_original($year_filter,0);
 if ($result < 0) setEventMessage ( $object->error, 'errors' );
 
-foreach($object->lines_report as $linereport) {
-	print '<td>'.$linereport.'</td>'."\n";
+foreach($object->lines_report as $key=>$linereport) {
+	if ($key>=1 && $key<=7) {
+		$columnstyle='trim1'.$ligne_style;
+	} elseif ($key>=8 && $key<=14) {
+		$columnstyle='trim2'.$ligne_style;
+	} elseif ($key>=16 && $key<=22) {
+		$columnstyle='trim3'.$ligne_style;
+	} elseif ($key>=23 && $key<=29) {
+		$columnstyle='trim4'.$ligne_style;
+	} elseif ($key==15 || $key==30) {
+		$columnstyle='semestre'.$ligne_style;
+	} elseif ($key==31) {
+		$columnstyle='total'.$ligne_style;
+	}
+	print '<td class="'.$columnstyle.'">'.$linereport.'</td>'."\n";
 }
 
 print '</table>';

@@ -1738,7 +1738,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule";
 		if (!empty($idservice)) $sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehiculeservice as servveh ON servveh.fk_vehicule=t.fk_vehicule";
 		if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_service as serv ON serv.rowid=servveh.fk_service AND serv.rowid=".$idservice;
-		$sql .= " WHERE date_format(t.dt_hr_take,'%Y') = '" . $year . "'";
+		$sql .= " WHERE t.code_produit IN (".$conf->global->GAZOIL_PROD_CODE_REPORT.") AND date_format(t.dt_hr_take,'%Y') = '" . $year . "'";
 		if (!empty($idservice))$sql .= " AND t.dt_hr_take BETWEEN servveh.date_start AND servveh.date_end";
 		$sql .= " GROUP BY date_format(t.dt_hr_take,'%m') ";
 	
@@ -1763,7 +1763,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule";
 			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehiculeservice as servveh ON servveh.fk_vehicule=t.fk_vehicule";
 			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_service as serv ON serv.rowid=servveh.fk_service AND serv.rowid=".$idservice;
-			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			$sql .= " WHERE t.code_produit IN (".$conf->global->GAZOIL_PROD_CODE_REPORT.") AND date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
 			if (!empty($idservice))$sql .= " AND t.dt_hr_take BETWEEN servveh.date_start AND servveh.date_end";
 			$sql .= " AND t.dt_hr_take= (SELECT MAX(dt_hr_take) FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake WHERE date_format(dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
 			$sql .= " AND fk_vehicule=veh.rowid)";
@@ -1792,7 +1792,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule";
 			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehiculeservice as servveh ON servveh.fk_vehicule=t.fk_vehicule";
 			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_service as serv ON serv.rowid=servveh.fk_service AND serv.rowid=".$idservice;
-			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_prevmonth,'%Y-%m') . "'";
+			$sql .= " WHERE t.code_produit IN (".$conf->global->GAZOIL_PROD_CODE_REPORT.") AND date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_prevmonth,'%Y-%m') . "'";
 			if (!empty($idservice))$sql .= " AND t.dt_hr_take BETWEEN servveh.date_start AND servveh.date_end";
 			$sql .= " AND t.dt_hr_take=(SELECT MAX(dt_hr_take) FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake WHERE date_format(dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_prevmonth,'%Y-%m') . "'";
 			$sql .= " AND fk_vehicule=veh.rowid)";
@@ -1819,7 +1819,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule";
 			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehiculeservice as servveh ON servveh.fk_vehicule=t.fk_vehicule";
 			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_service as serv ON serv.rowid=servveh.fk_service AND serv.rowid=".$idservice;
-			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			$sql .= " WHERE t.code_produit IN (".$conf->global->GAZOIL_PROD_CODE_REPORT.") AND date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
 			if (!empty($idservice))$sql .= " AND t.dt_hr_take BETWEEN servveh.date_start AND servveh.date_end";
 			//$sql .= " AND t.dt_hr_take=(SELECT MAX(dt_hr_take) FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake WHERE date_format(dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
 			//$sql .= " AND fk_vehicule=veh.rowid)";
@@ -2038,7 +2038,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		$sql .= " date_format(t.dt_hr_take,'%m') as dtmonth";
 		$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
 		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule AND veh.immat_veh='".$immat."'";
-		$sql .= " WHERE date_format(t.dt_hr_take,'%Y') = '" . $year . "'";
+		$sql .= " WHERE t.code_produit IN (".$conf->global->GAZOIL_PROD_CODE_REPORT.") AND date_format(t.dt_hr_take,'%Y') = '" . $year . "'";
 		$sql .= " GROUP BY date_format(t.dt_hr_take,'%m') ";
 	
 		dol_syslog ( get_class ( $this ) . "::fetch_report_conso sql=" . $sql, LOG_DEBUG );
@@ -2060,7 +2060,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 			$sql .= " t.volume as vollasttake";
 			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule AND veh.immat_veh='".$immat."'";
-			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			$sql .= " WHERE t.code_produit IN (".$conf->global->GAZOIL_PROD_CODE_REPORT.") AND date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
 			$sql .= " ORDER BY t.dt_hr_take desc ";
 			$sql .= "LIMIT 1 ";
 	
@@ -2085,7 +2085,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 			$sql .= " t.volume as vollasttakeprevmonth ";
 			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule AND veh.immat_veh='".$immat."'";
-			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_prevmonth,'%Y-%m') . "'";
+			$sql .= " WHERE t.code_produit IN (".$conf->global->GAZOIL_PROD_CODE_REPORT.") AND date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_prevmonth,'%Y-%m') . "'";
 			$sql .= " ORDER BY t.dt_hr_take desc ";
 			$sql .= "LIMIT 1 ";
 	
@@ -2108,7 +2108,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 			$sql .= " t.km_declare as kmlasttake";
 			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule AND veh.immat_veh='".$immat."'";
-			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			$sql .= " WHERE t.code_produit IN (".$conf->global->GAZOIL_PROD_CODE_REPORT.") AND date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
 			$sql .= " ORDER BY t.dt_hr_take desc ";
 			$sql .= "LIMIT 1 ";
 	
@@ -2134,7 +2134,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 			$sql .= " t.km_declare as kmlasttakeprevmonth ";
 			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule AND veh.immat_veh='".$immat."'";
-			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_prevmonth,'%Y-%m') . "'";
+			$sql .= " WHERE t.code_produit IN (".$conf->global->GAZOIL_PROD_CODE_REPORT.") AND date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_prevmonth,'%Y-%m') . "'";
 			$sql .= " ORDER BY t.dt_hr_take desc ";
 			$sql .= "LIMIT 1 ";
 	
@@ -2559,7 +2559,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 			$sql .= " t.km_declare";
 			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule AND veh.immat_veh='".$immat."'";
-			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			$sql .= " WHERE t.code_produit IN (".$conf->global->GAZOIL_PROD_CODE_REPORT.") AND date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
 			$sql .= " AND  t.km_declare IS NOT NULL AND t.km_declare<>0";
 			$sql .= " ORDER BY t.dt_hr_take asc ";
 			$sql .= "LIMIT 1 ";
@@ -2583,7 +2583,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 			$sql .= " t.km_declare";
 			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule AND veh.immat_veh='".$immat."'";
-			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			$sql .= " WHERE t.code_produit IN (".$conf->global->GAZOIL_PROD_CODE_REPORT.") AND date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
 			$sql .= " AND  t.km_declare IS NOT NULL AND t.km_declare<>0";
 			$sql .= " ORDER BY t.dt_hr_take desc ";
 			$sql .= "LIMIT 1 ";
@@ -2675,7 +2675,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule";
 			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehiculeservice as servveh ON servveh.fk_vehicule=t.fk_vehicule";
 			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_service as serv ON serv.rowid=servveh.fk_service AND serv.rowid=".$idservice;
-			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			$sql .= " WHERE t.code_produit IN (".$conf->global->GAZOIL_PROD_CODE_REPORT.") AND date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
 			if (!empty($idservice))$sql .= " AND t.dt_hr_take BETWEEN servveh.date_start AND servveh.date_end";
 			$sql .= " AND  t.km_declare IS NOT NULL AND t.km_declare<>0";
 			$sql .= " ORDER BY t.dt_hr_take asc ";
@@ -2702,7 +2702,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule";
 			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehiculeservice as servveh ON servveh.fk_vehicule=t.fk_vehicule";
 			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_service as serv ON serv.rowid=servveh.fk_service AND serv.rowid=".$idservice;
-			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			$sql .= " WHERE t.code_produit IN (".$conf->global->GAZOIL_PROD_CODE_REPORT.") AND date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
 			if (!empty($idservice))$sql .= " AND t.dt_hr_take BETWEEN servveh.date_start AND servveh.date_end";
 			$sql .= " AND  t.km_declare IS NOT NULL AND t.km_declare<>0";
 			$sql .= " ORDER BY t.dt_hr_take desc ";

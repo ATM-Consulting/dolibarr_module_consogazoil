@@ -51,6 +51,8 @@ ConsoProductCodeUseIntoReportHelp=Les code produit doivent être séparés par <
 ConsoSecurityKey=Clef de sécurité utilisé pour le script de re-calcul global
 ConsoGazoilLaunchGlobalCalcualtion=Re-calcul global
 ConsoScriptLink=Ou lancer ce lien dans un autre navigateur ou appel CURL via Tâches planifiés 
+ConsoProductCodePossible=Liste des produits
+ConsoProductCodePossibleHelp=Définie la liste des produit disponible lors de la création manuelle de prise (Doit être de la forme code-label<ENTER>)
 
 #
 # Page À propos
