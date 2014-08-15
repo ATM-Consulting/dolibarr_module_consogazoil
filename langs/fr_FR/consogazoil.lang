@@ -20,40 +20,44 @@
 
 # Module label 'ModuleXXXName'
 # (where XXX is value of numeric property 'numero' of module)
-Module103040Name = Consommation Gazoil
+Module103040Name = Consommation Gazole
 # Module description 'ModuleXXXDesc'
 # (where XXX is value of numeric property 'numero' of module)
-Module103040Desc = Contrôle de Consommation Gazoil
-Permission103041=Voir les données Consommation Gazoil
-Permission103042=Modifier les données Consommation Gazoil
-Permission103043=Crée les données Consommation Gazoil
-Permission103044=Supprimer les données Consommation Gazoil
-Permission103045=Importer les données Consommation Gazoil
-Permission103046=Exporter les données Consommation Gazoil
+Module103040Desc = Contrôle de Consommation Gazole
+Permission103041=Voir les données Consommation Gazole
+Permission103042=Modifier les données Consommation Gazole
+Permission103043=Crée les données Consommation Gazole
+Permission103044=Supprimer les données Consommation Gazole
+Permission103045=Importer les données Consommation Gazole
+Permission103046=Exporter les données Consommation Gazole
+Permission103047=Voir les montants des Consommation Gazole
 
 #
 # Page d'administration
 #
-ConsoGazoilSetup = Configuration du module Consommation Gazoil
+ConsoGazoleSetup = Configuration du module Consommation Gazole
 Settings = Réglages
-ConsoGazoilSetupPage = Page de réglage de Consommation Gazoil
+ConsoGazoleSetupPage = Page de réglage de Consommation Gazole
 ConsoGazThresoldConso=Seuil d'alerte dans le rapport consommation de carburant par véhicule par mois 
 ConsoGazThresoldKM=Seuil d'alerte dans le rapport de prise de carburant
 ConsoGazMailExploit=Liste des emails auquel sera envoyé un message à la fin de l'import du fichier
 ConsoGazMailExploitHelp=Les adresses email doivent être séparé par <b>virgule</b>
-ConsoGazMailExploitSubject=[Consommation Gazoil] : Nouvel import de fichier
-ConsoGazMailExploitMail=Chère M/Mme, Un fichier de consommation de Gazoil vient d'être importé, veuillez regardez les données
+ConsoGazMailExploitSubject=[Consommation Gazole] : Nouvel import de fichier
+ConsoGazMailExploitMail=Chère M/Mme, Un fichier de consommation de Gazole vient d'être importé, veuillez regardez les données
 ConsoGazVehNoImport=Liste des Id de véhicules à ne pas importer
 ConsoGazVehNoImportHelp=Les Id de véhicules doivent être séparés par <b>virgule</b>
 ConsoProductCodeUseIntoReport=Code des produit a importé et a utilisé dans les rapport
-ConsoProductCodeUseIntoReportHelp=Les code produit doivent être séparés par <b>virgule</b> et entouré par <b>simple guillemet</b> par exemple '03','04'
+ConsoProductCodeUseIntoReportHelp=Les code produit doivent être séparés par <b>virgule</b> et entouré par <b>simple guillemet</b> par exemple '03','10'
+ConsoSecurityKey=Clef de sécurité utilisé pour le script de re-calcul global
+ConsoGazoilLaunchGlobalCalcualtion=Re-calcul global
+ConsoScriptLink=Ou lancer ce lien dans un autre navigateur ou appel CURL via Tâches planifiés 
 
 #
 # Page À propos
 #
 About = À propos
-ConsoGazoilAbout = À propos de Consommation Gazoil
-ConsoGazoilAboutPage = Page à propos de Consommation Gazoil
+ConsoGazoleAbout = À propos de Consommation Gazole
+ConsoGazoleAboutPage = Page à propos de Consommation Gazole
 
 #
 # Menu
@@ -70,6 +74,10 @@ ConsoGazReportConso=Suivi Conso. de carburant/ véhicule/ mois
 ConsoGazReportTakeNoPref=Suivi de prise en station non préférentielle
 ConsoGazReportKM=Suivi du KM/ véhicule
 ConsoGazManageTake=Gérer les prises
+ConsoGazReportConsoOriginal=Suivi Conso. de carburant/ véhicule/ mois (Méthode 1)
+ConsoGazReportConsoOtherCalculation=Suivi Conso. de carburant/ véhicule/ mois (Méthode 2)
+ConsoGazReportKMOriginal=Suivi du KM/ véhicule (Méthode 1)
+ConsoGazReportKMOtherCalculation=Suivi du KM/ véhicule (Méthode 2)
 
 #
 # Common
@@ -122,7 +130,7 @@ ConsoGazImportCdProd= Seules les lignes code produit %s sont importées
 ConsoGazImportMustBeNumeric=Cette valeur : %s doit être un nombre
 ConsoGazImportQualDtFormat=Le format de date (%s) valide doit être YYYYMMDD
 ConsoGazImportQualHourFormat=Le format valide pour l'heure doit être HHMM (%s)
-ConsoGazoilSampleFileData=Voici les 5 premières lignes du fichier. Si les données ne correspondent pas au titre, merci de revoir votre fichier.
+ConsoGazoleSampleFileData=Voici les 5 premières lignes du fichier. Si les données ne correspondent pas au titre, merci de revoir votre fichier.
 ConsoGazColContrat=Contrat
 ConsoGazColCardVeh=Carte véhicule
 ConsoGazColCardDriv=Carte chauffeur

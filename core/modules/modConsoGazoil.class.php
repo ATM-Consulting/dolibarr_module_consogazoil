@@ -61,7 +61,7 @@ class modConsoGazoil extends DolibarrModules
         // (where XXX is value of numeric property 'numero' of module)
         $this->description = "Description of module ConsoGazoil";
         // Possible values for version are: 'development', 'experimental' or version
-        $this->version = '1.1';
+        $this->version = '1.2';
         // Key used in llx_const table to save module status enabled/disabled
         // (where MYMODULE is value of property name of module in uppercase)
         $this->const_name = 'MAIN_MODULE_' . strtoupper($this->name);
@@ -186,6 +186,16 @@ class modConsoGazoil extends DolibarrModules
 		$this->const[$r][5] = 	'current';
 		$this->const[$r][6] = 	1;
 
+		$r++;
+		$this->const[$r][0] = 	'GAZOIL_KEY_SCRIPT';
+		$this->const[$r][1] = 	'chaine';
+		$this->const[$r][2] = 	"M67xA5yu";
+		$this->const[$r][3] = 	'Secutity key to call update all conso';
+		$this->const[$r][4] = 	0;
+		$this->const[$r][5] = 	'allentities';
+		$this->const[$r][6] = 	1;
+		
+		
         // Array to add new pages in new tabs
         // Example:
         $this->tabs = array(
@@ -596,7 +606,7 @@ class modConsoGazoil extends DolibarrModules
         	'type'=>'left',
         	'titre'=>'ConsoGazManageReport',
         	'leftmenu'=>'consogazoilreport',
-        	'url'=>'/consogazoil/report/conso.php',
+        	'url'=>'',
         	'langs'=>'consogazoil@consogazoil',
         	'position'=>119,
         	'enabled'=>'$conf->consogazoil->enabled',
@@ -606,12 +616,26 @@ class modConsoGazoil extends DolibarrModules
         );
         $r++;
         $this->menu[$r]=array(
+        		'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoilreport',
+        		'type'=>'left',
+        		'titre'=>'ConsoGazReportConsoOriginal',
+        		'leftmenu'=>'consogazoilreport',
+        		'url'=>'/consogazoil/report/conso_original.php',
+        		'langs'=>'consogazoil@consogazoil',
+        		'position'=>120,
+        		'enabled'=>'$conf->consogazoil->enabled',
+        		'perms'=>'$user->rights->consogazoil->lire',
+        		'target'=>'',
+        		'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
         	'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoilreport',
         	'type'=>'left',
-        	'titre'=>'ConsoGazReportConso',
+        	'titre'=>'ConsoGazReportConsoOtherCalculation',
         	'url'=>'/consogazoil/report/conso.php',
         	'langs'=>'consogazoil@consogazoil',
-        	'position'=>120,
+        	'position'=>121,
         	'enabled'=>'$conf->consogazoil->enabled',
         	'perms'=>'$user->rights->consogazoil->lire',
         	'target'=>'',
@@ -619,12 +643,25 @@ class modConsoGazoil extends DolibarrModules
         );
         $r++;
         $this->menu[$r]=array(
+        		'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoilreport',
+        		'type'=>'left',
+        		'titre'=>'ConsoGazReportKMOriginal',
+        		'url'=>'/consogazoil/report/km_original.php',
+        		'langs'=>'consogazoil@consogazoil',
+        		'position'=>122,
+        		'enabled'=>'$conf->consogazoil->enabled',
+        		'perms'=>'$user->rights->consogazoil->lire',
+        		'target'=>'',
+        		'user'=>2
+        );
+        $r++;
+        $this->menu[$r]=array(
         	'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoilreport',
         	'type'=>'left',
-        	'titre'=>'ConsoGazReportKM',
+        	'titre'=>'ConsoGazReportKMOtherCalculation',
         	'url'=>'/consogazoil/report/km.php',
         	'langs'=>'consogazoil@consogazoil',
-        	'position'=>121,
+        	'position'=>123,
         	'enabled'=>'$conf->consogazoil->enabled',
         	'perms'=>'$user->rights->consogazoil->lire',
         	'target'=>'',
@@ -637,39 +674,12 @@ class modConsoGazoil extends DolibarrModules
         	'titre'=>'ConsoGazReportTakeNoPref',
         	'url'=>'/consogazoil/report/takepref.php',
         	'langs'=>'consogazoil@consogazoil',
-        	'position'=>122,
-        	'enabled'=>'$conf->consogazoil->enabled',
-        	'perms'=>'$user->rights->consogazoil->lire',
-        	'target'=>'',
-        	'user'=>2
-        );
-       /* $r++;
-        $this->menu[$r]=array(
-        	'fk_menu'=>'fk_mainmenu=consogazoil',
-        	'type'=>'left',
-        	'titre'=>'Admin',
-        	'leftmenu'=>'consogazoiladmin',
-        	'url'=>'/consogazoil/admin/admin_consogazoil.php',
-        	'langs'=>'consogazoil@consogazoil',
-        	'position'=>123,
-        	'enabled'=>'$conf->consogazoil->enabled',
-        	'perms'=>'$user->rights->consogazoil->lire',
-        	'target'=>'',
-        	'user'=>2
-        );
-        $r++;
-        $this->menu[$r]=array(
-        	'fk_menu'=>'fk_mainmenu=consogazoil,fk_leftmenu=consogazoiladmin',
-        	'type'=>'left',
-        	'titre'=>'Admin',
-        	'url'=>'/consogazoil/admin/admin_consogazoil.php',
-        	'langs'=>'consogazoil@consogazoil',
         	'position'=>124,
         	'enabled'=>'$conf->consogazoil->enabled',
         	'perms'=>'$user->rights->consogazoil->lire',
         	'target'=>'',
         	'user'=>2
-        );*/
+        );
         //
         // Example to declare a Left Menu entry into an existing Top menu entry:
         //$this->menu[$r]=array(

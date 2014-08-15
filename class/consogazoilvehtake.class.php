@@ -676,14 +676,14 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 					
 					$result = $this->update($user, 1);
 					if ($result < 0) {
-						dol_syslog(get_class($this) . "::calc_conso " . $this->error, LOG_ERR);
+						dol_syslog(get_class($this) . "::calc_conso update:" . $this->error, LOG_ERR);
 						return - 1;
 					}
 				}
 				$this->db->free($resql);
 			} else {
 				$this->error = "Error " . $this->db->lasterror();
-				dol_syslog(get_class($this) . "::calc_conso " . $this->error, LOG_ERR);
+				dol_syslog(get_class($this) . "::calc_conso nodata" . $this->error, LOG_ERR);
 				return - 1;
 			}
 			
@@ -706,13 +706,13 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 						$nexttake = new ConsogazoilVehTake($this->db);
 						$result = $nexttake->fetch($obj->rowid);
 						if ($result < 0) {
-							dol_syslog(get_class($this) . "::calc_conso " . $this->error, LOG_ERR);
+							dol_syslog(get_class($this) . "::calc_conso calcnext" . $this->error, LOG_ERR);
 							return - 1;
 						}
 						if (! empty($nexttake->id)) {
 							$result = $nexttake->calc_conso($user, 0);
 							if ($result < 0) {
-								dol_syslog(get_class($this) . "::calc_conso " . $this->error, LOG_ERR);
+								dol_syslog(get_class($this) . "::calc_conso calcnext" . $this->error, LOG_ERR);
 								return - 1;
 							}
 						}
@@ -720,7 +720,7 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 					$this->db->free($resql);
 				} else {
 					$this->error = "Error " . $this->db->lasterror();
-					dol_syslog(get_class($this) . "::calc_conso " . $this->error, LOG_ERR);
+					dol_syslog(get_class($this) . "::calc_conso calcnext" . $this->error, LOG_ERR);
 					return - 1;
 				}
 			}
@@ -744,7 +744,6 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
 		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule";
 		$sql .= " WHERE date_format(t.dt_hr_take,'%Y') = '" . $year . "'";
-		$sql .= " AND veh.immat_veh='RD748520'";
 		$sql .= " ORDER BY veh.immat_veh DESC";
 		
 		dol_syslog(get_class($this) . "::fetch_immat sql=" . $sql, LOG_DEBUG);
@@ -1685,6 +1684,1073 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		
 		return 1;
 	}
+	
+	
+	/**
+	 * Load array to display in reports
+	 *
+	 * @param int		$year		Year filter
+	 * @param string	$idservice	Idservice
+	 * @return int <0 if KO, >0 if OK
+	 */
+	function fetch_report_conso_service_original($year,$idservice) {
+	
+		global $conf,$langs;
+	
+		require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
+	
+		//This array will be populated as report
+		//$this->lines_report[1]=Avg Conso January
+		//$this->lines_report[2]=Avg Conso January flag
+		//...
+		$this->lines_report=array();
+	
+		$arry_sum_vol_month=array();
+		$arry_last_vol_month=array();
+		$arry_last_vol_prevmonth=array();
+		$arry_km_drive=array();
+	
+		$array_consoavg_month=array();
+	
+		$avg_conso_veh=array();
+	
+		//Populate with 0 if for each month all array
+		for ($month=1;$month<=12;$month++) {
+			$arry_sum_vol_month[$month]=0;
+			$arry_last_vol_month[$month]=0;
+			$arry_last_vol_prevmonth[$month]=0;
+			$arry_km_drive[$month]=0;
+			$array_consoavg_month[$month]=0;
+		}
+	
+	
+		//formula to calculate avg conso per month
+		//(sum volume per month - volume last take+Volume last take on prev month)
+		//divided by
+		//(Last km declare on month - last km declare on prev month) / 100
+	
+	
+		//Get sum volume on a periode
+		$sql = "SELECT";
+		$sql .= " sum(t.volume) as sumvol";
+		$sql .= " ,date_format(t.dt_hr_take,'%m') as dtmonth";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule";
+		if (!empty($idservice)) $sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehiculeservice as servveh ON servveh.fk_vehicule=t.fk_vehicule";
+		if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_service as serv ON serv.rowid=servveh.fk_service AND serv.rowid=".$idservice;
+		$sql .= " WHERE date_format(t.dt_hr_take,'%Y') = '" . $year . "'";
+		if (!empty($idservice))$sql .= " AND t.dt_hr_take BETWEEN servveh.date_start AND servveh.date_end";
+		$sql .= " GROUP BY date_format(t.dt_hr_take,'%m') ";
+	
+		dol_syslog ( get_class ( $this ) . "::fetch_report_conso_service sql=" . $sql, LOG_DEBUG );
+		$resql = $this->db->query ( $sql );
+		if ($resql) {
+			while($obj = $this->db->fetch_object ( $resql )) {
+				$arry_sum_vol_month[intval($obj->dtmonth)]=$obj->sumvol;
+			}
+		} else {
+			$this->error = "Error " . $this->db->lasterror ();
+			dol_syslog ( get_class ( $this ) . "::fetch_report_conso_service " . $this->error, LOG_ERR );
+			return - 1;
+		}
+	
+		//Get volume last take on this period
+		foreach($arry_sum_vol_month as $key=>$val) {
+			$firstday_month=dol_mktime(0, 0, 0, $key, 1, $year);
+			$sql = "SELECT";
+			$sql .= " sum(t.volume) as vollasttake";
+			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
+			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule";
+			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehiculeservice as servveh ON servveh.fk_vehicule=t.fk_vehicule";
+			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_service as serv ON serv.rowid=servveh.fk_service AND serv.rowid=".$idservice;
+			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			if (!empty($idservice))$sql .= " AND t.dt_hr_take BETWEEN servveh.date_start AND servveh.date_end";
+			$sql .= " AND t.dt_hr_take= (SELECT MAX(dt_hr_take) FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake WHERE date_format(dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			$sql .= " AND fk_vehicule=veh.rowid)";
+	
+			dol_syslog ( get_class ( $this ) . "::fetch_report_conso_service sql=" . $sql, LOG_DEBUG );
+			$resql = $this->db->query ( $sql );
+			if ($resql) {
+				while($obj = $this->db->fetch_object ( $resql )) {
+					$arry_last_vol_month[$key]+=$obj->vollasttake;
+				}
+			} else {
+				$this->error = "Error " . $this->db->lasterror ();
+				dol_syslog ( get_class ( $this ) . "::fetch_report_conso_service " . $this->error, LOG_ERR );
+				return - 1;
+			}
+		}
+	
+		//Get Volume last take on prev month
+		foreach($arry_sum_vol_month as $key=>$val) {
+			$firstday_month=dol_mktime(0, 0, 0, $key, 1, $year);
+			$firstday_prevmonth=dol_time_plus_duree($firstday_month,-1,m);
+	
+			$sql = "SELECT";
+			$sql .= " sum(t.volume) as vollasttakeprevmonth ";
+			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
+			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule";
+			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehiculeservice as servveh ON servveh.fk_vehicule=t.fk_vehicule";
+			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_service as serv ON serv.rowid=servveh.fk_service AND serv.rowid=".$idservice;
+			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_prevmonth,'%Y-%m') . "'";
+			if (!empty($idservice))$sql .= " AND t.dt_hr_take BETWEEN servveh.date_start AND servveh.date_end";
+			$sql .= " AND t.dt_hr_take=(SELECT MAX(dt_hr_take) FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake WHERE date_format(dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_prevmonth,'%Y-%m') . "'";
+			$sql .= " AND fk_vehicule=veh.rowid)";
+	
+			dol_syslog ( get_class ( $this ) . "::fetch_report_conso_service sql=" . $sql, LOG_DEBUG );
+			$resql = $this->db->query ( $sql );
+			if ($resql) {
+				while($obj = $this->db->fetch_object ( $resql )) {
+					$arry_last_vol_prevmonth[$key]+=$obj->vollasttakeprevmonth;
+				}
+			} else {
+				$this->error = "Error " . $this->db->lasterror ();
+				dol_syslog ( get_class ( $this ) . "::fetch_report_conso_service " . $this->error, LOG_ERR );
+				return - 1;
+			}
+		}
+	
+		//Get last KM declare on month
+		foreach($arry_sum_vol_month as $key=>$val) {
+			$firstday_month=dol_mktime(0, 0, 0, $key, 1, $year);
+			$sql = "SELECT";
+			$sql .= " sum(t.km_drive) as kmdrive";
+			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
+			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule";
+			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehiculeservice as servveh ON servveh.fk_vehicule=t.fk_vehicule";
+			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_service as serv ON serv.rowid=servveh.fk_service AND serv.rowid=".$idservice;
+			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			if (!empty($idservice))$sql .= " AND t.dt_hr_take BETWEEN servveh.date_start AND servveh.date_end";
+			//$sql .= " AND t.dt_hr_take=(SELECT MAX(dt_hr_take) FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake WHERE date_format(dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			//$sql .= " AND fk_vehicule=veh.rowid)";
+	
+			dol_syslog ( get_class ( $this ) . "::fetch_report_conso_service sql=" . $sql, LOG_DEBUG );
+			$resql = $this->db->query ( $sql );
+			if ($resql) {
+				while($obj = $this->db->fetch_object ( $resql )) {
+					$arry_km_drive[$key]+=$obj->kmdrive;
+				}
+			} else {
+				$this->error = "Error " . $this->db->lasterror ();
+				dol_syslog ( get_class ( $this ) . "::fetch_report_conso_service " . $this->error, LOG_ERR );
+				return - 1;
+			}
+		}
+	
+	
+		//Populate with 0 if for each month all array
+		for ($month=1;$month<=12;$month++) {
+			if (empty($arry_sum_vol_month[$month])) $arry_sum_vol_month[$month]=0;
+			if (empty($arry_last_vol_month[$month])) $arry_last_vol_month[$month]=0;
+			if (empty($arry_last_vol_prevmonth[$month])) $arry_last_vol_prevmonth[$month]=0;
+			if (empty($arry_km_drive[$month])) $arry_km_drive[$month]=0;
+			if (empty($arry_last_km_prevmonth[$month])) $arry_last_km_prevmonth[$month]=0;
+			if (empty($array_consoavg_month[$month])) $array_consoavg_month[$month]=0;
+		}
+	
+	
+	
+		for ($month=1;$month<=12;$month++) {
+			if ($arry_km_drive[$month] != 0) {
+				//$array_consoavg_month[$month]=($arry_sum_vol_month[$month]-$arry_last_vol_month[$month]+$arry_last_vol_prevmonth[$month])/(($arry_last_km_month[$month]-$arry_last_km_prevmonth[$month])/100);
+				$array_consoavg_month[$month]=($arry_sum_vol_month[$month]-$arry_last_vol_month[$month]+$arry_last_vol_prevmonth[$month])/(($arry_km_drive[$month])/100);
+				//$array_consoavg_month[$month]=(($arry_sum_vol_month[$month])/($arry_km_drive[$month]/100));
+			}else {
+				$array_consoavg_month[$month]='0';
+			}
+			$array_consoavg_month[$month]=price2num($array_consoavg_month[$month],2,1);
+	
+			if ($array_consoavg_month[$month]<0) {
+				$array_consoavg_month[$month]=0;
+			}
+	
+			$debug_string=' $service='.$idservice;
+			$debug_string.=' $arry_sum_vol_month['.$month.']=' . $arry_sum_vol_month[$month];
+			$debug_string.=' $arry_last_vol_month['.$month.']=' . $arry_last_vol_month[$month];
+			$debug_string.=' $arry_last_vol_prevmonth['.$month.']=' . $arry_last_vol_prevmonth[$month];
+			$debug_string.=' $arry_km_drive['.$month.']=' . $arry_km_drive[$month];
+			$debug_string.=' $array_consoavg_month['.$month.']=' . $array_consoavg_month[$month];
+	
+			dol_syslog ( get_class ( $this ) . '::fetch_report_conso_service '.$debug_string, LOG_DEBUG );
+		}
+	
+	
+		//January
+		$month=1;
+		$this->lines_report[1]=$array_consoavg_month[$month];
+		$this->lines_report[2]='';
+	
+	
+		//Febuary
+		$month=2;
+		$this->lines_report[3]=$array_consoavg_month[$month];
+		$this->lines_report[4]='';
+	
+	
+		//March
+		$month=3;
+		$this->lines_report[5]=$array_consoavg_month[$month];
+		$this->lines_report[6]='';
+	
+	
+		//Trimestre
+		if ($arry_last_km_month[3]-$arry_last_km_prevmonth[1]) {
+			$this->lines_report[7]=($arry_sum_vol_month[1]+$arry_sum_vol_month[2]+$arry_sum_vol_month[3])/($arry_last_km_month[3]-$arry_last_km_prevmonth[1]);
+		} else {
+			$this->lines_report[7]=0;
+		}
+	
+	
+		//April
+		$month=4;
+		$this->lines_report[8]=$array_consoavg_month[$month];
+		$this->lines_report[9]='';
+	
+		//May
+		$month=5;
+		$this->lines_report[10]=$array_consoavg_month[$month];
+		$this->lines_report[11]='';
+	
+		//Jun
+		$month=6;
+		$this->lines_report[12]=$array_consoavg_month[$month];
+		$this->lines_report[13]='';
+	
+		//Trimestre
+		if ($arry_last_km_month[6]-$arry_last_km_prevmonth[4]) {
+			$this->lines_report[14]=($arry_sum_vol_month[4]+$arry_sum_vol_month[5]+$arry_sum_vol_month[6])/($arry_last_km_month[6]-$arry_last_km_prevmonth[4]);
+		} else {
+			$this->lines_report[14]=0;
+		}
+	
+		//Semestre
+		for ($month=1;$month<=6;$month++) {
+			$this->lines_report[15]+=$array_consoavg_month[$month];
+		}
+	
+		//Jully
+		$month=7;
+		$this->lines_report[16]=$array_consoavg_month[$month];
+		$this->lines_report[17]='';
+	
+		//August
+		$month=8;
+		$this->lines_report[18]=$array_consoavg_month[$month];
+		$this->lines_report[19]='';
+	
+		//Septembre
+		$month=9;
+		$this->lines_report[20]=$array_consoavg_month[$month];
+		$this->lines_report[21]='';
+	
+		//Trimestre
+		if ($arry_last_km_month[9]-$arry_last_km_prevmonth[7]) {
+			$this->lines_report[22]=($arry_sum_vol_month[7]+$arry_sum_vol_month[8]+$arry_sum_vol_month[9])/($arry_last_km_month[9]-$arry_last_km_prevmonth[7]);
+		}else {
+			$this->lines_report[22]=0;
+		}
+	
+		//Octobre
+		$month=10;
+		$this->lines_report[23]=$array_consoavg_month[$month];
+		$this->lines_report[24]='';
+	
+		//Novembre
+		$month=11;
+		$this->lines_report[25]=$array_consoavg_month[$month];
+		$this->lines_report[26]='';
+	
+		//Decembre
+		$month=12;
+		$this->lines_report[27]=$array_consoavg_month[$month];
+		$this->lines_report[28]='';
+	
+		//Trimestre
+		if ($arry_last_km_month[12]-$arry_last_km_prevmonth[10]) {
+			$this->lines_report[29]=($arry_sum_vol_month[10]+$arry_sum_vol_month[11]+$arry_sum_vol_month[12])/($arry_last_km_month[12]-$arry_last_km_prevmonth[10]);
+		} else {
+			$this->lines_report[29]=0;
+		}
+	
+		//Semestre
+		for ($month=7;$month<=12;$month++) {
+			$this->lines_report[30]+=$array_consoavg_month[$month];
+		}
+	
+		//Total
+		for ($month=0;$month<=12;$month++) {
+			$this->lines_report[31]+=$array_consoavg_month[$month];
+		}
+		return 1;
+	}
+	
+	
+	
+	/**
+	 * Load array to display in reports
+	 *
+	 * @param int		$year	Year filter
+	 * @param string	$immat	Immat
+	 * @return int <0 if KO, >0 if OK
+	 */
+	function fetch_report_conso_original($year,$immat) {
+	
+		global $conf,$langs;
+	
+		require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
+	
+		//This array will be populated as report
+		//$this->lines_report[1]=Avg Conso January
+		//$this->lines_report[2]=Avg Conso January flag
+		//...
+		$this->lines_report=array();
+	
+		$arry_sum_vol_month=array();
+		$arry_last_vol_month=array();
+		$arry_last_vol_prevmonth=array();
+		$arry_last_km_month=array();
+		$arry_last_km_prevmonth=array();
+	
+		$array_consoavg_month=array();
+	
+		$avg_conso_veh=array();
+	
+		//Populate with 0 if for each month all array
+		for ($month=1;$month<=12;$month++) {
+			$arry_sum_vol_month[$month]=0;
+			$arry_last_vol_month[$month]=0;
+			$arry_last_vol_prevmonth[$month]=0;
+			$arry_last_km_month[$month]=0;
+			$arry_last_km_prevmonth[$month]=0;
+			$array_consoavg_month[$month]=0;
+		}
+	
+	
+		//formula to calculate avg conso per month
+		//(sum volume per month - volume last take+Volume last take on prev month)
+		//divided by
+		//(Last km declare on month - last km declare on prev month) / 100
+	
+	
+		//Get sum volume on a periode
+		$sql = "SELECT";
+		$sql .= " sum(t.volume) as sumvol,";
+		$sql .= " date_format(t.dt_hr_take,'%m') as dtmonth";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule AND veh.immat_veh='".$immat."'";
+		$sql .= " WHERE date_format(t.dt_hr_take,'%Y') = '" . $year . "'";
+		$sql .= " GROUP BY date_format(t.dt_hr_take,'%m') ";
+	
+		dol_syslog ( get_class ( $this ) . "::fetch_report_conso sql=" . $sql, LOG_DEBUG );
+		$resql = $this->db->query ( $sql );
+		if ($resql) {
+			while($obj = $this->db->fetch_object ( $resql )) {
+				$arry_sum_vol_month[intval($obj->dtmonth)]=$obj->sumvol;
+			}
+		} else {
+			$this->error = "Error " . $this->db->lasterror ();
+			dol_syslog ( get_class ( $this ) . "::fetch_report_conso " . $this->error, LOG_ERR );
+			return - 1;
+		}
+	
+		//Get volume last take on this period
+		foreach($arry_sum_vol_month as $key=>$val) {
+			$firstday_month=dol_mktime(0, 0, 0, $key, 1, $year);
+			$sql = "SELECT";
+			$sql .= " t.volume as vollasttake";
+			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
+			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule AND veh.immat_veh='".$immat."'";
+			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			$sql .= " ORDER BY t.dt_hr_take desc ";
+			$sql .= "LIMIT 1 ";
+	
+			dol_syslog ( get_class ( $this ) . "::fetch_report_conso sql=" . $sql, LOG_DEBUG );
+			$resql = $this->db->query ( $sql );
+			if ($resql) {
+				$obj = $this->db->fetch_object ( $resql );
+				$arry_last_vol_month[$key]=$obj->vollasttake;
+			} else {
+				$this->error = "Error " . $this->db->lasterror ();
+				dol_syslog ( get_class ( $this ) . "::fetch_report_conso " . $this->error, LOG_ERR );
+				return - 1;
+			}
+		}
+	
+		//Get Volume last take on prev month
+		foreach($arry_sum_vol_month as $key=>$val) {
+			$firstday_month=dol_mktime(0, 0, 0, $key, 1, $year);
+			$firstday_prevmonth=dol_time_plus_duree($firstday_month,-1,m);
+	
+			$sql = "SELECT";
+			$sql .= " t.volume as vollasttakeprevmonth ";
+			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
+			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule AND veh.immat_veh='".$immat."'";
+			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_prevmonth,'%Y-%m') . "'";
+			$sql .= " ORDER BY t.dt_hr_take desc ";
+			$sql .= "LIMIT 1 ";
+	
+			dol_syslog ( get_class ( $this ) . "::fetch_report_conso sql=" . $sql, LOG_DEBUG );
+			$resql = $this->db->query ( $sql );
+			if ($resql) {
+				$obj = $this->db->fetch_object ( $resql );
+				$arry_last_vol_prevmonth[$key]=$obj->vollasttakeprevmonth;
+			} else {
+				$this->error = "Error " . $this->db->lasterror ();
+				dol_syslog ( get_class ( $this ) . "::fetch_report_conso " . $this->error, LOG_ERR );
+				return - 1;
+			}
+		}
+	
+		//Get last KM declare on month
+		foreach($arry_sum_vol_month as $key=>$val) {
+			$firstday_month=dol_mktime(0, 0, 0, $key, 1, $year);
+			$sql = "SELECT";
+			$sql .= " t.km_declare as kmlasttake";
+			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
+			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule AND veh.immat_veh='".$immat."'";
+			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			$sql .= " ORDER BY t.dt_hr_take desc ";
+			$sql .= "LIMIT 1 ";
+	
+			dol_syslog ( get_class ( $this ) . "::fetch_report_conso sql=" . $sql, LOG_DEBUG );
+			$resql = $this->db->query ( $sql );
+			if ($resql) {
+				$obj = $this->db->fetch_object ( $resql );
+				$arry_last_km_month[$key]=$obj->kmlasttake;
+	
+			} else {
+				$this->error = "Error " . $this->db->lasterror ();
+				dol_syslog ( get_class ( $this ) . "::fetch_report_conso " . $this->error, LOG_ERR );
+				return - 1;
+			}
+		}
+	
+		//Get km last take on prev month
+		foreach($arry_sum_vol_month as $key=>$val) {
+			$firstday_month=dol_mktime(0, 0, 0, $key, 1, $year);
+			$firstday_prevmonth=dol_time_plus_duree($firstday_month,-1,m);
+	
+			$sql = "SELECT";
+			$sql .= " t.km_declare as kmlasttakeprevmonth ";
+			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
+			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule AND veh.immat_veh='".$immat."'";
+			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_prevmonth,'%Y-%m') . "'";
+			$sql .= " ORDER BY t.dt_hr_take desc ";
+			$sql .= "LIMIT 1 ";
+	
+			dol_syslog ( get_class ( $this ) . "::fetch_report_conso sql=" . $sql, LOG_DEBUG );
+			$resql = $this->db->query ( $sql );
+			if ($resql) {
+				$obj = $this->db->fetch_object ( $resql );
+				$arry_last_km_prevmonth[$key]=$obj->kmlasttakeprevmonth;
+			} else {
+				$this->error = "Error " . $this->db->lasterror ();
+				dol_syslog ( get_class ( $this ) . "::fetch_report_conso " . $this->error, LOG_ERR );
+				return - 1;
+			}
+		}
+	
+		//Populate with 0 if for each month all array
+		for ($month=1;$month<=12;$month++) {
+			if (empty($arry_sum_vol_month[$month])) $arry_sum_vol_month[$month]=0;
+			if (empty($arry_last_vol_month[$month])) $arry_last_vol_month[$month]=0;
+			if (empty($arry_last_vol_prevmonth[$month])) $arry_last_vol_prevmonth[$month]=0;
+			if (empty($arry_last_km_month[$month])) $arry_last_km_month[$month]=0;
+			if (empty($arry_last_km_prevmonth[$month])) $arry_last_km_prevmonth[$month]=0;
+			if (empty($array_consoavg_month[$month])) $array_consoavg_month[$month]=0;
+		}
+	
+	
+	
+		for ($month=1;$month<=12;$month++) {
+			if (($arry_last_km_month[$month]-$arry_last_km_prevmonth[$month]) != 0) {
+				$array_consoavg_month[$month]=($arry_sum_vol_month[$month]-$arry_last_vol_month[$month]+$arry_last_vol_prevmonth[$month])/(($arry_last_km_month[$month]-$arry_last_km_prevmonth[$month])/100);
+			}else {
+				$array_consoavg_month[$month]='0';
+			}
+			$array_consoavg_month[$month]=price2num($array_consoavg_month[$month],2,1);
+	
+			if ($array_consoavg_month[$month]<0) {
+				$array_consoavg_month[$month]=0;
+			}
+	
+			$debug_string=' $immat='.$immat;
+			$debug_string.=' $arry_sum_vol_month['.$month.']=' . $arry_sum_vol_month[$month];
+			$debug_string.=' $arry_last_vol_month['.$month.']=' . $arry_last_vol_month[$month];
+			$debug_string.=' $arry_last_vol_prevmonth['.$month.']=' . $arry_last_vol_prevmonth[$month];
+			$debug_string.=' $arry_last_km_month['.$month.']=' . $arry_last_km_month[$month];
+			$debug_string.=' $arry_last_km_prevmonth['.$month.']=' . $arry_last_km_prevmonth[$month];
+	
+			$debug_string.=' $array_consoavg_month['.$month.']=' . $array_consoavg_month[$month];
+	
+			dol_syslog ( get_class ( $this ) . '::fetch_report_conso '.$debug_string, LOG_DEBUG );
+		}
+	
+		//get avg conso vehicule
+		if (!array_key_exists($immat,$avg_conso_veh)){
+			$sql = "SELECT";
+			$sql .= " avg_conso ";
+			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehicule WHERE immat_veh='".$immat."'";
+			$sql .= "LIMIT 1 ";
+			dol_syslog ( get_class ( $this ) . "::fetch_report_conso sql=" . $sql, LOG_DEBUG );
+			$resql = $this->db->query ( $sql );
+			if ($resql) {
+				$obj = $this->db->fetch_object ( $resql );
+				$avg_conso_veh[$immat]=$obj->avg_conso;
+			} else {
+				$this->error = "Error " . $this->db->lasterror ();
+				dol_syslog ( get_class ( $this ) . "::fetch_report_conso " . $this->error, LOG_ERR );
+				return - 1;
+			}
+		}
+		$avg_alert_percent = $avg_conso_veh[$immat] + (($avg_conso_veh[$immat] / 100) * $conf->global->GAZOIL_THRESOLD_CONSO);
+	
+		//January
+		$month=1;
+		$this->lines_report[1]=$array_consoavg_month[$month];
+		//January sate
+		if ($array_consoavg_month[$month]<=$avg_conso_veh[$immat]) {
+			$this->lines_report[2]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flaggreen.png', 1 ), '', 1 );
+		}else if (($avg_conso_veh[$immat] < $array_consoavg_month[$month]) &&  ($array_consoavg_month[1] < $avg_alert_percent)) {
+			$this->lines_report[2]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagyellow.png', 1 ), '', 1 );
+		} else if ($array_consoavg_month[$month]>$avg_alert_percent) {
+			$this->lines_report[2]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagred.png', 1 ), '', 1 );
+		} else {
+			$this->lines_report[2]='';
+		}
+	
+		//Febuary
+		$month=2;
+		$this->lines_report[3]=$array_consoavg_month[$month];
+		//Febuary sate
+		if ($array_consoavg_month[$month]<=$avg_conso_veh[$immat]) {
+			$this->lines_report[4]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flaggreen.png', 1 ), '', 1 );
+		}else if (($avg_conso_veh[$immat] < $array_consoavg_month[$month]) &&  ($array_consoavg_month[1] < $avg_alert_percent)) {
+			$this->lines_report[4]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagyellow.png', 1 ), '', 1 );
+		} else if ($array_consoavg_month[$month]>$avg_alert_percent) {
+			$this->lines_report[4]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagred.png', 1 ), '', 1 );
+		}else {
+			$this->lines_report[4]='';
+		}
+	
+		//March
+		$month=3;
+		$this->lines_report[5]=$array_consoavg_month[$month];
+		//March sate
+		if ($array_consoavg_month[$month]<=$avg_conso_veh[$immat]) {
+			$this->lines_report[6]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flaggreen.png', 1 ), '', 1 );
+		}else if (($avg_conso_veh[$immat] < $array_consoavg_month[$month]) &&  ($array_consoavg_month[1] < $avg_alert_percent)) {
+			$this->lines_report[6]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagyellow.png', 1 ), '', 1 );
+		} else if ($array_consoavg_month[$month]>$avg_alert_percent) {
+			$this->lines_report[6]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagred.png', 1 ), '', 1 );
+		}else {
+			$this->lines_report[6]='';
+		}
+	
+		//Trimestre
+		$last = 0;
+		$prev = 99999999;
+		$liter = 0;
+		For($month=1;$month<=3;$month++){
+			if($arry_last_km_month[$month]!=0 AND $arry_last_km_month[$month] > $last){
+				$last = $arry_last_km_month[$month];
+			}
+			if($arry_last_km_prevmonth[$month]!=0 AND $arry_last_km_prevmonth[$month] < $prev){
+				$prev = $arry_last_km_prevmonth[$month];
+			}
+			$liter+=$arry_sum_vol_month[$month];
+		}
+		if ($last-$prev!=0) {
+			$this->lines_report[7]=round(($liter/(($last-$prev)/100)),2);
+		} else {
+			$this->lines_report[7]=0;
+		}
+	
+		//April
+		$month=4;
+		$this->lines_report[8]=$array_consoavg_month[$month];
+		//April sate
+		if ($array_consoavg_month[$month]<=$avg_conso_veh[$immat]) {
+			$this->lines_report[9]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flaggreen.png', 1 ), '', 1 );
+		}else if (($avg_conso_veh[$immat] < $array_consoavg_month[$month]) &&  ($array_consoavg_month[1] < $avg_alert_percent)) {
+			$this->lines_report[9]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagyellow.png', 1 ), '', 1 );
+		} else if ($array_consoavg_month[$month]>$avg_alert_percent) {
+			$this->lines_report[9]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagred.png', 1 ), '', 1 );
+		}else {
+			$this->lines_report[9]='';
+		}
+	
+		//May
+		$month=5;
+		$this->lines_report[10]=$array_consoavg_month[$month];
+		//May sate
+		if ($array_consoavg_month[$month]<=$avg_conso_veh[$immat]) {
+			$this->lines_report[11]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flaggreen.png', 1 ), '', 1 );
+		}else if (($avg_conso_veh[$immat] < $array_consoavg_month[$month]) &&  ($array_consoavg_month[1] < $avg_alert_percent)) {
+			$this->lines_report[11]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagyellow.png', 1 ), '', 1 );
+		} else if ($array_consoavg_month[$month]>$avg_alert_percent) {
+			$this->lines_report[11]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagred.png', 1 ), '', 1 );
+		}else {
+			$this->lines_report[11]='';
+		}
+	
+		//Jun
+		$month=6;
+		$this->lines_report[12]=$array_consoavg_month[$month];
+		//Jun sate
+		if ($array_consoavg_month[$month]<=$avg_conso_veh[$immat]) {
+			$this->lines_report[13]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flaggreen.png', 1 ), '', 1 );
+		}else if (($avg_conso_veh[$immat] < $array_consoavg_month[$month]) &&  ($array_consoavg_month[1] < $avg_alert_percent)) {
+			$this->lines_report[13]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagyellow.png', 1 ), '', 1 );
+		} else if ($array_consoavg_month[$month]>$avg_alert_percent) {
+			$this->lines_report[13]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagred.png', 1 ), '', 1 );
+		}else {
+			$this->lines_report[13]='';
+		}
+	
+		//Trimestre
+		$last = 0;
+		$prev = 99999999;
+		$liter = 0;
+		For($month=4;$month<=6;$month++){
+			if($arry_last_km_month[$month]!=0 AND $arry_last_km_month[$month] > $last){
+				$last = $arry_last_km_month[$month];
+			}
+			if($arry_last_km_prevmonth[$month]!=0 AND $arry_last_km_prevmonth[$month] < $prev){
+				$prev = $arry_last_km_prevmonth[$month];
+			}
+			$liter+=$arry_sum_vol_month[$month];
+		}
+	
+		if ($last-$prev!=0) {
+			$this->lines_report[14]=round(($liter/(($last-$prev)/100)),2);
+		} else {
+			$this->lines_report[14]=0;
+		}
+	
+	
+		//Semestre
+		$last = 0;
+		$prev = 99999999;
+		$liter = 0;
+		for($month=1;$month<=6;$month++){
+			if($arry_last_km_month[$month]!=0 AND $arry_last_km_month[$month] > $last){
+				$last = $arry_last_km_month[$month];
+			}
+			if($arry_last_km_prevmonth[$month]!=0 AND $arry_last_km_prevmonth[$month] < $prev){
+				$prev = $arry_last_km_prevmonth[$month];
+			}
+			$liter+=$arry_sum_vol_month[$month];
+		}
+	
+		if ($last-$prev!=0) {
+			$this->lines_report[15]=round(($liter/(($last-$prev)/100)),2);
+		} else {
+			$this->lines_report[15]=0;
+		}
+	
+		//Jully
+		$month=7;
+		$this->lines_report[16]=$array_consoavg_month[$month];
+		//Jully sate
+		if ($array_consoavg_month[$month]<=$avg_conso_veh[$immat]) {
+			$this->lines_report[17]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flaggreen.png', 1 ), '', 1 );
+		}else if (($avg_conso_veh[$immat] < $array_consoavg_month[$month]) &&  ($array_consoavg_month[1] < $avg_alert_percent)) {
+			$this->lines_report[17]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagyellow.png', 1 ), '', 1 );
+		} else if ($array_consoavg_month[$month]>$avg_alert_percent) {
+			$this->lines_report[17]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagred.png', 1 ), '', 1 );
+		}else {
+			$this->lines_report[17]='';
+		}
+	
+		//August
+		$month=8;
+		$this->lines_report[18]=$array_consoavg_month[$month];
+		//August sate
+		if ($array_consoavg_month[$month]<=$avg_conso_veh[$immat]) {
+			$this->lines_report[19]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flaggreen.png', 1 ), '', 1 );
+		}else if (($avg_conso_veh[$immat] < $array_consoavg_month[$month]) &&  ($array_consoavg_month[1] < $avg_alert_percent)) {
+			$this->lines_report[19]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagyellow.png', 1 ), '', 1 );
+		} else if ($array_consoavg_month[$month]>$avg_alert_percent) {
+			$this->lines_report[19]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagred.png', 1 ), '', 1 );
+		}else {
+			$this->lines_report[19]='';
+		}
+	
+		//Septembre
+		$month=9;
+		$this->lines_report[20]=$array_consoavg_month[$month];
+		//Septembre sate
+		if ($array_consoavg_month[$month]<=$avg_conso_veh[$immat]) {
+			$this->lines_report[21]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flaggreen.png', 1 ), '', 1 );
+		}else if (($avg_conso_veh[$immat] < $array_consoavg_month[$month]) &&  ($array_consoavg_month[1] < $avg_alert_percent)) {
+			$this->lines_report[21]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagyellow.png', 1 ), '', 1 );
+		} else if ($array_consoavg_month[$month]>$avg_alert_percent) {
+			$this->lines_report[21]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagred.png', 1 ), '', 1 );
+		}else {
+			$this->lines_report[21]='';
+		}
+	
+		//Trimestre
+		$last = 0;
+		$prev = 99999999;
+		$liter = 0;
+		for($month=7;$month<=9;$month++){
+			if($arry_last_km_month[$month]!=0 AND $arry_last_km_month[$month] > $last){
+				$last = $arry_last_km_month[$month];
+			}
+			if($arry_last_km_prevmonth[$month]!=0 AND $arry_last_km_prevmonth[$month] < $prev){
+				$prev = $arry_last_km_prevmonth[$month];
+			}
+			$liter+=$arry_sum_vol_month[$month];
+		}
+	
+		if ($last-$prev!=0) {
+			$this->lines_report[22]=round(($liter/(($last-$prev)/100)),2);
+		}else {
+			$this->lines_report[22]=0;
+		}
+	
+	
+		//Octobre
+		$month=10;
+		$this->lines_report[23]=$array_consoavg_month[$month];
+		//Octobre sate
+		if ($array_consoavg_month[$month]<=$avg_conso_veh[$immat]) {
+			$this->lines_report[24]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flaggreen.png', 1 ), '', 1 );
+		}else if (($avg_conso_veh[$immat] < $array_consoavg_month[$month]) &&  ($array_consoavg_month[1] < $avg_alert_percent)) {
+			$this->lines_report[24]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagyellow.png', 1 ), '', 1 );
+		} else if ($array_consoavg_month[$month]>$avg_alert_percent) {
+			$this->lines_report[24]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagred.png', 1 ), '', 1 );
+		}else {
+			$this->lines_report[24]='';
+		}
+	
+		//Novembre
+		$month=11;
+		$this->lines_report[25]=$array_consoavg_month[$month];
+		//Novembre sate
+		if ($array_consoavg_month[$month]<=$avg_conso_veh[$immat]) {
+			$this->lines_report[26]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flaggreen.png', 1 ), '', 1 );
+		}else if (($avg_conso_veh[$immat] < $array_consoavg_month[$month]) &&  ($array_consoavg_month[1] < $avg_alert_percent)) {
+			$this->lines_report[26]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagyellow.png', 1 ), '', 1 );
+		} else if ($array_consoavg_month[$month]>$avg_alert_percent) {
+			$this->lines_report[26]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagred.png', 1 ), '', 1 );
+		}else {
+			$this->lines_report[26]='';
+		}
+	
+		//Decembre
+		$month=12;
+		$this->lines_report[27]=$array_consoavg_month[$month];
+		//Decembre sate
+		if ($array_consoavg_month[$month]<=$avg_conso_veh[$immat]) {
+			$this->lines_report[28]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flaggreen.png', 1 ), '', 1 );
+		}else if (($avg_conso_veh[$immat] < $array_consoavg_month[$month]) &&  ($array_consoavg_month[1] < $avg_alert_percent)) {
+			$this->lines_report[28]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagyellow.png', 1 ), '', 1 );
+		} else if ($array_consoavg_month[$month]>$avg_alert_percent) {
+			$this->lines_report[28]=img_picto ( 'OK', dol_buildpath ( '/consogazoil/img/flagred.png', 1 ), '', 1 );
+		}else {
+			$this->lines_report[28]='';
+		}
+	
+		//Trimestre
+		$last = 0;
+		$prev = 99999999;
+		$liter = 0;
+		For($month=10;$month<=12;$month++){
+			if($arry_last_km_month[$month]!=0 AND $arry_last_km_month[$month] > $last){
+				$last = $arry_last_km_month[$month];
+			}
+			if($arry_last_km_prevmonth[$month]!=0 AND $arry_last_km_prevmonth[$month] < $prev){
+				$prev = $arry_last_km_prevmonth[$month];
+			}
+			$liter+=$arry_sum_vol_month[$month];
+		}
+	
+		if ($last-$prev!=0) {
+			$this->lines_report[29]=round(($liter/(($last-$prev)/100)),2);
+		} else {
+			$this->lines_report[29]=0;
+		}
+	
+		//Semestre
+		$last = 0;
+		$prev = 99999999;
+		$liter = 0;
+		for($month=7;$month<=12;$month++){
+			if($arry_last_km_month[$month]!=0 AND $arry_last_km_month[$month] > $last){
+				$last = $arry_last_km_month[$month];
+			}
+			if($arry_last_km_prevmonth[$month]!=0 AND $arry_last_km_prevmonth[$month] < $prev){
+				$prev = $arry_last_km_prevmonth[$month];
+			}
+			$liter+=$arry_sum_vol_month[$month];
+		}
+	
+		if ($last-$prev!=0) {
+			$this->lines_report[30]=round(($liter/(($last-$prev)/100)),2);
+		}else {
+			$this->lines_report[30]=0;
+		}
+	
+	
+		//Total
+		$last = 0;
+		$prev = 99999999;
+		$liter = 0;
+		for($month=1;$month<=12;$month++){
+			if($arry_last_km_month[$month]!=0 AND $arry_last_km_month[$month] > $last){
+				$last = $arry_last_km_month[$month];
+			}
+			if($arry_last_km_prevmonth[$month]!=0 AND $arry_last_km_prevmonth[$month] < $prev){
+				$prev = $arry_last_km_prevmonth[$month];
+			}
+			$liter+=$arry_sum_vol_month[$month];
+		}
+	
+		if ($last-$prev!=0) {
+			$this->lines_report[31]=round(($liter/(($last-$prev)/100)),2);
+		} else {
+			$this->lines_report[31]=0;
+		}
+	
+	
+		return 1;
+	}
+	
+	
+	/**
+	 * Load array to display in reports
+	 *
+	 * @param int		$year	Year filter
+	 * @param string	$immat	Immat
+	 * @return int <0 if KO, >0 if OK
+	 */
+	function fetch_report_km_original($year,$immat) {
+	
+		global $conf,$langs;
+	
+		//This array will be populated as report
+		//$this->lines_report[1]=km January
+		//$this->lines_report[2]=km Febuary
+		//...
+		$this->lines_report=array();
+	
+		$arry_first_km_month=array();
+		$arry_last_km_month=array();
+	
+	
+		//Populate with 0 if for each month all array
+		for ($month=1;$month<=12;$month++) {
+			$arry_first_km_month[$month]=0;
+			$arry_last_km_month[$month]=0;
+		}
+	
+	
+		//formula to calculate km per month
+		//(last km month - first km month)
+	
+	
+		//Get first km declare on this period
+		foreach($arry_first_km_month as $key=>$val) {
+			$firstday_month=dol_mktime(0, 0, 0, $key, 1, $year);
+			$sql = "SELECT";
+			$sql .= " t.km_declare";
+			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
+			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule AND veh.immat_veh='".$immat."'";
+			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			$sql .= " AND  t.km_declare IS NOT NULL AND t.km_declare<>0";
+			$sql .= " ORDER BY t.dt_hr_take asc ";
+			$sql .= "LIMIT 1 ";
+	
+			dol_syslog ( get_class ( $this ) . "::fetch_report_km sql=" . $sql, LOG_DEBUG );
+			$resql = $this->db->query ( $sql );
+			if ($resql) {
+				$obj = $this->db->fetch_object ( $resql );
+				$arry_first_km_month[$key]=$obj->km_declare;
+			} else {
+				$this->error = "Error " . $this->db->lasterror ();
+				dol_syslog ( get_class ( $this ) . "::fetch_report_km " . $this->error, LOG_ERR );
+				return - 1;
+			}
+		}
+	
+		//Get last km declare on this period
+		foreach($arry_first_km_month as $key=>$val) {
+			$firstday_month=dol_mktime(0, 0, 0, $key, 1, $year);
+			$sql = "SELECT";
+			$sql .= " t.km_declare";
+			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
+			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule AND veh.immat_veh='".$immat."'";
+			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			$sql .= " AND  t.km_declare IS NOT NULL AND t.km_declare<>0";
+			$sql .= " ORDER BY t.dt_hr_take desc ";
+			$sql .= "LIMIT 1 ";
+	
+			dol_syslog ( get_class ( $this ) . "::fetch_report_km sql=" . $sql, LOG_DEBUG );
+			$resql = $this->db->query ( $sql );
+			if ($resql) {
+				$obj = $this->db->fetch_object ( $resql );
+				$arry_last_km_month[$key]=$obj->km_declare;
+			} else {
+				$this->error = "Error " . $this->db->lasterror ();
+				dol_syslog ( get_class ( $this ) . "::fetch_report_km " . $this->error, LOG_ERR );
+				return - 1;
+			}
+		}
+	
+		//Populate with 0 if for each month all array
+		for ($month=1;$month<=12;$month++) {
+			if (empty($arry_first_km_month[$month])) $arry_first_km_month[$month]=0;
+			if (empty($arry_last_km_month[$month])) $arry_last_km_month[$month]=0;
+		}
+	
+	
+		$km=0;
+		for ($month=1;$month<=12;$month++) {
+	
+			$debug_string=' $immat='.$immat;
+			$debug_string.=' $arry_first_km_month['.$month.']=' . $arry_first_km_month[$month];
+			$debug_string.=' $arry_last_km_month['.$month.']=' . $arry_last_km_month[$month];
+			dol_syslog ( get_class ( $this ) . '::fetch_report_km '.$debug_string, LOG_DEBUG );
+	
+	
+			$km+=$arry_last_km_month[$month]-$arry_first_km_month[$month];
+			$this->lines_report[$month]=$arry_last_km_month[$month]-$arry_first_km_month[$month];
+	
+			if (!empty($arry_last_km_month[$month])) {
+				$lastkmknow=$arry_last_km_month[$month];
+			}
+	
+		}
+	
+		//Km Avg
+		$this->lines_report[13]=price2num($km/12,2,1);
+	
+		//Last km know
+		$this->lines_report[14]=$lastkmknow;
+	
+		return 1;
+	}
+	
+	/**
+	 * Load array to display in reports
+	 *
+	 * @param int		$year		Year filter
+	 * @param string	$idservice	Service
+	 * @return int <0 if KO, >0 if OK
+	 */
+	function fetch_report_km_service_original($year,$idservice) {
+	
+		global $conf,$langs;
+	
+		//This array will be populated as report
+		//$this->lines_report[1]=km January
+		//$this->lines_report[2]=km Febuary
+		//...
+		$this->lines_report=array();
+	
+		$arry_first_km_month=array();
+		$arry_last_km_month=array();
+	
+	
+		//Populate with 0 if for each month all array
+		for ($month=1;$month<=12;$month++) {
+			$arry_first_km_month[$month]=0;
+			$arry_last_km_month[$month]=0;
+		}
+	
+	
+		//formula to calculate km per month
+		//(last km month - first km month)
+	
+	
+		//Get first km declare on this period
+		foreach($arry_first_km_month as $key=>$val) {
+			$firstday_month=dol_mktime(0, 0, 0, $key, 1, $year);
+			$sql = "SELECT";
+			$sql .= " t.km_declare";
+			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
+			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule";
+			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehiculeservice as servveh ON servveh.fk_vehicule=t.fk_vehicule";
+			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_service as serv ON serv.rowid=servveh.fk_service AND serv.rowid=".$idservice;
+			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			if (!empty($idservice))$sql .= " AND t.dt_hr_take BETWEEN servveh.date_start AND servveh.date_end";
+			$sql .= " AND  t.km_declare IS NOT NULL AND t.km_declare<>0";
+			$sql .= " ORDER BY t.dt_hr_take asc ";
+			$sql .= "LIMIT 1 ";
+	
+			dol_syslog ( get_class ( $this ) . "::fetch_report_km_service sql=" . $sql, LOG_DEBUG );
+			$resql = $this->db->query ( $sql );
+			if ($resql) {
+				$obj = $this->db->fetch_object ( $resql );
+				$arry_first_km_month[$key]=$obj->km_declare;
+			} else {
+				$this->error = "Error " . $this->db->lasterror ();
+				dol_syslog ( get_class ( $this ) . "::fetch_report_km_service " . $this->error, LOG_ERR );
+				return - 1;
+			}
+		}
+	
+		//Get last km declare on this period
+		foreach($arry_first_km_month as $key=>$val) {
+			$firstday_month=dol_mktime(0, 0, 0, $key, 1, $year);
+			$sql = "SELECT";
+			$sql .= " t.km_declare";
+			$sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
+			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON veh.rowid=t.fk_vehicule";
+			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehiculeservice as servveh ON servveh.fk_vehicule=t.fk_vehicule";
+			if (!empty($idservice))$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_service as serv ON serv.rowid=servveh.fk_service AND serv.rowid=".$idservice;
+			$sql .= " WHERE date_format(t.dt_hr_take,'%Y-%m') = '" . dol_print_date($firstday_month,'%Y-%m') . "'";
+			if (!empty($idservice))$sql .= " AND t.dt_hr_take BETWEEN servveh.date_start AND servveh.date_end";
+			$sql .= " AND  t.km_declare IS NOT NULL AND t.km_declare<>0";
+			$sql .= " ORDER BY t.dt_hr_take desc ";
+			$sql .= "LIMIT 1 ";
+	
+			dol_syslog ( get_class ( $this ) . "::fetch_report_km_service sql=" . $sql, LOG_DEBUG );
+			$resql = $this->db->query ( $sql );
+			if ($resql) {
+				$obj = $this->db->fetch_object ( $resql );
+				$arry_last_km_month[$key]=$obj->km_declare;
+			} else {
+				$this->error = "Error " . $this->db->lasterror ();
+				dol_syslog ( get_class ( $this ) . "::fetch_report_km_service " . $this->error, LOG_ERR );
+				return - 1;
+			}
+		}
+	
+		//Populate with 0 if for each month all array
+		for ($month=1;$month<=12;$month++) {
+			if (empty($arry_first_km_month[$month])) $arry_first_km_month[$month]=0;
+			if (empty($arry_last_km_month[$month])) $arry_last_km_month[$month]=0;
+		}
+	
+	
+		$km=0;
+		for ($month=1;$month<=12;$month++) {
+	
+			$debug_string=' $immat='.$immat;
+			$debug_string.=' $arry_first_km_month['.$month.']=' . $arry_first_km_month[$month];
+			$debug_string.=' $arry_last_km_month['.$month.']=' . $arry_last_km_month[$month];
+			dol_syslog ( get_class ( $this ) . '::fetch_report_km_service '.$debug_string, LOG_DEBUG );
+	
+	
+			$km+=$arry_last_km_month[$month]-$arry_first_km_month[$month];
+			$this->lines_report[$month]=$arry_last_km_month[$month]-$arry_first_km_month[$month];
+	
+			if (!empty($arry_last_km_month[$month])) {
+				$lastkmknow=$arry_last_km_month[$month];
+			}
+	
+		}
+	
+		//Km Avg
+		$this->lines_report[13]=price2num($km/12,2,1);
+	
+		return 1;
+	}
+	
 }
 class ConsogazoilVehTakeLine {
 	var $id;

@@ -351,7 +351,7 @@ if ($step==3) {
 	print_fiche_titre($langs->trans("InformationOnSourceFile") .' : '. $filetoimport);
 	
 	
-	print '<b>'.$langs->trans("ConsoGazoilSampleFileData").'</b>';	
+	print '<b>'.$langs->trans("ConsoGazoleSampleFileData").'</b>';	
 	print '<table width="100%" cellspacing="0" cellpadding="4" class="border">';
 	print '<tr class="liste_titre">';	
 	

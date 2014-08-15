@@ -46,7 +46,10 @@ ConsoGazMailExploitHelp=Separated by coma
 ConsoGazVehNoImport=Id of vehicule to never import
 ConsoGazVehNoImportHelp=Separated by coma
 ConsoProductCodeUseIntoReport=Product Code imported
-ConsoProductCodeUseIntoReportHelp=Product code must be quoted and separate by coma. By exemple '03','04'
+ConsoProductCodeUseIntoReportHelp=Product code must be quoted and separate by coma. By exemple '03','10'
+ConsoSecurityKey=Security key used by script to update all consumption
+ConsoGazoilLaunchGlobalCalcualtion=Global computation of consumption
+ConsoScriptLink=Or use this link in other tool to luanch global calculation 
 
 #
 # About page
@@ -69,6 +72,11 @@ ConsoGazManageReport=Reports
 ConsoGazReportConso=Conso. Gazoil/Vehicule/Month 
 ConsoGazReportTakeNoPref=Gazoil no prefered station
 ConsoGazReportKM=Km/Vehicule
+ConsoGazReportConsoOriginal=Conso. Gazoil/Vehicule/Month  (Method 1)
+ConsoGazReportConsoOtherCalculation=Conso. Gazoil/Vehicule/Month  (Method 2)
+ConsoGazReportKMOriginal=Km/Vehicule (Method 1)
+ConsoGazReportKMOtherCalculation=Km/Vehicule (Method 2)
+
 
 #
 # Common
@@ -115,7 +123,7 @@ Showing=Showing
 # Import
 #
 ConsoGazImportQual=This line will not be import : %s
-ConsoGazImportCdProd=Only code product 03 will be import
+ConsoGazImportCdProd=Only code product %s will be import
 ConsoGazImportMustBeNumeric=This information : %s, must a be valid number
 ConsoGazImportQualDtFormat=The date format must be valid YYYYMMDD (%s)
 ConsoGazImportQualHourFormat=The hour format must be HHMM (%s)

@@ -72,6 +72,10 @@ if ($action == 'setvar')
 	$res = dolibarr_set_const($db, 'GAZOIL_PROD_CODE_REPORT', $val,'chaine',0,'',$conf->entity);
 	if (! $res > 0) $error++;
 	
+	$val=GETPOST('GAZOIL_KEY_SCRIPT','alpha');
+	$res = dolibarr_set_const($db, 'GAZOIL_KEY_SCRIPT', $val,'chaine',0,'',$conf->entity);
+	if (! $res > 0) $error++;
+	
 	
 	if (! $error)
 	{
@@ -88,6 +92,23 @@ if ($action == 'setvar')
  */
 $page_name = "ConsoGazoilSetup";
 llxHeader('', $langs->trans($page_name));
+
+if (! empty($conf->use_javascript_ajax))
+{
+	print "\n".'<script type="text/javascript">';
+	print '$(document).ready(function () {
+            $("#generate_token").click(function() {
+            	$.get( "'.DOL_URL_ROOT.'/core/ajax/security.php", {
+            		action: \'getrandompassword\',
+            		generic: true
+				},
+				function(token) {
+					$("#GAZOIL_KEY_SCRIPT").val(token);
+				});
+            });
+    });';
+	print '</script>';
+}
 
 $form=new Form($db);
 
@@ -159,7 +180,7 @@ print $form->textwithpicto('',$langs->trans("ConsoGazVehNoImportHelp"),1,'help')
 print '</td>';
 print '</tr>';
 
-//GAZOIL_ID_VEH_NO_IMPORT
+//GAZOIL_PROD_CODE_REPORT
 print '<tr class="pair"><td>'.$langs->trans("ConsoProductCodeUseIntoReport").'</td>';
 print '<td align="left">';
 print '<input type="text"  name="GAZOIL_PROD_CODE_REPORT"  size="10" value="'.$conf->global->GAZOIL_PROD_CODE_REPORT.'"></td>';
@@ -168,12 +189,32 @@ print $form->textwithpicto('',$langs->trans("ConsoProductCodeUseIntoReportHelp")
 print '</td>';
 print '</tr>';
 
+//GAZOIL_KEY_SCRIPT
+print '<tr class="pair"><td>'.$langs->trans("ConsoSecurityKey").'</td>';
+print '<td align="left">';
+print '<input type="text" class="flat" id="GAZOIL_KEY_SCRIPT" name="GAZOIL_KEY_SCRIPT" value="'. $conf->global->GAZOIL_KEY_SCRIPT . '" size="40"></td>';
+print '<td align="center">';
+if (! empty($conf->use_javascript_ajax))
+	print '&nbsp;'.img_picto($langs->trans('Generate'), 'refresh', 'id="generate_token" class="linkobject"');
+print '</td>';
+print '</tr>';
 
 print '<tr class="impair"><td colspan="3" align="right"><input type="submit" class="button" value="'.$langs->trans("Save").'"></td>';
 print '</tr>';
 
 print '</table><br>';
 print '</form>';
+
+print '<table class="noborder" width="100%">';
+
+echo $langs->trans("ConsoGazoilLaunchGlobalCalcualtion");
+print '<tr class="pair"><td>';
+print '<a target="_blanck" href="'.dol_buildpath('/consogazoil/scripts/calc_conso_all.php',1).'?login='.$user->login.'&key='.$conf->global->GAZOIL_KEY_SCRIPT.'">'.$langs->trans('ConsoGazoilLaunchGlobalCalcualtion').'</a>';
+print '</td></tr>';
+print '<tr class="impair"><td>';
+print $langs->trans('ConsoScriptLink').' '.dol_buildpath('/consogazoil/scripts/calc_conso_all.php',1).'?login='.$user->login.'&key='.$conf->global->GAZOIL_KEY_SCRIPT;
+print '</td></tr>';
+print '</table>';
 
 
 llxFooter();

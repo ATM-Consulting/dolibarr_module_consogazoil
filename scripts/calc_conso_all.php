@@ -15,11 +15,6 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-error_reporting(E_ALL);
-ini_set('display_errors', true);
-ini_set('html_errors', false);
-
-
 
 /**
  *       \file       /consogazoil/scripts/calc_conso_all.php
@@ -41,10 +36,19 @@ dol_include_once('/consogazoil/class/consogazoilvehtake.class.php');
 dol_include_once('/user/class/user.class.php');
 
 $userlogin=GETPOST('login');
+$key=GETPOST('key');
 
 
 $user=new User($db);
 $result=$user->fetch('',$userlogin);
+if (empty($user->id)) {
+	print 'user do not exists!';
+	exit;
+}
+if ($key!=$conf->global->GAZOIL_KEY_SCRIPT) {
+	print 'key is not valid!';
+	exit;
+}
 
 $sql = "SELECT t.rowid";
 $sql .= " FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake as t";
@@ -57,8 +61,9 @@ if ($resql) {
 			if (!empty($gazoil->id)) {
 			
 				$result = $gazoil->calc_conso($user);
-				if ($result>0) {
+				if ($result<0) {
 					print -1;
+					print ' $gazoil->error='.$gazoil->error.'<BR>';
 				} else {
 					print 1;
 				}
