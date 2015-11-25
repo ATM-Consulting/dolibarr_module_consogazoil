@@ -78,7 +78,7 @@ print_fiche_titre($langs->trans("ConsoGazoilSetup"), $linkback, 'setup');
 print "<br>\n";
 
 // Configuration header
-$head = referencelettersAdminPrepareHead();
+$head = consogazoilAdminPrepareHead();
 dol_fiche_head($head, 'attributes', $langs->trans("Module103040Name"), 0, "consogazoil@consogazoil");
 
 print $langs->trans("DefineHereComplementaryAttributes", $langs->transnoentitiesnoconv("Module103040Name")) . '<br>' . "\n";
