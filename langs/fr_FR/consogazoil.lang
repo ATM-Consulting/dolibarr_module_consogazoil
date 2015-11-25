@@ -65,10 +65,13 @@ ConsoGazoleAboutPage = Page à propos de Consommation Gazole
 # Menu
 #
 ConsoGazManageVeh=Gérer les Véhicules
+ConsoGazVehicule=Véhicules
 ConsoGazList=Liste
 ConsoGazNew=Créer
 ConsoGazManageServ=Gérer les Services
+ConsoGazService=Service
 ConsoGazManageSta=Gérer les Stations
+ConsoGazStation=Stations
 ConsoGazManageDriv=Gérer les Conducteurs
 ConsoGazManageImport=Import fichier
 ConsoGazManageReport=Rapport

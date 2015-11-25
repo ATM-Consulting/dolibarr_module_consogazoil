@@ -64,10 +64,13 @@ ConsoGazoilAboutPage = Gazoil consumption about page
 # Menu
 #
 ConsoGazManageVeh=Manage Vehicule
+ConsoGazVehicule=Vehicule
 ConsoGazList=List
 ConsoGazNew=Create
 ConsoGazManageServ=Manage Service
+ConsoGazService=Service
 ConsoGazManageSta=Manage Station
+ConsoGazStation=Station
 ConsoGazManageDriv=Manage Driver
 ConsoGazManageImport=Import
 ConsoGazManageReport=Reports
