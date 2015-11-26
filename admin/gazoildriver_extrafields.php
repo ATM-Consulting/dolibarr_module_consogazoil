@@ -79,7 +79,7 @@ print "<br>\n";
 
 // Configuration header
 $head = consogazoilAdminPrepareHead();
-dol_fiche_head($head, 'attributes', $langs->trans("Module103040Name"), 0, "consogazoil@consogazoil");
+dol_fiche_head($head, 'extrafieldsdriver', $langs->trans("Module103040Name"), 0, "consogazoil@consogazoil");
 
 print $langs->trans("DefineHereComplementaryAttributes", $langs->transnoentitiesnoconv("Module103040Name")) . '<br>' . "\n";
 print '<br>';

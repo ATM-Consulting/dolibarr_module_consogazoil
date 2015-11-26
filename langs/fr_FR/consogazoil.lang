@@ -36,7 +36,7 @@ Permission103047=Voir les montants des Consommation Gazole
 # Page d'administration
 #
 ConsoGazoleSetup = Configuration du module Consommation Gazole
-Settings = Réglages
+ConsoGazoilSettings = Réglages du module Consommation Gazole
 ConsoGazoleSetupPage = Page de réglage de Consommation Gazole
 ConsoGazThresoldConso=Seuil d'alerte dans le rapport consommation de carburant par véhicule par mois 
 ConsoGazThresoldKM=Seuil d'alerte dans le rapport de prise de carburant
@@ -71,8 +71,9 @@ ConsoGazNew=Créer
 ConsoGazManageServ=Gérer les Services
 ConsoGazService=Service
 ConsoGazManageSta=Gérer les Stations
-ConsoGazStation=Stations
+ConsoGazStation=Station
 ConsoGazManageDriv=Gérer les Conducteurs
+ConsoGazDriver=Conducteur
 ConsoGazManageImport=Import fichier
 ConsoGazManageReport=Rapport
 ConsoGazReportConso=Suivi Conso. de carburant/ véhicule/ mois 

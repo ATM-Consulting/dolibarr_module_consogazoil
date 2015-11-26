@@ -35,7 +35,7 @@ Permission103046=Export Conso Gazoil data
 # Admin page
 #
 ConsoGazoilSetup = Gazoil consumption setup
-Settings = Settings
+ConsoGazoilSettings = Settings Gazoil consumption
 ConsoGazoilSetupPage = Gazoil consumption setup page
 ConsoGazThresoldConso=Thresold of flag in report Usage per month per vehicule
 ConsoGazThresoldKM=Thresold of flag in report Taking gazoil
@@ -72,6 +72,7 @@ ConsoGazService=Service
 ConsoGazManageSta=Manage Station
 ConsoGazStation=Station
 ConsoGazManageDriv=Manage Driver
+ConsoGazDriver=Driver
 ConsoGazManageImport=Import
 ConsoGazManageReport=Reports
 ConsoGazReportConso=Conso. Gazoil/Vehicule/Month 

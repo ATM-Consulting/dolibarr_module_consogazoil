@@ -145,6 +145,16 @@ class ConsogazoilVehicule extends CommonObjectConsoGazoil
         $resql=$this->db->query($sql);
     	if (! $resql) { $error++; $this->errors[]="Error ".$this->db->lasterror(); }
 
+    	if (! $error) {
+    	
+    		if (empty($conf->global->MAIN_EXTRAFIELDS_DISABLED)) {
+    			$result = $this->insertExtraFields();
+    			if ($result < 0) {
+    				$error ++;
+    			}
+    		}
+    	}
+    	
 		if (! $error)
         {
             $this->id = $this->db->last_insert_id(MAIN_DB_PREFIX."consogazoil_vehicule");
@@ -162,6 +172,8 @@ class ConsogazoilVehicule extends CommonObjectConsoGazoil
 	            //// End call triggers
 			}
         }
+        
+       
 
         // Commit or rollback
         if ($error)
@@ -241,7 +253,13 @@ class ConsogazoilVehicule extends CommonObjectConsoGazoil
 				$this->activ = $obj->activ;
 				$this->import_key = $obj->import_key;
 
-                
+				$extrafields = new ExtraFields($this->db);
+				$extralabels = $extrafields->fetch_name_optionals_label($this->table_element, true);
+				if (count($extralabels) > 0) {
+					$this->fetch_optionals($this->id, $extralabels);
+				}
+				
+				
             }
             $this->db->free($resql);
 
@@ -311,6 +329,17 @@ class ConsogazoilVehicule extends CommonObjectConsoGazoil
         $resql = $this->db->query($sql);
     	if (! $resql) { $error++; $this->errors[]="Error ".$this->db->lasterror(); }
 
+    	if (! $error) {
+    	
+    		if (empty($conf->global->MAIN_EXTRAFIELDS_DISABLED)) {
+    			$result = $this->insertExtraFields();
+    			if ($result < 0) {
+    				$error ++;
+    			}
+    		}
+    	}
+    	
+    	
 		if (! $error)
 		{
 			if (! $notrigger)

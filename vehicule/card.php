@@ -66,6 +66,15 @@ if ((($action=='delete') ||
 
 $object= new ConsogazoilVehicule($db);
 $object_link= new ConsogazoilVehiculeService($db);
+$extrafields = new ExtraFields($db);
+
+// fetch optionals attributes and labels
+$extralabels = $extrafields->fetch_name_optionals_label($object->table_element);
+
+// Initialize technical object to manage hooks of thirdparties. Note that conf->hooks_modules contains array array
+$hookmanager->initHooks(array(
+		'consogazoilvehiculecard'
+));
 
 $error=0;
 
@@ -97,6 +106,7 @@ if ($action=="create_confirm") {
 		$object->immat_veh=$immat_veh;
 		$object->avg_conso=$avg_conso;
 		
+		$extrafields->setOptionalsFromPost($extralabels, $object);
 		
 		$result=$object->create($user);
 	    if ($result<0) {
@@ -185,7 +195,17 @@ else if ($action == 'confirm_delete' && $confirm == 'yes' && $user->rights->cons
 		header('Location:'.dol_buildpath('/consogazoil/vehicule/list.php',1));
 	}
 }
+else if ($action=="update") {
 
+	$extrafields->setOptionalsFromPost($extralabels, $object);
+		
+	$result=$object->update($user);
+    if ($result<0) {
+		setEventMessage($object->errors,'errors');
+	}else {
+		header('Location:'.dol_buildpath('/consogazoil/vehicule/card.php',1).'?id='.$object->id);
+	}
+}
 
 
 /*
@@ -243,6 +263,13 @@ if ($action == 'create' && $user->rights->consogazoil->creer)
 	print '</td>';
 	print '</tr>';
 	
+	// Other attributes
+	$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
+	
+	if (empty($reshook) && ! empty($extrafields->attribute_label)) {
+		print $object->showOptionals($extrafields, 'edit');
+	}
+	
 	print '<table>';
 
 	print '<center>';
@@ -274,6 +301,12 @@ if ($action == 'create' && $user->rights->consogazoil->creer)
 
 	$linkback = '<a href="'.dol_buildpath('/consogazoil/vehicule/list.php',1).'">'.$langs->trans("BackToList").'</a>';
 
+	if ($action=='edit') {
+		print '<form name="update" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'" method="POST">';
+		print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+		print '<input type="hidden" name="action" value="update">';
+	}
+	
 	print '<table class="border" width="100%">';
 	print '<tr>';
 	print '<td width="20%">';
@@ -301,71 +334,109 @@ if ($action == 'create' && $user->rights->consogazoil->creer)
 	print $form->editfieldval("activ",'activ',$object->activ,$object,$user->rights->consogazoil->modifier ,'select;1:'.$langs->trans("Yes").',0:'.$langs->trans("No"));
 	print '</td></tr>';
 	
+	// Other attributes
+	$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
+	
+	if (empty($reshook) && ! empty($extrafields->attribute_label)) {
+		if ($action=='edit') {
+			print $object->showOptionals($extrafields,'edit');
+		} else {
+			print $object->showOptionals($extrafields);
+		}
+	}
+	
 	print '</table>';
+	
+	if ($action=='edit') {
+		
+		print '<center>';
+		print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
+		print '&nbsp;<input type="button" class="button" value="'.$langs->trans("Cancel").'" onClick="javascript:history.go(-1)">';
+		print '</center>';
+		
+		print '</form>';
+	}
+	
 	print "</div>\n";
 
 	/*
 	 * Barre d'actions
 	*
 	*/
-	print '<div class="tabsAction">';
-
-	// Delete
-	if ($user->rights->consogazoil->supprimer)
-	{
-		print '<div class="inline-block divButAction"><a class="butActionDelete" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=delete">'.$langs->trans("Delete")."</a></div>\n";
+	if ($action!='edit') {
+		print '<div class="tabsAction">';
+	
+		if (! empty($extrafields->attribute_label)) {
+			// Edit
+			if ($user->rights->consogazoil->modifier)
+			{
+				print '<div class="inline-block divButAction"><a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=edit">'.$langs->trans("Edit")."</a></div>\n";
+			}
+			else
+			{
+				print '<div class="inline-block divButAction"><font class="butActionRefused" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans("Edit")."</font></div>";
+			}
+		}
+		// Delete
+		if ($user->rights->consogazoil->supprimer)
+		{
+			print '<div class="inline-block divButAction"><a class="butActionDelete" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=delete">'.$langs->trans("Delete")."</a></div>\n";
+		}
+		else
+		{
+			print '<div class="inline-block divButAction"><font class="butActionRefused" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans("Delete")."</font></div>";
+		}
+		
+		print '</div>';
 	}
-	else
-	{
-		print '<div class="inline-block divButAction"><font class="butActionRefused" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans("Delete")."</font></div>";
+	
+	if ($action!='edit') {
+		print_fiche_titre($langs->trans('ConsoGazManageServ'),'',dol_buildpath('/consogazoil/img/object_consogazoil.png',1),1);
+		
+		print '<div class="fiche">';
+		print '<form name="add" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'" method="POST">';
+		print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+		print '<input type="hidden" name="action" value="create_link_serv_confirm">';
+		
+		print '<table class="border" width="100%">';
+		print '<tr>';
+		print '<td class="fieldrequired"  width="20%">';
+		print $langs->trans('Label');
+		print '</td>';
+		print '<td>';
+		print $formconsogaz->select_service(GETPOST('service'));
+		print '</td>';
+		print '</tr>';
+		
+		print '<tr>';
+		print '<td class="fieldrequired"  width="20%">';
+		print $langs->trans('ConsoGazDtSt');
+		print '</td>';
+		print '<td>';
+		$form->select_date("", 'dtst','','','','create_link_serv_confirm');
+		print '</td>';
+		print '</tr>';
+		
+		print '<tr>';
+		print '<td class="fieldrequired"  width="20%">';
+		print $langs->trans('ConsoGazDtEnd');
+		print '</td>';
+		print '<td>';
+		$form->select_date("", 'dtend','','','','create_link_serv_confirm');
+		print '</td>';
+		print '</tr>';
+		print '<table>';
+		
+		print '<center>';
+		print '<input type="submit" class="button" value="'.$langs->trans("ConsoGazAssociate").'">';
+		print '</center>';
+		
+		
+		print '</form>';
+		print '</div>';
+		
+		include 'tpl/list_service.tpl.php';
 	}
-	print '</div>';
-	
-	print_fiche_titre($langs->trans('ConsoGazManageServ'),'',dol_buildpath('/consogazoil/img/object_consogazoil.png',1),1);
-	
-	print '<div class="fiche">';
-	print '<form name="add" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'" method="POST">';
-	print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
-	print '<input type="hidden" name="action" value="create_link_serv_confirm">';
-	
-	print '<table class="border" width="100%">';
-	print '<tr>';
-	print '<td class="fieldrequired"  width="20%">';
-	print $langs->trans('Label');
-	print '</td>';
-	print '<td>';
-	print $formconsogaz->select_service(GETPOST('service'));
-	print '</td>';
-	print '</tr>';
-	
-	print '<tr>';
-	print '<td class="fieldrequired"  width="20%">';
-	print $langs->trans('ConsoGazDtSt');
-	print '</td>';
-	print '<td>';
-	$form->select_date("", 'dtst','','','','create_link_serv_confirm');
-	print '</td>';
-	print '</tr>';
-	
-	print '<tr>';
-	print '<td class="fieldrequired"  width="20%">';
-	print $langs->trans('ConsoGazDtEnd');
-	print '</td>';
-	print '<td>';
-	$form->select_date("", 'dtend','','','','create_link_serv_confirm');
-	print '</td>';
-	print '</tr>';
-	print '<table>';
-	
-	print '<center>';
-	print '<input type="submit" class="button" value="'.$langs->trans("ConsoGazAssociate").'">';
-	print '</center>';
-	
-	
-	print '</form>';
-	print '</div>';
-	
-	include 'tpl/list_service.tpl.php';
 
 	
 }

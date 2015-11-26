@@ -114,11 +114,13 @@ if ($_GET['sSearch'] != "") {
 	$numColumns = count($aColumns);
 	for($i = 0; $i < $numColumns; $i ++) {
 		
-		if (($aColumns[$i] == "ref") || ($aColumns[$i] == "immat_veh")) {
+		if (($aColumns[$i] == "t.ref") || ($aColumns[$i] == "t.immat_veh")) {
 			$sWhere .= $aColumns[$i] . " LIKE '%" . $db->escape($_GET['sSearch']) . "%' OR ";
 		}
-		if (($aColumns[$i] == "avg_conso") && (is_numeric($_GET['sSearch']))) {
+		elseif (($aColumns[$i] == "t.avg_conso") && (is_numeric($_GET['sSearch']))) {
 			$sWhere .= $aColumns[$i] . " = " . $db->escape($_GET['sSearch']) . " OR ";
+		} else {
+			$sWhere .= $aColumns[$i] . " LIKE '%" . $db->escape($_GET['sSearch']) . "%' OR ";
 		}
 	}
 	$sWhere = substr_replace($sWhere, "", - 3);
@@ -143,7 +145,7 @@ $rResult = $db->query($sQuery);
 
 /* Data set length after filtering */
 $sQuery = "
-		SELECT count(rowid) FROM   $sTable ";
+		SELECT count(t.rowid) FROM   $sTable as t";
 $sQuery .= " LEFT OUTER JOIN ".$sTable."_extrafields as extra ON extra.fk_object=t.rowid";
 $sQuery .= " $sWhere
 			$sLimit
@@ -174,12 +176,15 @@ $output = array (
 while ( $aRow = $db->fetch_array($rResult) ) {
 	$row = array ();
 	for($i = 0; $i < $numColumns; $i ++) {
-		if ($aColumns[$i] == "ref") {
+		if ($aColumns[$i] == "t.ref") {
 			$object->fetch($aRow[$aColumns[0]]);
 			$row[] = $object->getNomUrl();
-		} else if ($aColumns[$i] != "rowid") {
-			$row[] = $aRow[$aColumns[$i]];
-		}
+		} elseif (strpos($aColumns[$i],'extra.')!==false) {
+			$extrafields_name=str_replace('extra.', '', $aColumns[$i]);
+			$row[]=$extrafields->showOutputField($extrafields_name,$aRow[$i]);
+		} elseif ($aColumns[$i] != "t.rowid") {
+			$row[] = $aRow[$i];
+		} 
 	}
 	$output['aaData'][] = $row;
 }

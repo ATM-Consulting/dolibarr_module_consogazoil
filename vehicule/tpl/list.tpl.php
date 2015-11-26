@@ -31,7 +31,7 @@ $(document).ready(function() {
 		}
 		?>
 		"oTableTools": {
-			"sSwfPath": "<?php echo dol_buildpath('/includes/jquery/plugins/datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf',1); ?>"
+			"sSwfPath": "<?php echo dol_buildpath('/includes/jquery/plugins/datatables/extensions/TableTools/swf/copy_csv_xls_pdf.swf',1); ?>"
 		},
 		"bJQueryUI": true,
 		"sPaginationType": "full_numbers",
@@ -68,7 +68,6 @@ $(document).ready(function() {
 			$object= new ConsogazoilVehicule($db);
 			$extrafields = new ExtraFields($db);
 			$extralabels = $extrafields->fetch_name_optionals_label($object->table_element);
-			
 			if (count($extrafields->attribute_label) > 0)
 			{
 				foreach($extrafields->attribute_label as $key=>$label) {

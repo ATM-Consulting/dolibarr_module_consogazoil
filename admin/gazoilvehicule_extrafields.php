@@ -51,7 +51,7 @@ foreach ($tmptype2label as $key => $val)
 
 $action = GETPOST('action', 'alpha');
 $attrname = GETPOST('attrname', 'alpha');
-$elementtype = 'consogazoil_station'; // Must be the $table_element of the class that manage extrafield
+$elementtype = 'consogazoil_vehicule'; // Must be the $table_element of the class that manage extrafield
 
 if (! $user->admin)
 	accessforbidden();
@@ -79,7 +79,7 @@ print "<br>\n";
 
 // Configuration header
 $head = consogazoilAdminPrepareHead();
-dol_fiche_head($head, 'attributes', $langs->trans("Module103040Name"), 0, "consogazoil@consogazoil");
+dol_fiche_head($head, 'extrafieldsvehicule', $langs->trans("Module103040Name"), 0, "consogazoil@consogazoil");
 
 print $langs->trans("DefineHereComplementaryAttributes", $langs->transnoentitiesnoconv("Module103040Name")) . '<br>' . "\n";
 print '<br>';
