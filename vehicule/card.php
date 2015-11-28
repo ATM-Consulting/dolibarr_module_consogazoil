@@ -60,11 +60,12 @@ if ((($action == 'delete') || ($action == 'delete_confirm')) && (empty($user->ri
 
 $object = new ConsogazoilVehicule($db);
 $object_link = new ConsogazoilVehiculeService($db);
-$extrafields = new ExtraFields($db);
 
+$extrafields = new ExtraFields($db);
+$extrafields_link = new ExtraFields($db);
 // fetch optionals attributes and labels
 $extralabels = $extrafields->fetch_name_optionals_label($object->table_element);
-
+$extralabels_link = $extrafields_link->fetch_name_optionals_label($object_link->table_element);
 // Initialize technical object to manage hooks of thirdparties. Note that conf->hooks_modules contains array array
 $hookmanager->initHooks(array (
 		'consogazoilvehiculecard' 
@@ -118,6 +119,9 @@ if ($action == "create_confirm") {
 		$object_link->fk_vehicule = $object->id;
 		$object_link->date_start = $dtstart;
 		$object_link->date_end = $dtend;
+		
+		$extrafields_link->setOptionalsFromPost($extralabels_link, $object_link);
+		
 		$result = $object_link->create($user);
 		if ($result < 0) {
 			setEventMessage($object_link->errors, 'errors');
@@ -400,6 +404,15 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 		$form->select_date("", 'dtend', '', '', '', 'create_link_serv_confirm');
 		print '</td>';
 		print '</tr>';
+		
+		// Other attributes
+		$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
+
+		if (empty($reshook) && ! empty($extrafields_link->attribute_label)) {
+				print $object_link->showOptionals($extrafields_link, 'edit');
+		}
+		
+		
 		print '<table>';
 		
 		print '<center>';

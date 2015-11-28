@@ -73,6 +73,7 @@ ConsoGazManageSta=Manage Station
 ConsoGazStation=Station
 ConsoGazManageDriv=Manage Driver
 ConsoGazDriver=Driver
+ConsoGazVehiculeService=Link vehicule/service
 ConsoGazManageImport=Import
 ConsoGazManageReport=Reports
 ConsoGazReportConso=Conso. Gazoil/Vehicule/Month 

@@ -74,6 +74,7 @@ ConsoGazManageSta=Gérer les Stations
 ConsoGazStation=Station
 ConsoGazManageDriv=Gérer les Conducteurs
 ConsoGazDriver=Conducteur
+ConsoGazVehiculeService=Association vehicules/services
 ConsoGazManageImport=Import fichier
 ConsoGazManageReport=Rapport
 ConsoGazReportConso=Suivi Conso. de carburant/ véhicule/ mois 

@@ -66,6 +66,16 @@ $(document).ready(function() {
 			<?php echo getTitleFieldOfList($langs->trans('ConsoGazDtSt'),1); ?>
 			<?php echo getTitleFieldOfList($langs->trans('ConsoGazDtEnd'),1); ?>
 			<?php
+			$object = new ConsogazoilVehiculeService($db);
+			$extrafields = new ExtraFields($db);
+			$extralabels = $extrafields->fetch_name_optionals_label($object->table_element);
+			if (count($extrafields->attribute_label) > 0) {
+				foreach ( $extrafields->attribute_label as $key => $label ) {
+					echo getTitleFieldOfList($label, 1);
+				}
+			}
+			?>
+			<?php
 			if ($user->rights->consogazoil->supprimer) {
 				echo getTitleFieldOfList($langs->trans('Delete'), 1);
 			}

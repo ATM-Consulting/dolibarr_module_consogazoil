@@ -26,6 +26,7 @@ if (! $res)
 
 require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
 require_once '../class/consogazoilvehicule.class.php';
+require_once '../class/consogazoilvehiculeservice.class.php';
 
 // Load translation files required by the page
 $langs->load("consogazoil@consogazoil");

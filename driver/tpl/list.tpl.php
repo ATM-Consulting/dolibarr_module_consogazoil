@@ -64,6 +64,16 @@ $(document).ready(function() {
 		<tr>
 			<?php echo getTitleFieldOfList($langs->trans('Ref'),1); ?>
 			<?php echo getTitleFieldOfList($langs->trans('Name'),1); ?>
+			<?php
+			$object = new ConsogazoilDriver($db);
+			$extrafields = new ExtraFields($db);
+			$extralabels = $extrafields->fetch_name_optionals_label($object->table_element);
+			if (count($extrafields->attribute_label) > 0) {
+				foreach ( $extrafields->attribute_label as $key => $label ) {
+					echo getTitleFieldOfList($label, 1);
+				}
+			}
+			?>
 		</tr>
 	</thead>
 	<tbody>

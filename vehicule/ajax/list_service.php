@@ -38,6 +38,8 @@ if (! $res)
 $veh_id = GETPOST('vehid', 'int');
 
 dol_include_once('/consogazoil/class/consogazoilservice.class.php');
+dol_include_once('/consogazoil/class/consogazoilvehiculeservice.class.php');
+require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
 
 $langs->load("consogazoil@consogazoil");
 
@@ -48,18 +50,29 @@ top_httphead();
 // print_r($_GET);
 
 $object = new ConsogazoilService($db);
+$object_link = new ConsogazoilVehiculeService($db);
 
 /* Array of database columns which should be read and sent back to DataTables. Use a space where
  * you want to insert a non-database field (for example a counter or static image)
  */
 $aColumns = array (
+		'serv.label',
 		't.fk_vehicule',
 		't.fk_service',
-		'serv.label',
 		't.date_start',
-		't.date_end',
-		't.rowid' 
+		't.date_end'
 );
+
+$extrafields = new ExtraFields($db);
+$extralabels = $extrafields->fetch_name_optionals_label($object_link->table_element);
+
+if (count($extrafields->attribute_label) > 0) {
+	foreach ( $extrafields->attribute_label as $key => $label ) {
+		$aColumns[] = 'extra.' . $key;
+	}
+}
+
+$aColumns[]='t.rowid';
 
 $numColumns = count($aColumns);
 
@@ -70,6 +83,7 @@ $sIndexColumn = "t.rowid";
 $sTable = MAIN_DB_PREFIX . "consogazoil_vehiculeservice as t ";
 $sTable .= "		INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_service as serv ON t.fk_service=serv.rowid ";
 $sTable .= "		INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON t.fk_vehicule=veh.rowid ";
+$sTable .= "		LEFT OUTER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehiculeservice_extrafields as extra ON extra.fk_object=t.rowid";
 
 /*
  * Paging
@@ -110,6 +124,8 @@ if ($_GET['sSearch'] != "") {
 	for($i = 0; $i < $numColumns; $i ++) {
 		
 		if ($aColumns[$i] == "serv.label") {
+			$sWhere .= $aColumns[$i] . " LIKE '%" . $db->escape($_GET['sSearch']) . "%' OR ";
+		} elseif ($aColumns[$i] != "t.rowid") {
 			$sWhere .= $aColumns[$i] . " LIKE '%" . $db->escape($_GET['sSearch']) . "%' OR ";
 		}
 	}
@@ -165,20 +181,18 @@ while ( $aRow = $db->fetch_array($rResult) ) {
 	$row = array ();
 	for($i = 0; $i < $numColumns; $i ++) {
 		if ($aColumns[$i] == "serv.label") {
-			
-			$object->fetch($aRow[1]);
+			$object->fetch($aRow[$numColumns]);
 			$row[] = $object->getNomUrl();
-		}
-		
-		if (($aColumns[$i] == "t.date_start") || ($aColumns[$i] == "t.date_end")) {
+		} elseif (($aColumns[$i] == "t.date_start") || ($aColumns[$i] == "t.date_end")) {
 			$row[] = dol_print_date($db->jdate($aRow[$i]), 'daytextshort');
-		}
-		
-		if ($aColumns[$i] == "t.rowid") {
+		} elseif (strpos($aColumns[$i], 'extra.') !== false) {
+			$extrafields_name = str_replace('extra.', '', $aColumns[$i]);
+			$row[] = $extrafields->showOutputField($extrafields_name, $aRow[$i]);
+		} elseif ($aColumns[$i] == "t.rowid") {
 			if ($user->rights->consogazoil->supprimer) {
 				$row[] = '<a href="' . dol_buildpath('/consogazoil/vehicule/card.php', 1) . '?id=' . $veh_id . '&id_link=' . $aRow[$i] . '&action=delete_link">' . $langs->trans("Delete") . "</a>\n";
 			}
-		}
+		} 
 	}
 	$output['aaData'][] = $row;
 }

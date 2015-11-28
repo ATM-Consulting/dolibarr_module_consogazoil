@@ -21,9 +21,13 @@
  * \ingroup consogazoil
  */
 $res = @include '../../main.inc.php'; // For root directory
-if (! $res)
+if (! $res) {
 	$res = @include '../../../main.inc.php'; // For "custom" directory
-		                                                     
+}                                          
+
+require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
+require_once '../class/consogazoildriver.class.php';
+	
 // Load translation files required by the page
 $langs->load("consogazoil@consogazoil");
 

@@ -33,7 +33,7 @@ require_once '../lib/consogazoil.lib.php';
 // require_once "../class/myclass.class.php";
 // Translations
 $langs->load("consogazoil@consogazoil");
-
+$langs->load("admin");
 // Access control
 if (! $user->admin) {
 	accessforbidden();
