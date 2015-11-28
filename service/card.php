@@ -29,6 +29,7 @@ if (! $res) {
 }
 require_once '../class/consogazoilservice.class.php';
 require_once '../lib/consogazoil.lib.php';
+require_once DOL_DOCUMENT_ROOT."/core/class/extrafields.class.php";
 
 $langs->load ( "consogazoil@consogazoil" );
 
@@ -53,6 +54,15 @@ if ((($action == 'delete') || ($action == 'delete_confirm')) && (empty ( $user->
 */
 
 $object = new ConsogazoilService ( $db );
+$extrafields = new ExtraFields($db);
+
+// fetch optionals attributes and labels
+$extralabels = $extrafields->fetch_name_optionals_label($object->table_element);
+
+// Initialize technical object to manage hooks of thirdparties. Note that conf->hooks_modules contains array array
+$hookmanager->initHooks(array(
+		'consogazoilservicecard'
+));
 
 $error = 0;
 
@@ -74,6 +84,8 @@ if ($action == "create_confirm") {
 	if (empty ( $error )) {
 		$object->ref = $ref;
 		$object->label = $label;
+		
+		$extrafields->setOptionalsFromPost($extralabels, $object);
 		
 		$result = $object->create ( $user );
 		if ($result < 0) {
@@ -104,6 +116,16 @@ if ($action == "create_confirm") {
 		setEventMessage ( $object->errors, 'errors' );
 	} else {
 		header ( 'Location:' . dol_buildpath ( '/consogazoil/service/list.php', 1 ) );
+	}
+}else if ($action=="update") {
+
+	$extrafields->setOptionalsFromPost($extralabels, $object);
+		
+	$result=$object->update($user);
+    if ($result<0) {
+		setEventMessage($object->errors,'errors');
+	}else {
+		header('Location:'.dol_buildpath('/consogazoil/service/card.php',1).'?id='.$object->id);
 	}
 }
 
@@ -143,6 +165,13 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 	print '</td>';
 	print '</tr>';
 	
+	// Other attributes
+	$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
+	
+	if (empty($reshook) && ! empty($extrafields->attribute_label)) {
+		print $object->showOptionals($extrafields, 'edit');
+	}
+	
 	print '<table>';
 	
 	print '<center>';
@@ -167,6 +196,13 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 	
 	$linkback = '<a href="' . dol_buildpath ( '/consogazoil/service/list.php', 1 ) . '">' . $langs->trans ( "BackToList" ) . '</a>';
 	
+	if ($action=='edit') {
+		print '<form name="update" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'" method="POST">';
+		print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+		print '<input type="hidden" name="action" value="update">';
+	}
+	
+	
 	print '<table class="border" width="100%">';
 	print '<tr>';
 	print '<td width="20%">';
@@ -186,22 +222,63 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 	print $form->editfieldval ( "Label", 'label', $object->label, $object, $user->rights->consogazoil->modifier, 'string' );
 	print '</td></tr>';
 	
+	// Other attributes
+	$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
+	
+	if (empty($reshook) && ! empty($extrafields->attribute_label)) {
+		if ($action=='edit') {
+			print $object->showOptionals($extrafields,'edit');
+		} else {
+			print $object->showOptionals($extrafields);
+		}
+	}
+	
 	print '</table>';
+	
+	
+	if ($action=='edit') {
+	
+		print '<center>';
+		print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
+		print '&nbsp;<input type="button" class="button" value="'.$langs->trans("Cancel").'" onClick="javascript:history.go(-1)">';
+		print '</center>';
+	
+		print '</form>';
+	}
+	
+	
 	print "</div>\n";
 	
 	/*
 	 * Barre d'actions
 	*
 	*/
-	print '<div class="tabsAction">';
+	if ($action!='edit') {
+		print '<div class="tabsAction">';
 	
-	// Delete
-	if ($user->rights->consogazoil->supprimer) {
-		print '<div class="inline-block divButAction"><a class="butActionDelete" href="' . $_SERVER ['PHP_SELF'] . '?id=' . $object->id . '&action=delete">' . $langs->trans ( "Delete" ) . "</a></div>\n";
-	} else {
-		print '<div class="inline-block divButAction"><font class="butActionRefused" href="#" title="' . dol_escape_htmltag ( $langs->trans ( "NotEnoughPermissions" ) ) . '">' . $langs->trans ( "Delete" ) . "</font></div>";
+		if (! empty($extrafields->attribute_label)) {
+			// Edit
+			if ($user->rights->consogazoil->modifier)
+			{
+				print '<div class="inline-block divButAction"><a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=edit">'.$langs->trans("Edit")."</a></div>\n";
+			}
+			else
+			{
+				print '<div class="inline-block divButAction"><font class="butActionRefused" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans("Edit")."</font></div>";
+			}
+		}
+		// Delete
+		if ($user->rights->consogazoil->supprimer)
+		{
+			print '<div class="inline-block divButAction"><a class="butActionDelete" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=delete">'.$langs->trans("Delete")."</a></div>\n";
+		}
+		else
+		{
+			print '<div class="inline-block divButAction"><font class="butActionRefused" href="#" title="'.dol_escape_htmltag($langs->trans("NotEnoughPermissions")).'">'.$langs->trans("Delete")."</font></div>";
+		}
+		
+		print '</div>';
 	}
-	print '</div>';
 }
 
 // End of page

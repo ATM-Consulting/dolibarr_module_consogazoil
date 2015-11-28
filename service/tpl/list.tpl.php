@@ -31,7 +31,7 @@ $(document).ready(function() {
 		}
 		?>
 		"oTableTools": {
-			"sSwfPath": "<?php echo dol_buildpath('/includes/jquery/plugins/datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf',1); ?>"
+			"sSwfPath": "<?php echo dol_buildpath('/includes/jquery/plugins/datatables/extensions/TableTools/swf/copy_csv_xls_pdf.swf',1); ?>"
 		},
 		"bJQueryUI": true,
 		"sPaginationType": "full_numbers",
@@ -64,7 +64,7 @@ $(document).ready(function() {
 			<?php echo getTitleFieldOfList($langs->trans('Ref'),1); ?>
 			<?php echo getTitleFieldOfList($langs->trans('Label'),1); ?>
 			<?php 
-			$object= new ConsogazoilStation($db);
+			$object= new ConsogazoilService($db);
 			$extrafields = new ExtraFields($db);
 			$extralabels = $extrafields->fetch_name_optionals_label($object->table_element);
 			

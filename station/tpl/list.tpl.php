@@ -31,7 +31,7 @@ $(document).ready(function() {
 		}
 		?>
 		"oTableTools": {
-			"sSwfPath": "<?php echo dol_buildpath('/includes/jquery/plugins/datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf',1); ?>"
+			"sSwfPath": "<?php echo dol_buildpath('/includes/jquery/plugins/datatables/extensions/TableTools/swf/copy_csv_xls_pdf.swf',1); ?>"
 		},
 		"bJQueryUI": true,
 		"sPaginationType": "full_numbers",

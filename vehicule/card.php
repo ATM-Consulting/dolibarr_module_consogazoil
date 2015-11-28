@@ -31,6 +31,7 @@ require_once '../class/consogazoilvehicule.class.php';
 require_once '../class/consogazoilvehiculeservice.class.php';
 require_once '../class/html.formconsogazoil.class.php';
 require_once '../lib/consogazoil.lib.php';
+require_once DOL_DOCUMENT_ROOT."/core/class/extrafields.class.php";
 
 
 $langs->load("consogazoil@consogazoil");
