@@ -17,26 +17,25 @@
  */
 
 /**
- *  \file		consogazoil/lib/import.ajax.lib.php
- *  \brief		Page called by Ajax request 
+ * \file consogazoil/lib/import.ajax.lib.php
+ * \brief Page called by Ajax request
  */
- 
-/**
- * 	Select for action in quality data import test action
- *
- * 	@param	string	$id		rowid to update
- * 	@param	string	$type	type of action type
- * 	@return	string	HTML select
- */
-function ajax_selectactions($id,$type)
-{
-	global $conf, $langs;
 
-	$out= '<script type="text/javascript">
+/**
+ * Select for action in quality data import test action
+ *
+ * @param string $id rowid to update
+ * @param string $type type of action type
+ * @return string HTML select
+ */
+function ajax_selectactions($id, $type) {
+	global $conf, $langs;
+	
+	$out = '<script type="text/javascript">
 		$(function() {
-			var url = \''.dol_buildpath('/consogazoil/import/ajax/update_temp_table.php',2).'\';
-			var code = \''.$id.'\';
-			var typesource=\''.$type.'\';
+			var url = \'' . dol_buildpath('/consogazoil/import/ajax/update_temp_table.php', 2) . '\';
+			var code = \'' . $id . '\';
+			var typesource=\'' . $type . '\';
 
 			// Set value
 			$("#act_" + typesource + "_" + code).change(function() {
@@ -49,15 +48,15 @@ function ajax_selectactions($id,$type)
 		});
 	</script>';
 	
-	$out.= '<select name="act_'.$type.'_'.$id.'" id="act_'.$type.'_'.$id.'">';
-	$out.= '<option value="nothing" selected="selected">'.$langs->trans('ConsoGazTraitementDoNothing').'</option>';
-	if ($type!='veh') {
-		$out.= '<option value="update">'.$langs->trans('ConsoGazColTraitementUpdate').'</option>';
+	$out .= '<select name="act_' . $type . '_' . $id . '" id="act_' . $type . '_' . $id . '">';
+	$out .= '<option value="nothing" selected="selected">' . $langs->trans('ConsoGazTraitementDoNothing') . '</option>';
+	if ($type != 'veh') {
+		$out .= '<option value="update">' . $langs->trans('ConsoGazColTraitementUpdate') . '</option>';
 	}
 	
-	$out.= '<option value="new">'.$langs->trans('ConsoGazColTraitementNew').'</option>';
+	$out .= '<option value="new">' . $langs->trans('ConsoGazColTraitementNew') . '</option>';
 	
-	$out.= '</select>';
-
+	$out .= '</select>';
+	
 	return $out;
 }

@@ -60,11 +60,10 @@ $aColumns = array (
 
 $extrafields = new ExtraFields($db);
 $extralabels = $extrafields->fetch_name_optionals_label($object->table_element);
-	
-if (count($extrafields->attribute_label) > 0)
-{
-	foreach($extrafields->attribute_label as $key=>$label) {
-		$aColumns[]='extra.'.$key;
+
+if (count($extrafields->attribute_label) > 0) {
+	foreach ( $extrafields->attribute_label as $key => $label ) {
+		$aColumns[] = 'extra.' . $key;
 	}
 }
 
@@ -116,10 +115,9 @@ if ($_GET['sSearch'] != "") {
 		
 		if (($aColumns[$i] == "t.ref") || ($aColumns[$i] == "t.immat_veh")) {
 			$sWhere .= $aColumns[$i] . " LIKE '%" . $db->escape($_GET['sSearch']) . "%' OR ";
-		}
-		elseif (($aColumns[$i] == "t.avg_conso") && (is_numeric($_GET['sSearch']))) {
+		} elseif (($aColumns[$i] == "t.avg_conso") && (is_numeric($_GET['sSearch']))) {
 			$sWhere .= $aColumns[$i] . " = " . $db->escape($_GET['sSearch']) . " OR ";
-		} else {
+		} elseif ($aColumns[$i] != "t.rowid") {
 			$sWhere .= $aColumns[$i] . " LIKE '%" . $db->escape($_GET['sSearch']) . "%' OR ";
 		}
 	}
@@ -134,7 +132,7 @@ if ($_GET['sSearch'] != "") {
 $sQuery = "
 		SELECT " . str_replace(" , ", " ", implode(", ", $aColumns)) . "
 			FROM   $sTable as t";
-$sQuery .= " LEFT OUTER JOIN ".$sTable."_extrafields as extra ON extra.fk_object=t.rowid";
+$sQuery .= " LEFT OUTER JOIN " . $sTable . "_extrafields as extra ON extra.fk_object=t.rowid";
 $sQuery .= " $sWhere
 			$sOrder
 			$sLimit
@@ -146,7 +144,7 @@ $rResult = $db->query($sQuery);
 /* Data set length after filtering */
 $sQuery = "
 		SELECT count(t.rowid) FROM   $sTable as t";
-$sQuery .= " LEFT OUTER JOIN ".$sTable."_extrafields as extra ON extra.fk_object=t.rowid";
+$sQuery .= " LEFT OUTER JOIN " . $sTable . "_extrafields as extra ON extra.fk_object=t.rowid";
 $sQuery .= " $sWhere
 			$sLimit
 			";
@@ -179,12 +177,12 @@ while ( $aRow = $db->fetch_array($rResult) ) {
 		if ($aColumns[$i] == "t.ref") {
 			$object->fetch($aRow[$aColumns[0]]);
 			$row[] = $object->getNomUrl();
-		} elseif (strpos($aColumns[$i],'extra.')!==false) {
-			$extrafields_name=str_replace('extra.', '', $aColumns[$i]);
-			$row[]=$extrafields->showOutputField($extrafields_name,$aRow[$i]);
+		} elseif (strpos($aColumns[$i], 'extra.') !== false) {
+			$extrafields_name = str_replace('extra.', '', $aColumns[$i]);
+			$row[] = $extrafields->showOutputField($extrafields_name, $aRow[$i]);
 		} elseif ($aColumns[$i] != "t.rowid") {
 			$row[] = $aRow[$i];
-		} 
+		}
 	}
 	$output['aaData'][] = $row;
 }

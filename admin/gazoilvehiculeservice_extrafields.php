@@ -43,10 +43,10 @@ $form = new Form($db);
 
 // List of supported format
 $tmptype2label = ExtraFields::$type2label;
-$type2label = array(
-	''
+$type2label = array (
+		'' 
 );
-foreach ($tmptype2label as $key => $val)
+foreach ( $tmptype2label as $key => $val )
 	$type2label[$key] = $langs->trans($val);
 
 $action = GETPOST('action', 'alpha');
@@ -100,7 +100,7 @@ print '<td width="80">&nbsp;</td>';
 print "</tr>\n";
 
 $var = True;
-foreach ($extrafields->attribute_type as $key => $value) {
+foreach ( $extrafields->attribute_type as $key => $value ) {
 	$var = ! $var;
 	print "<tr " . $bc[$var] . ">";
 	print "<td>" . $extrafields->attribute_label[$key] . "</td>\n";

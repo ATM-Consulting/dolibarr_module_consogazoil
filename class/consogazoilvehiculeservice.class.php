@@ -351,7 +351,7 @@ class ConsogazoilVehiculeService extends CommonObject {
 		if (! $error) {
 			$sql = "DELETE FROM " . MAIN_DB_PREFIX . "consogazoil_vehiculeservice_extrafields";
 			$sql .= " WHERE fk_object=" . $this->id;
-				
+			
 			dol_syslog(get_class($this) . "::delete sql=" . $sql);
 			$resql = $this->db->query($sql);
 			if (! $resql) {

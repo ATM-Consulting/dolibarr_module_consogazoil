@@ -23,8 +23,8 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	$("#list").dataTable( {
-		<?php 
-		if ($optioncss=='print') {
+		<?php
+		if ($optioncss == 'print') {
 			print '"sDom": "lfrtip",';
 		} else {
 			print '"sDom": \'T<"clear">lfrtip\',';
@@ -58,7 +58,8 @@ $(document).ready(function() {
 });
 </script>
 
-<table cellpadding="0" cellspacing="0" border="0" class="display" id="list">
+<table cellpadding="0" cellspacing="0" border="0" class="display"
+	id="list">
 	<thead>
 		<tr>
 			<?php echo getTitleFieldOfList($langs->trans('Ref'),1); ?>

@@ -273,7 +273,7 @@ class ConsogazoilStation extends CommonObjectConsoGazoil {
 		}
 		
 		if (! $error) {
-				
+			
 			if (empty($conf->global->MAIN_EXTRAFIELDS_DISABLED)) {
 				$result = $this->insertExtraFields();
 				if ($result < 0) {
@@ -352,7 +352,7 @@ class ConsogazoilStation extends CommonObjectConsoGazoil {
 		if (! $error) {
 			$sql = "DELETE FROM " . MAIN_DB_PREFIX . "consogazoil_station_extrafields";
 			$sql .= " WHERE fk_object=" . $this->id;
-				
+			
 			dol_syslog(get_class($this) . "::delete sql=" . $sql);
 			$resql = $this->db->query($sql);
 			if (! $resql) {

@@ -263,7 +263,7 @@ class ConsogazoilService extends CommonObjectConsoGazoil {
 		}
 		
 		if (! $error) {
-				
+			
 			if (empty($conf->global->MAIN_EXTRAFIELDS_DISABLED)) {
 				$result = $this->insertExtraFields();
 				if ($result < 0) {
