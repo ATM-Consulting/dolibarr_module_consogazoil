@@ -72,6 +72,15 @@ $aColumns = array (
 		't.produit' 
 );
 
+$extrafields = new ExtraFields($db);
+$extralabels = $extrafields->fetch_name_optionals_label($object->table_element);
+
+if (count($extrafields->attribute_label) > 0) {
+	foreach ( $extrafields->attribute_label as $key => $label ) {
+		$aColumns[] = 'extra.' . $key;
+	}
+}
+
 $numColumns = count($aColumns);
 
 /* Indexed column (used for fast and accurate table cardinality) */
@@ -82,6 +91,7 @@ $sTable = MAIN_DB_PREFIX . "consogazoil_vehtake as t ";
 $sTable .= "		INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_station as station ON t.fk_station=station.rowid ";
 $sTable .= "		INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_vehicule as veh ON t.fk_vehicule=veh.rowid ";
 $sTable .= "		INNER JOIN " . MAIN_DB_PREFIX . "consogazoil_driver as driv ON t.fk_driver=driv.rowid ";
+$sTable .= "		LEFT JOIN " . MAIN_DB_PREFIX . "consogazoil_vehtake_extrafields as extra ON extra.fk_object=t.rowid ";
 
 /*
  * Paging
@@ -131,6 +141,8 @@ if ($_GET['sSearch'] != "") {
 			}
 		} else if (($aColumns[$i] != "t.dt_hr_take") && ($aColumns[$i] != "t.rowid") && ($aColumns[$i] != "t.fk_vehicule") && ($aColumns[$i] != "t.fk_station") && ($aColumns[$i] != "t.fk_driver") && ($aColumns[$i] != "station.is_pref")) {
 			
+			$sWhere .= $aColumns[$i] . " LIKE '%" . $db->escape($_GET['sSearch']) . "%' OR ";
+		}elseif ($aColumns[$i] != "t.rowid") {
 			$sWhere .= $aColumns[$i] . " LIKE '%" . $db->escape($_GET['sSearch']) . "%' OR ";
 		}
 	}
@@ -238,6 +250,14 @@ while ( $aRow = $db->fetch_array($rResult) ) {
 	}
 	// km controle
 	$row[] = $aRow[8] . ' ' . $km_ctrl_picto;
+	
+	for($i = 0; $i < $numColumns; $i ++) {
+		if (strpos($aColumns[$i], 'extra.') !== false) {
+			$extrafields_name = str_replace('extra.', '', $aColumns[$i]);
+			$row[] = $extrafields->showOutputField($extrafields_name, $aRow[$i]);
+		}
+	}
+	
 	if ($user->rights->consogazoil->modifier) {
 		$row[] = '<a href="' . dol_buildpath('/consogazoil/take/card.php', 1) . '?id=' . $aRow[10] . '">' . $langs->trans("Show") . "</a>\n";
 	}

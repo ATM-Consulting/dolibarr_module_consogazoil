@@ -81,6 +81,7 @@ ConsoGazReportConso=Suivi Conso. de carburant/ véhicule/ mois
 ConsoGazReportTakeNoPref=Suivi de prise en station non préférentielle
 ConsoGazReportKM=Suivi du KM/ véhicule
 ConsoGazManageTake=Gérer les prises
+ConsoGazTake=Prise
 ConsoGazReportConsoOriginal=Suivi Conso. de carburant/ véhicule/ mois (Méthode 1)
 ConsoGazReportConsoOtherCalculation=Suivi Conso. de carburant/ véhicule/ mois (Méthode 2)
 ConsoGazReportKMOriginal=Suivi du KM/ véhicule (Méthode 1)
@@ -128,6 +129,9 @@ Last = Fin
 To=à
 ConsoGazOf=de
 Showing = Afficher
+ConsoGazSearch=Recherche
+All=Tous
+Showhidecols=Afficher les colonnes
 
 #
 # Import
@@ -183,6 +187,7 @@ ConsoGazColTraitementUpdate=Mettre à jour réf/nom
 ConsoGazColTraitementNew=Créer
 ConsoGazSampleFile=Vous pouvez télécharger le fichier d'exemple pour connaître le format approprié de cette import
 ConsoGazSendEmail=Envoie d'Email
+ConsoGazProd=Produit
 
 #
 # Report

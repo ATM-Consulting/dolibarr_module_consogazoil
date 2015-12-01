@@ -30,6 +30,7 @@ if (! $res) {
 require_once '../class/consogazoilvehtake.class.php';
 require_once '../class/html.formconsogazoil.class.php';
 require_once '../lib/consogazoil.lib.php';
+require_once DOL_DOCUMENT_ROOT . "/core/class/extrafields.class.php";
 
 $langs->load("consogazoil@consogazoil");
 
@@ -64,6 +65,15 @@ if ((($action == 'edit') || ($action == 'edit_confirm')) && (empty($user->rights
  */
 
 $object = new ConsogazoilVehTake($db);
+$extrafields = new ExtraFields($db);
+
+// fetch optionals attributes and labels
+$extralabels = $extrafields->fetch_name_optionals_label($object->table_element);
+
+// Initialize technical object to manage hooks of thirdparties. Note that conf->hooks_modules contains array array
+$hookmanager->initHooks(array (
+		'consogazoilvehtakecard' 
+));
 
 $error = 0;
 
@@ -129,6 +139,8 @@ if ($action == "create_confirm") {
 		$object->km_controle = $km_controle;
 		$object->dt_hr_take = $dt_take;
 		
+		$extrafields->setOptionalsFromPost($extralabels, $object);
+		
 		$result = $object->create($user);
 		if ($result < 0) {
 			setEventMessage($object->errors, 'errors');
@@ -187,6 +199,8 @@ if ($action == "create_confirm") {
 		$object->km_declare = $km_declare;
 		$object->km_controle = $km_controle;
 		$object->dt_hr_take = $dt_take;
+		
+		$extrafields->setOptionalsFromPost($extralabels, $object);
 		
 		$result = $object->update($user);
 		if ($result < 0) {
@@ -288,6 +302,13 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 	print '</td>';
 	print '</tr>';
 	
+	// Other attributes
+	$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
+	
+	if (empty($reshook) && ! empty($extrafields->attribute_label)) {
+		print $object->showOptionals($extrafields, 'edit');
+	}
+	
 	print '<table>';
 	
 	print '<center>';
@@ -325,7 +346,6 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 		print '<input type="hidden" name="id_veh" value="' . $object->fk_vehicule . '">';
 		print '</td>';
 		print '</tr>';
-		;
 	}
 	
 	If ($user->rights->consogazoil->import) {
@@ -426,6 +446,13 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 	$form->select_date($object->dt_hr_take, 'dttake', 1, 1, '', 'add');
 	print '</td>';
 	print '</tr>';
+	
+	// Other attributes
+	$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
+	
+	if (empty($reshook) && ! empty($extrafields->attribute_label)) {
+		print $object->showOptionals($extrafields, 'edit');
+	}
 	
 	print '<table>';
 	
@@ -531,6 +558,13 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 	print dol_print_date($object->dt_hr_take, 'dayhourtext');
 	print '</td>';
 	print '</tr>';
+	
+	// Other attributes
+	$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
+	
+	if (empty($reshook) && ! empty($extrafields->attribute_label)) {
+		print $object->showOptionals($extrafields);
+	}
 	
 	print '</table>';
 	print "</div>\n";

@@ -79,6 +79,8 @@ ConsoGazManageReport=Reports
 ConsoGazReportConso=Conso. Gazoil/Vehicule/Month 
 ConsoGazReportTakeNoPref=Gazoil no prefered station
 ConsoGazReportKM=Km/Vehicule
+ConsoGazManageTake=Manage take
+ConsoGazTake=Take
 ConsoGazReportConsoOriginal=Conso. Gazoil/Vehicule/Month  (Method 1)
 ConsoGazReportConsoOtherCalculation=Conso. Gazoil/Vehicule/Month  (Method 2)
 ConsoGazReportKMOriginal=Km/Vehicule (Method 1)
@@ -125,6 +127,8 @@ First = First
 Last = Last
 ConsoGazOf=Of
 Showing=Showing
+All=All
+Showhidecols=Display Column
 
 #
 # Import
@@ -178,6 +182,7 @@ ConsoGazColTraitementUpdate=Update
 ConsoGazColTraitementNew=Create
 ConsoGazSampleFile=You can download the sample file to know the correct import format
 ConsoGazSendEmail=Send Email
+ConsoGazProd=Product
 
 #
 # Report

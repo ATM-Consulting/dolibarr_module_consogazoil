@@ -177,6 +177,13 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		if (! $error) {
 			$this->id = $this->db->last_insert_id(MAIN_DB_PREFIX . "consogazoil_vehtake");
 			
+			if (empty($conf->global->MAIN_EXTRAFIELDS_DISABLED)) {
+				$result = $this->insertExtraFields();
+				if ($result < 0) {
+					$error ++;
+				}
+			}
+			
 			if (! $notrigger) {
 				// // Call triggers
 				// include_once DOL_DOCUMENT_ROOT . '/core/class/interfaces.class.php';
@@ -280,6 +287,12 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 				$this->veh_immat = $obj->veh_immat;
 				$this->driv_ref = $obj->driv_ref;
 				$this->driv_name = $obj->driv_name;
+				
+				$extrafields = new ExtraFields($this->db);
+				$extralabels = $extrafields->fetch_name_optionals_label($this->table_element, true);
+				if (count($extralabels) > 0) {
+					$this->fetch_optionals($this->id, $extralabels);
+				}
 			}
 			$this->db->free($resql);
 			
@@ -368,6 +381,16 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 		}
 		
 		if (! $error) {
+				
+			if (empty($conf->global->MAIN_EXTRAFIELDS_DISABLED)) {
+				$result = $this->insertExtraFields();
+				if ($result < 0) {
+					$error ++;
+				}
+			}
+		}
+		
+		if (! $error) {
 			if (! $notrigger) {
 				
 				$this->calc_conso($user);
@@ -433,6 +456,19 @@ class ConsogazoilVehTake extends CommonObjectConsoGazoil {
 				$this->errors[] = "Error " . $this->db->lasterror();
 			}
 		}
+		
+		if (! $error) {
+			$sql = "DELETE FROM " . MAIN_DB_PREFIX . "consogazoil_vehtake_extrafields";
+			$sql .= " WHERE fk_object=" . $this->id;
+				
+			dol_syslog(get_class($this) . "::delete sql=" . $sql);
+			$resql = $this->db->query($sql);
+			if (! $resql) {
+				$error ++;
+				$this->errors[] = "Error " . $this->db->lasterror();
+			}
+		}
+		
 		
 		// Commit or rollback
 		if ($error) {

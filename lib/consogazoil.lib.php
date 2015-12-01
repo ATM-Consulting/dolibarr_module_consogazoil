@@ -56,6 +56,10 @@ function consogazoilAdminPrepareHead()
     $head[$h][1] = $langs->trans("ExtraFields").' '.$langs->trans('ConsoGazDriver');
     $head[$h][2] = 'extrafieldsdriver';
     $h++;
+    $head[$h][0] = dol_buildpath("/consogazoil/admin/gazoilvehtake_extrafields.php", 1);
+    $head[$h][1] = $langs->trans("ExtraFields").' '.$langs->trans('ConsoGazTake');
+    $head[$h][2] = 'extrafieldsvehtake';
+    $h++;
     $head[$h][0] = dol_buildpath("/consogazoil/admin/about.php", 1);
     $head[$h][1] = $langs->trans("About");
     $head[$h][2] = 'about';

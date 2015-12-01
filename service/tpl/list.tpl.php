@@ -27,13 +27,13 @@ $(document).ready(function() {
 		if ($optioncss == 'print') {
 			print '"sDom": "lfrtip",';
 		} else {
-			print '"sDom": \'T<"clear">lfrtip\',';
+			print '"sDom": \'TC<"clear">lfrtip\',';
 		}
 		?>
 		"oTableTools": {
 			"sSwfPath": "<?php echo dol_buildpath('/includes/jquery/plugins/datatables/extensions/TableTools/swf/copy_csv_xls_pdf.swf',1); ?>"
 		},
-		"bJQueryUI": true,
+		"oColVis": {"buttonText": "<?php echo $langs->trans('Showhidecols')?>" },
 		"sPaginationType": "full_numbers",
 		"aLengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "<?php echo $langs->trans('ConsoGazAll'); ?>"]],
 		"oLanguage": {
@@ -51,6 +51,7 @@ $(document).ready(function() {
 			}
 		},
 		"aaSorting": [[0,'desc']],
+		"stateSave": true,
 		"bProcessing": true,
 		"bServerSide": true,
 		"sAjaxSource": "<?php echo dol_buildpath('/consogazoil/service/ajax/list.php',1); ?>"

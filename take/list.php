@@ -25,6 +25,7 @@ if (! $res)
 	$res = @include '../../../main.inc.php'; // For "custom" directory
 
 require_once '../class/html.formconsogazoil.class.php';
+require_once '../class/consogazoilvehtake.class.php';
 
 // Load translation files required by the page
 $langs->load("consogazoil@consogazoil");
