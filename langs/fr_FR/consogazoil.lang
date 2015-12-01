@@ -36,7 +36,7 @@ Permission103047=Voir les montants des Consommation Gazole
 # Page d'administration
 #
 ConsoGazoleSetup = Configuration du module Consommation Gazole
-Settings = Réglages
+ConsoGazoilSettings = Réglages du module Consommation Gazole
 ConsoGazoleSetupPage = Page de réglage de Consommation Gazole
 ConsoGazThresoldConso=Seuil d'alerte dans le rapport consommation de carburant par véhicule par mois 
 ConsoGazThresoldKM=Seuil d'alerte dans le rapport de prise de carburant
@@ -65,17 +65,23 @@ ConsoGazoleAboutPage = Page à propos de Consommation Gazole
 # Menu
 #
 ConsoGazManageVeh=Gérer les Véhicules
+ConsoGazVehicule=Véhicules
 ConsoGazList=Liste
 ConsoGazNew=Créer
 ConsoGazManageServ=Gérer les Services
+ConsoGazService=Service
 ConsoGazManageSta=Gérer les Stations
+ConsoGazStation=Station
 ConsoGazManageDriv=Gérer les Conducteurs
+ConsoGazDriver=Conducteur
+ConsoGazVehiculeService=Association vehicules/services
 ConsoGazManageImport=Import fichier
 ConsoGazManageReport=Rapport
 ConsoGazReportConso=Suivi Conso. de carburant/ véhicule/ mois 
 ConsoGazReportTakeNoPref=Suivi de prise en station non préférentielle
 ConsoGazReportKM=Suivi du KM/ véhicule
 ConsoGazManageTake=Gérer les prises
+ConsoGazTake=Prise
 ConsoGazReportConsoOriginal=Suivi Conso. de carburant/ véhicule/ mois (Méthode 1)
 ConsoGazReportConsoOtherCalculation=Suivi Conso. de carburant/ véhicule/ mois (Méthode 2)
 ConsoGazReportKMOriginal=Suivi du KM/ véhicule (Méthode 1)
@@ -123,6 +129,9 @@ Last = Fin
 To=à
 ConsoGazOf=de
 Showing = Afficher
+ConsoGazSearch=Recherche
+All=Tous
+Showhidecols=Afficher les colonnes
 
 #
 # Import
@@ -178,6 +187,7 @@ ConsoGazColTraitementUpdate=Mettre à jour réf/nom
 ConsoGazColTraitementNew=Créer
 ConsoGazSampleFile=Vous pouvez télécharger le fichier d'exemple pour connaître le format approprié de cette import
 ConsoGazSendEmail=Envoie d'Email
+ConsoGazProd=Produit
 
 #
 # Report

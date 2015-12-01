@@ -35,7 +35,7 @@ Permission103046=Export Conso Gazoil data
 # Admin page
 #
 ConsoGazoilSetup = Gazoil consumption setup
-Settings = Settings
+ConsoGazoilSettings = Settings Gazoil consumption
 ConsoGazoilSetupPage = Gazoil consumption setup page
 ConsoGazThresoldConso=Thresold of flag in report Usage per month per vehicule
 ConsoGazThresoldKM=Thresold of flag in report Taking gazoil
@@ -64,16 +64,23 @@ ConsoGazoilAboutPage = Gazoil consumption about page
 # Menu
 #
 ConsoGazManageVeh=Manage Vehicule
+ConsoGazVehicule=Vehicule
 ConsoGazList=List
 ConsoGazNew=Create
 ConsoGazManageServ=Manage Service
+ConsoGazService=Service
 ConsoGazManageSta=Manage Station
+ConsoGazStation=Station
 ConsoGazManageDriv=Manage Driver
+ConsoGazDriver=Driver
+ConsoGazVehiculeService=Link vehicule/service
 ConsoGazManageImport=Import
 ConsoGazManageReport=Reports
 ConsoGazReportConso=Conso. Gazoil/Vehicule/Month 
 ConsoGazReportTakeNoPref=Gazoil no prefered station
 ConsoGazReportKM=Km/Vehicule
+ConsoGazManageTake=Manage take
+ConsoGazTake=Take
 ConsoGazReportConsoOriginal=Conso. Gazoil/Vehicule/Month  (Method 1)
 ConsoGazReportConsoOtherCalculation=Conso. Gazoil/Vehicule/Month  (Method 2)
 ConsoGazReportKMOriginal=Km/Vehicule (Method 1)
@@ -120,6 +127,8 @@ First = First
 Last = Last
 ConsoGazOf=Of
 Showing=Showing
+All=All
+Showhidecols=Display Column
 
 #
 # Import
@@ -173,6 +182,7 @@ ConsoGazColTraitementUpdate=Update
 ConsoGazColTraitementNew=Create
 ConsoGazSampleFile=You can download the sample file to know the correct import format
 ConsoGazSendEmail=Send Email
+ConsoGazProd=Product
 
 #
 # Report

@@ -23,17 +23,17 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	$("#list").dataTable( {
-		<?php 
-		if ($optioncss=='print') {
+		<?php
+		if ($optioncss == 'print') {
 			print '"sDom": "lfrtip",';
 		} else {
-			print '"sDom": \'T<"clear">lfrtip\',';
+			print '"sDom": \'TC<"clear">lfrtip\',';
 		}
 		?>
 		"oTableTools": {
-			"sSwfPath": "<?php echo dol_buildpath('/includes/jquery/plugins/datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf',1); ?>"
+			"sSwfPath": "<?php echo dol_buildpath('/includes/jquery/plugins/datatables/extensions/TableTools/swf/copy_csv_xls_pdf.swf',1); ?>"
 		},
-		"bJQueryUI": true,
+		"oColVis": {"buttonText": "<?php echo $langs->trans('Showhidecols')?>" },
 		"sPaginationType": "full_numbers",
 		"aLengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "<?php echo $langs->trans('ConsoGazAll'); ?>"]],
 		"oLanguage": {
@@ -52,13 +52,15 @@ $(document).ready(function() {
 		},
 		"aaSorting": [[9,'desc']],
 		"bProcessing": true,
+		"stateSave": true,
 		"bServerSide": true,
 		"sAjaxSource": "<?php echo dol_buildpath('/consogazoil/take/ajax/list.php',1).'?filterdate='.$filterdate; ?>"
 	});
 });
 </script>
 
-<table cellpadding="0" cellspacing="0" border="0" class="display" id="list">
+<table cellpadding="0" cellspacing="0" border="0" class="display"
+	id="list">
 	<thead>
 		<tr>
 			<?php echo getTitleFieldOfList($langs->trans('Date'),1); ?>
@@ -73,10 +75,22 @@ $(document).ready(function() {
 			<?php echo getTitleFieldOfList($langs->trans('ConsoGazColProd'),1); ?>
 			<?php echo getTitleFieldOfList($langs->trans('ConsoGazColKM'),1); ?>
 			<?php echo getTitleFieldOfList($langs->trans('ConsoGazColKMCtrole'),1); ?>
-			<?php 
+			<?php
+			$object = new ConsogazoilVehTake($db);
+			$extrafields = new ExtraFields($db);
+			$extralabels = $extrafields->fetch_name_optionals_label($object->table_element);
+			
+			if (count($extrafields->attribute_label) > 0) {
+				foreach ( $extrafields->attribute_label as $key => $label ) {
+					echo getTitleFieldOfList($label, 1);
+				}
+			}
+			?>
+			<?php
 			if ($user->rights->consogazoil->modifier) {
-			 echo getTitleFieldOfList($langs->trans('Edit'),1); 
-			}?>
+				echo getTitleFieldOfList($langs->trans('Edit'), 1);
+			}
+			?>
 		</tr>
 	</thead>
 	<tbody>

@@ -23,15 +23,15 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	$("#list").dataTable( {
-		<?php 
-		if ($optioncss=='print') {
+		<?php
+		if ($optioncss == 'print') {
 			print '"sDom": "lfrtip",';
 		} else {
 			print '"sDom": \'T<"clear">lfrtip\',';
 		}
 		?>
 		"oTableTools": {
-			"sSwfPath": "<?php echo dol_buildpath('/includes/jquery/plugins/datatables/extras/TableTools/swf/copy_csv_xls_pdf.swf',1); ?>"
+			"sSwfPath": "<?php echo dol_buildpath('/includes/jquery/plugins/datatables/extensions/TableTools/swf/copy_csv_xls_pdf.swf',1); ?>"
 		},
 		"bJQueryUI": true,
 		"sPaginationType": "full_numbers",
@@ -58,16 +58,28 @@ $(document).ready(function() {
 });
 </script>
 
-<table cellpadding="0" cellspacing="0" border="0" class="display" id="list">
+<table cellpadding="0" cellspacing="0" border="0" class="display"
+	id="list">
 	<thead>
 		<tr>
 			<?php echo getTitleFieldOfList($langs->trans('Label'),1); ?>
 			<?php echo getTitleFieldOfList($langs->trans('ConsoGazDtSt'),1); ?>
 			<?php echo getTitleFieldOfList($langs->trans('ConsoGazDtEnd'),1); ?>
 			<?php
+			$object = new ConsogazoilVehiculeService($db);
+			$extrafields = new ExtraFields($db);
+			$extralabels = $extrafields->fetch_name_optionals_label($object->table_element);
+			if (count($extrafields->attribute_label) > 0) {
+				foreach ( $extrafields->attribute_label as $key => $label ) {
+					echo getTitleFieldOfList($label, 1);
+				}
+			}
+			?>
+			<?php
 			if ($user->rights->consogazoil->supprimer) {
-			 echo getTitleFieldOfList($langs->trans('Delete'),1);
-			 }  ?>
+				echo getTitleFieldOfList($langs->trans('Delete'), 1);
+			}
+			?>
 		</tr>
 	</thead>
 	<tbody>

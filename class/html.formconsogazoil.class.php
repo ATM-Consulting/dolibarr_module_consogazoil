@@ -2,21 +2,21 @@
 /*
  * Copyright (C) 2013  Florian Henry   <florian.henry@open-concept.pro>
  * 
-*
-*
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ *
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * \file consogazoil/class/html.formconsogazoil.class.php
@@ -28,7 +28,7 @@ class FormConsoGazoil extends Form {
 	
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param DoliDB $db handler
 	 */
 	function __construct($db) {
@@ -38,7 +38,7 @@ class FormConsoGazoil extends Form {
 	
 	/**
 	 * Display select with Service available
-	 * 
+	 *
 	 * @param int $selectid à preselectionner
 	 * @param string $htmlname select field
 	 * @return string select field
@@ -50,15 +50,15 @@ class FormConsoGazoil extends Form {
 		
 		$out = '';
 		
-		$object = new ConsogazoilService ( $this->db );
+		$object = new ConsogazoilService($this->db);
 		
-		$num = $object->fetch_all ();
+		$num = $object->fetch_all();
 		
 		if ($num >= 0) {
 			$out .= '<select id="' . $htmlname . '" class="flat" name="' . $htmlname . '">';
 			
 			$i = 0;
-
+			
 			foreach ( $object->lines as $line ) {
 				
 				if ($selectid > 0 && $selectid == $line->id) {
@@ -67,10 +67,10 @@ class FormConsoGazoil extends Form {
 					$out .= '<option value="' . $line->id . '">' . $line->label . '</option>';
 				}
 			}
-
+			
 			$out .= '</select>';
 		} else {
-			setEventMessage ( $object->error, 'errors' );
+			setEventMessage($object->error, 'errors');
 		}
 		
 		return $out;
@@ -85,35 +85,35 @@ class FormConsoGazoil extends Form {
 	 */
 	function select_vehicule($selectid, $htmlname = 'vehicule') {
 		global $conf, $user, $langs;
-	
+		
 		require_once 'consogazoilvehicule.class.php';
-	
+		
 		$out = '';
-	
-		$object = new ConsogazoilVehicule ( $this->db );
-	
-		$num = $object->fetch_all ();
-	
+		
+		$object = new ConsogazoilVehicule($this->db);
+		
+		$num = $object->fetch_all();
+		
 		if ($num >= 0) {
 			$out .= '<select id="' . $htmlname . '" class="flat" name="' . $htmlname . '">';
-				
+			
 			$i = 0;
-	
+			
 			foreach ( $object->lines as $line ) {
-			 if($line->activ == 1){
+				if ($line->activ == 1) {
 					if ($selectid > 0 && $selectid == $line->id) {
-						$out .= '<option value="' . $line->id . '" selected="selected">' . $line->ref.'-'.$line->immat_veh . '</option>';
+						$out .= '<option value="' . $line->id . '" selected="selected">' . $line->ref . '-' . $line->immat_veh . '</option>';
 					} else {
-						$out .= '<option value="' . $line->id . '">' .$line->ref.'-'.$line->immat_veh . '</option>';
+						$out .= '<option value="' . $line->id . '">' . $line->ref . '-' . $line->immat_veh . '</option>';
 					}
 				}
 			}
-	
+			
 			$out .= '</select>';
 		} else {
-			setEventMessage ( $object->error, 'errors' );
+			setEventMessage($object->error, 'errors');
 		}
-	
+		
 		return $out;
 	}
 	
@@ -126,35 +126,34 @@ class FormConsoGazoil extends Form {
 	 */
 	function select_station($selectid, $htmlname = 'station') {
 		global $conf, $user, $langs;
-	
+		
 		require_once 'consogazoilstation.class.php';
-	
+		
 		$out = '';
-	
-		$object = new ConsogazoilStation ( $this->db );
-	
-		$num = $object->fetch_all ();
-	
+		
+		$object = new ConsogazoilStation($this->db);
+		
+		$num = $object->fetch_all();
+		
 		if ($num >= 0) {
 			$out .= '<select id="' . $htmlname . '" class="flat" name="' . $htmlname . '">';
-	
+			
 			$i = 0;
-	
+			
 			foreach ( $object->lines as $line ) {
-	
-				if ($selectid > 0 && $selectid == $line->id) {
-					$out .= '<option value="' . $line->id . '" selected="selected">' . $line->ref.'-'.$line->name . '</option>';
-				} else {
-					$out .= '<option value="' . $line->id . '">' .$line->ref.'-'.$line->name . '</option>';
-				}
 				
+				if ($selectid > 0 && $selectid == $line->id) {
+					$out .= '<option value="' . $line->id . '" selected="selected">' . $line->ref . '-' . $line->name . '</option>';
+				} else {
+					$out .= '<option value="' . $line->id . '">' . $line->ref . '-' . $line->name . '</option>';
+				}
 			}
-	
+			
 			$out .= '</select>';
 		} else {
-			setEventMessage ( $object->error, 'errors' );
+			setEventMessage($object->error, 'errors');
 		}
-	
+		
 		return $out;
 	}
 	
@@ -167,166 +166,158 @@ class FormConsoGazoil extends Form {
 	 */
 	function select_driver($selectid, $htmlname = 'driver') {
 		global $conf, $user, $langs;
-	
+		
 		require_once 'consogazoildriver.class.php';
-	
+		
 		$out = '';
-	
-		$object = new ConsogazoilDriver ( $this->db );
-	
-		$num = $object->fetch_all ();
-	
+		
+		$object = new ConsogazoilDriver($this->db);
+		
+		$num = $object->fetch_all();
+		
 		if ($num >= 0) {
 			$out .= '<select id="' . $htmlname . '" class="flat" name="' . $htmlname . '">';
-	
+			
 			$i = 0;
-	
+			
 			foreach ( $object->lines as $line ) {
-				if($line->activ == 1){
+				if ($line->activ == 1) {
 					if ($selectid > 0 && $selectid == $line->id) {
-						$out .= '<option value="' . $line->id . '" selected="selected">' . $line->ref.'-'.$line->name . '</option>';
+						$out .= '<option value="' . $line->id . '" selected="selected">' . $line->ref . '-' . $line->name . '</option>';
 					} else {
-						$out .= '<option value="' . $line->id . '">' .$line->ref.'-'.$line->name . '</option>';
+						$out .= '<option value="' . $line->id . '">' . $line->ref . '-' . $line->name . '</option>';
 					}
 				}
 			}
-	
+			
 			$out .= '</select>';
 		} else {
-			setEventMessage ( $object->error, 'errors' );
+			setEventMessage($object->error, 'errors');
 		}
-	
+		
 		return $out;
 	}
 	
 	/**
-	 *	Return select filer with date of transaction
+	 * Return select filer with date of transaction
 	 *
-	 *  @param	string	$htmlname 		name of input
-	 *  @param	string	$selectedkey	selected default value
-	 *  @param	int		$custid 		customerid
-	 *  @param	int 	$shopid 		shopid
-	 *  @param	string 	$type 			'histoshop' or 'histocust' or ''
-	 *	@return	string					HTML select input
+	 * @param string $htmlname name of input
+	 * @param string $selectedkey selected default value
+	 * @param int $custid customerid
+	 * @param int $shopid shopid
+	 * @param string $type 'histoshop' or 'histocust' or ''
+	 * @return string HTML select input
 	 */
-	function select_date_filter($htmlname,$selectedkey,$type='take') {
-	
+	function select_date_filter($htmlname, $selectedkey, $type = 'take') {
 		global $langs;
-	
-		$date_array=array();
-	
-		$sql='SELECT DISTINCT dt_hr_take from '.MAIN_DB_PREFIX.'consogazoil_vehtake ';
-		$sql.=' ORDER BY dt_hr_take';
-	
-		dol_syslog(get_class($this)."::select_date_filter sql=".$sql, LOG_DEBUG);
-		$resql=$this->db->query($sql);
-		if ($resql)
-		{
-			$i=0;
+		
+		$date_array = array ();
+		
+		$sql = 'SELECT DISTINCT dt_hr_take from ' . MAIN_DB_PREFIX . 'consogazoil_vehtake ';
+		$sql .= ' ORDER BY dt_hr_take';
+		
+		dol_syslog(get_class($this) . "::select_date_filter sql=" . $sql, LOG_DEBUG);
+		$resql = $this->db->query($sql);
+		if ($resql) {
+			$i = 0;
 			$num = $this->db->num_rows($resql);
+			
+			while ( $i < $num ) {
+				$obj = $this->db->fetch_object($resql);
 				
-			while ($i<$num)
-			{
-				$obj = $this->db->fetch_object($resql);
-	
-				$date=$this->db->jdate($obj->dt_hr_take);
-				$keydate=dol_print_date($date,'%Y-%m');
-				$valdate=dol_print_date($date,'%b %Y');
-	
-				if (!array_key_exists($keydate,$date_array)) {
-					$date_array[$keydate]=$valdate;
+				$date = $this->db->jdate($obj->dt_hr_take);
+				$keydate = dol_print_date($date, '%Y-%m');
+				$valdate = dol_print_date($date, '%b %Y');
+				
+				if (! array_key_exists($keydate, $date_array)) {
+					$date_array[$keydate] = $valdate;
 				}
-	
-				$i++;
+				
+				$i ++;
 			}
-	
-		}else {
-			$this->error="Error ".$this->db->lasterror();
-			dol_syslog(get_class($this)."::select_date_filter ".$this->error, LOG_ERR);
-			return -1;
+		} else {
+			$this->error = "Error " . $this->db->lasterror();
+			dol_syslog(get_class($this) . "::select_date_filter " . $this->error, LOG_ERR);
+			return - 1;
 		}
-	
-		if (count($date_array)>0) {
-			$out='<SELECT name="'.$htmlname.'">';
-			$out.='<OPTION value="">'.$langs->trans('ConsoGazAll').'</OPTION>';
-			foreach ($date_array as $key=>$val) {
-	
-				$selected='';
-				if ($selectedkey==$key) {
-					$selected=' selected="selected" ';
+		
+		if (count($date_array) > 0) {
+			$out = '<SELECT name="' . $htmlname . '">';
+			$out .= '<OPTION value="">' . $langs->trans('ConsoGazAll') . '</OPTION>';
+			foreach ( $date_array as $key => $val ) {
+				
+				$selected = '';
+				if ($selectedkey == $key) {
+					$selected = ' selected="selected" ';
 				}
-	
-				$out.='<OPTION value="'.$key.'"'.$selected.'>'.$val.'</OPTION>';
+				
+				$out .= '<OPTION value="' . $key . '"' . $selected . '>' . $val . '</OPTION>';
 			}
-			$out.='</SELECT>';
+			$out .= '</SELECT>';
 		}
-	
+		
 		return $out;
 	}
 	
 	/**
-	 *	Return select filer with date of transaction
+	 * Return select filer with date of transaction
 	 *
-	 *  @param	string	$htmlname 		name of input
-	 *  @param	string	$selectedkey	selected default value
-	 *  @param	int		$custid 		customerid
-	 *  @param	int 	$shopid 		shopid
-	 *  @param	string 	$type 			'histoshop' or 'histocust' or ''
-	 *	@return	string					HTML select input
+	 * @param string $htmlname name of input
+	 * @param string $selectedkey selected default value
+	 * @param int $custid customerid
+	 * @param int $shopid shopid
+	 * @param string $type 'histoshop' or 'histocust' or ''
+	 * @return string HTML select input
 	 */
-	function select_year_report($htmlname,$selectedkey) {
-	
+	function select_year_report($htmlname, $selectedkey) {
 		global $langs;
-	
-		$date_array=array();
-	
-		$sql="SELECT DISTINCT date_format(dt_hr_take,'%Y') as yeardt from ".MAIN_DB_PREFIX."consogazoil_vehtake ";
-		$sql.=" ORDER BY date_format(dt_hr_take,'%Y')";
-	
-		dol_syslog(get_class($this)."::select_year_report sql=".$sql, LOG_DEBUG);
-		$resql=$this->db->query($sql);
-		if ($resql)
-		{
-			$i=0;
+		
+		$date_array = array ();
+		
+		$sql = "SELECT DISTINCT date_format(dt_hr_take,'%Y') as yeardt from " . MAIN_DB_PREFIX . "consogazoil_vehtake ";
+		$sql .= " ORDER BY date_format(dt_hr_take,'%Y')";
+		
+		dol_syslog(get_class($this) . "::select_year_report sql=" . $sql, LOG_DEBUG);
+		$resql = $this->db->query($sql);
+		if ($resql) {
+			$i = 0;
 			$num = $this->db->num_rows($resql);
-	
-			while ($i<$num)
-			{
+			
+			while ( $i < $num ) {
 				$obj = $this->db->fetch_object($resql);
-	
-				if (!array_key_exists($keydate,$date_array)) {
-					$date_array[$obj->yeardt]=$obj->yeardt;
+				
+				if (! array_key_exists($keydate, $date_array)) {
+					$date_array[$obj->yeardt] = $obj->yeardt;
 				}
-	
-				$i++;
+				
+				$i ++;
 			}
-	
-		}else {
-			$this->error="Error ".$this->db->lasterror();
-			dol_syslog(get_class($this)."::select_year_report ".$this->error, LOG_ERR);
-			return -1;
+		} else {
+			$this->error = "Error " . $this->db->lasterror();
+			dol_syslog(get_class($this) . "::select_year_report " . $this->error, LOG_ERR);
+			return - 1;
 		}
-	
-		if (count($date_array)>0) {
-			$out='<SELECT name="'.$htmlname.'">';
-			foreach ($date_array as $key=>$val) {
-	
-				$selected='';
-				if ($selectedkey==$key) {
-					$selected=' selected="selected" ';
+		
+		if (count($date_array) > 0) {
+			$out = '<SELECT name="' . $htmlname . '">';
+			foreach ( $date_array as $key => $val ) {
+				
+				$selected = '';
+				if ($selectedkey == $key) {
+					$selected = ' selected="selected" ';
 				}
-	
-				$out.='<OPTION value="'.$key.'"'.$selected.'>'.$val.'</OPTION>';
+				
+				$out .= '<OPTION value="' . $key . '"' . $selected . '>' . $val . '</OPTION>';
 			}
-			$out.='</SELECT>';
+			$out .= '</SELECT>';
 		}
-	
+		
 		return $out;
 	}
 	
 	/**
 	 * Display select with Service available
-	 * 
+	 *
 	 * @param int $selectid à preselectionner
 	 * @param string $htmlname select field
 	 * @return string select field
@@ -336,33 +327,33 @@ class FormConsoGazoil extends Form {
 		
 		$out = '';
 		
-		$prod_array=array();
+		$prod_array = array ();
 		
-		$prod_type=explode("\n",$conf->global->GAZOIL_PROD_TYPE);
-		if (is_array($prod_type) && count($prod_type)>0) {
-			foreach($prod_type as $value) {
-				$prod=explode('-',$value);
-				$prod_array[$prod[0]]=$prod[1];
-			}	
-		}else {
-			
-			return -1;
-		}
-		
-		if (count($prod_array)>0) {
-			$out='<SELECT name="'.$htmlname.'">';
-			foreach ($prod_array as $key=>$val) {
-	
-				$selected='';
-				if ($prod==$key) {
-					$selected=' selected="selected" ';
-				}
-	
-				$out.='<OPTION value="'.$key.'"'.$selected.'>'.$val.'</OPTION>';
+		$prod_type = explode("\n", $conf->global->GAZOIL_PROD_TYPE);
+		if (is_array($prod_type) && count($prod_type) > 0) {
+			foreach ( $prod_type as $value ) {
+				$prod = explode('-', $value);
+				$prod_array[$prod[0]] = $prod[1];
 			}
-			$out.='</SELECT>';
+		} else {
+			
+			return - 1;
 		}
-	
+		
+		if (count($prod_array) > 0) {
+			$out = '<SELECT name="' . $htmlname . '">';
+			foreach ( $prod_array as $key => $val ) {
+				
+				$selected = '';
+				if ($prod == $key) {
+					$selected = ' selected="selected" ';
+				}
+				
+				$out .= '<OPTION value="' . $key . '"' . $selected . '>' . $val . '</OPTION>';
+			}
+			$out .= '</SELECT>';
+		}
+		
 		return $out;
 	}
 }
