@@ -60,7 +60,7 @@ class modConsoGazoil extends DolibarrModules {
 		// (where XXX is value of numeric property 'numero' of module)
 		$this->description = "Description of module ConsoGazoil";
 		// Possible values for version are: 'development', 'experimental' or version
-		$this->version = '1.4';
+		$this->version = '1.5';
 		// Key used in llx_const table to save module status enabled/disabled
 		// (where MYMODULE is value of property name of module in uppercase)
 		$this->const_name = 'MAIN_MODULE_' . strtoupper($this->name);
@@ -118,12 +118,12 @@ class modConsoGazoil extends DolibarrModules {
 		// Minimum version of PHP required by module
 		$this->phpmin = array (
 				5,
-				2 
+				4 
 		);
 		// Minimum version of Dolibarr required by module
 		$this->need_dolibarr_version = array (
 				3,
-				3 
+				9 
 		);
 		$this->langfiles = array (
 				"consogazoil@consogazoil" 
@@ -974,13 +974,13 @@ class modConsoGazoil extends DolibarrModules {
 			}
 		}
 		
-		// DELETE AGF_LAST_VERION_INSTALL to update with the new one
-		$sql = 'DELETE FROM ' . MAIN_DB_PREFIX . 'const WHERE name=\'AGF_LAST_VERION_INSTALL\'';
-		dol_syslog(get_class($this) . "::_load_tables_agefodd sql:" . $sql, LOG_DEBUG);
+		// DELETE GAZOIL_LAST_VERION_INSTALL to update with the new one
+		$sql = 'DELETE FROM ' . MAIN_DB_PREFIX . 'const WHERE name=\'GAZOIL_LAST_VERION_INSTALL\'';
+		dol_syslog(get_class($this) . "::_load_tables_consogazoil sql:" . $sql, LOG_DEBUG);
 		$resql = $this->db->query($sql);
 		if (! $resql) {
 			$this->error = "Error " . $this->db->lasterror();
-			dol_syslog(get_class($this) . "::_load_tables_agefodd " . $this->error, LOG_ERR);
+			dol_syslog(get_class($this) . "::_load_tables_consogazoil " . $this->error, LOG_ERR);
 			$error ++;
 		}
 		

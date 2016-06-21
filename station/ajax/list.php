@@ -171,24 +171,24 @@ $output = array (
 		"aaData" => array () 
 );
 
-while ( $aRow = $db->fetch_array($rResult) ) {
+while ( $aRow = $db->fetch_object($rResult) ) {
 	$row = array ();
-	for($i = 0; $i < $numColumns; $i ++) {
-		if ($aColumns[$i] == "t.ref") {
-			$object->fetch($aRow[$aColumns[0]]);
+	foreach($aColumns as $aColumn) {
+		if ($aColumn == "t.ref") {
+			$object->fetch($aRow->rowid);
 			$row[] = $object->getNomUrl();
-		}elseif (strpos($aColumns[$i], 'extra.') !== false) {
-			$extrafields_name = str_replace('extra.', '', $aColumns[$i]);
-			$row[] = $extrafields->showOutputField($extrafields_name, $aRow[$i]);
-		} 
-		else if ($aColumns[$i] == "t.is_pref") {
-			if (! empty($aRow[$i])) {
+		} elseif (strpos($aColumn, 'extra.') !== false) {
+			$extrafields_name = str_replace('extra.', '', $aColumn);
+			$row[] = $extrafields->showOutputField($extrafields_name, $aRow->{$extrafields_name});
+		} else if ($aColumn == "t.is_pref") {
+			if (! empty($aRow->is_pref)) {
 				$row[] = img_picto($langs->trans('ConsoGazIsPrefYes'), dol_buildpath('/consogazoil/img/flaggreen.png', 1), '', 1);
 			} else {
 				$row[] = img_picto($langs->trans('ConsoGazIsPrefNo'), dol_buildpath('/consogazoil/img/flagred.png', 1), '', 1);
 			}
-		} else if ($aColumns[$i] != "t.rowid") {
-			$row[] = $aRow[$i];
+		}else if ($aColumn != "t.rowid") {
+			$fieldname=str_replace('t.', '', $aColumn);
+			$row[] = $aRow->{$fieldname};
 		}
 	}
 	$output['aaData'][] = $row;

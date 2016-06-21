@@ -57,10 +57,10 @@ $object_link = new ConsogazoilVehiculeService($db);
  */
 $aColumns = array (
 		'serv.label',
+		't.date_start',
+		't.date_end',
 		't.fk_vehicule',
 		't.fk_service',
-		't.date_start',
-		't.date_end'
 );
 
 $extrafields = new ExtraFields($db);
@@ -177,22 +177,26 @@ $output = array (
 		"aaData" => array () 
 );
 
-while ( $aRow = $db->fetch_array($rResult) ) {
+while ( $aRow = $db->fetch_object($rResult) ) {
 	$row = array ();
-	for($i = 0; $i < $numColumns; $i ++) {
-		if ($aColumns[$i] == "serv.label") {
-			$object->fetch($aRow[$numColumns]);
+	foreach($aColumns as $aColumn) {
+		if ($aColumn == "serv.label") {
+			$object->fetch($aRow->fk_service);
 			$row[] = $object->getNomUrl();
-		} elseif (($aColumns[$i] == "t.date_start") || ($aColumns[$i] == "t.date_end")) {
-			$row[] = dol_print_date($db->jdate($aRow[$i]), 'daytextshort');
-		} elseif (strpos($aColumns[$i], 'extra.') !== false) {
-			$extrafields_name = str_replace('extra.', '', $aColumns[$i]);
-			$row[] = $extrafields->showOutputField($extrafields_name, $aRow[$i]);
-		} elseif ($aColumns[$i] == "t.rowid") {
+		} elseif (($aColumn == "t.date_start") || ($aColumn == "t.date_end")) {
+			$fieldname=str_replace('t.', '', $aColumn);
+			$row[] = dol_print_date($db->jdate($aRow->{$fieldname}), 'daytextshort');
+		}elseif (strpos($aColumn, 'extra.') !== false) {
+			$extrafields_name = str_replace('extra.', '', $aColumn);
+			$row[] = $extrafields->showOutputField($extrafields_name, $aRow->{$extrafields_name});
+		} elseif ($aColumn != "t.rowid" && $aColumn != "t.fk_vehicule" && $aColumn != "t.fk_service") {
+			$fieldname=str_replace('t.', '', $aColumn);
+			$row[] = $aRow->{$fieldname};
+		} elseif ($aColumn == "t.rowid") {
 			if ($user->rights->consogazoil->supprimer) {
-				$row[] = '<a href="' . dol_buildpath('/consogazoil/vehicule/card.php', 1) . '?id=' . $veh_id . '&id_link=' . $aRow[$i] . '&action=delete_link">' . $langs->trans("Delete") . "</a>\n";
+				$row[] = '<a href="' . dol_buildpath('/consogazoil/vehicule/card.php', 1) . '?id=' . $veh_id . '&id_link=' . $aRow->rowid . '&action=delete_link">' . $langs->trans("Delete") . "</a>\n";
 			}
-		} 
+		}
 	}
 	$output['aaData'][] = $row;
 }
