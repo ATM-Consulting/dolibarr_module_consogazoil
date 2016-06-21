@@ -106,8 +106,8 @@ class ConsogazoilVehiculeService extends CommonObject {
 		$sql .= " " . $conf->entity . ",";
 		$sql .= " " . (! isset($this->fk_vehicule) ? 'NULL' : "'" . $this->fk_vehicule . "'") . ",";
 		$sql .= " " . (! isset($this->fk_service) ? 'NULL' : "'" . $this->fk_service . "'") . ",";
-		$sql .= " " . (! isset($this->date_start) || dol_strlen($this->date_start) == 0 ? 'NULL' : $this->db->idate($this->date_start)) . ",";
-		$sql .= " " . (! isset($this->date_end) || dol_strlen($this->date_end) == 0 ? 'NULL' : $this->db->idate($this->date_end)) . ",";
+		$sql .= " " . (! isset($this->date_start) || dol_strlen($this->date_start) == 0 ? 'NULL' : ("'".$this->db->idate($this->date_start))."'") . ",";
+		$sql .= " " . (! isset($this->date_end) || dol_strlen($this->date_end) == 0 ? 'NULL' : ("'".$this->db->idate($this->date_end))."'") . ",";
 		$sql .= "'" . $this->db->idate(dol_now()) . "',";
 		$sql .= " " . $user->id . ",";
 		$sql .= " " . $user->id . ",";
