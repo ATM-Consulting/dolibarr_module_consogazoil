@@ -1,5 +1,5 @@
 <?php
-/* Consomation Gazoil 
+/* Consomation Gazoil
  * Copyright (C) 2013	Florian HENRY 		<florian.henry@open-concept.pro>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -68,7 +68,7 @@ $extralabels = $extrafields->fetch_name_optionals_label($object->table_element);
 $extralabels_link = $extrafields_link->fetch_name_optionals_label($object_link->table_element);
 // Initialize technical object to manage hooks of thirdparties. Note that conf->hooks_modules contains array array
 $hookmanager->initHooks(array (
-		'consogazoilvehiculecard' 
+		'consogazoilvehiculecard'
 ));
 
 $error = 0;
@@ -98,9 +98,9 @@ if ($action == "create_confirm") {
 		$object->ref = $ref;
 		$object->immat_veh = $immat_veh;
 		$object->avg_conso = $avg_conso;
-		
+
 		$extrafields->setOptionalsFromPost($extralabels, $object);
-		
+
 		$result = $object->create($user);
 		if ($result < 0) {
 			setEventMessage($object->errors, 'errors');
@@ -111,7 +111,7 @@ if ($action == "create_confirm") {
 } else if ($action == "create_link_serv_confirm") {
 	$dtstart = dol_mktime(0, 0, 0, GETPOST('dtstmonth', 'int'), GETPOST('dtstday', 'int'), GETPOST('dtstyear', 'int'));
 	$dtend = dol_mktime(0, 0, 0, GETPOST('dtendmonth', 'int'), GETPOST('dtendday', 'int'), GETPOST('dtendyear', 'int'));
-	
+
 	if (empty($dtstart) || empty($dtend)) {
 		setEventMessage($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("ConsoGazDtSt") . '/' . $langs->transnoentitiesnoconv("ConsoGazDtEnd"), 'errors'));
 	} else {
@@ -119,9 +119,9 @@ if ($action == "create_confirm") {
 		$object_link->fk_vehicule = $object->id;
 		$object_link->date_start = $dtstart;
 		$object_link->date_end = $dtend;
-		
+
 		$extrafields_link->setOptionalsFromPost($extralabels_link, $object_link);
-		
+
 		$result = $object_link->create($user);
 		if ($result < 0) {
 			setEventMessage($object_link->errors, 'errors');
@@ -147,7 +147,7 @@ if ($action == "create_confirm") {
 		$action = 'edit';
 	} else {
 		$object->ref = $ref;
-		
+
 		$result = $object->update($user);
 		if ($result < 0)
 			setEventMessage($object->errors, 'errors');
@@ -157,22 +157,22 @@ if ($action == "create_confirm") {
 		setEventMessage($langs->trans("ConsoGazMustBeNumeric", $langs->transnoentitiesnoconv("ConsoGazConsoAvg")), 'errors');
 	} else {
 		$object->avg_conso = $avg_conso;
-		
+
 		$result = $object->update($user);
 		if ($result < 0)
 			setEventMessage($object->errors, 'errors');
 	}
 } else if ($action == "setimmat_veh") {
-	
+
 	$object->immat_veh = $immat_veh;
-	
+
 	$result = $object->update($user);
 	if ($result < 0)
 		setEventMessage($object->errors, 'errors');
 } else if ($action == "setactiv") {
-	
+
 	$object->activ = $active;
-	
+
 	$result = $object->update($user);
 	if ($result < 0)
 		setEventMessage($object->errors, 'errors');
@@ -184,9 +184,9 @@ if ($action == "create_confirm") {
 		header('Location:' . dol_buildpath('/consogazoil/vehicule/list.php', 1));
 	}
 } else if ($action == "update") {
-	
+
 	$extrafields->setOptionalsFromPost($extralabels, $object);
-	
+
 	$result = $object->update($user);
 	if ($result < 0) {
 		setEventMessage($object->errors, 'errors');
@@ -202,7 +202,9 @@ $title = $langs->trans('Module103040Name') . '-' . $langs->trans('ConsoGazManage
 if (! empty($object->ref))
 	$title .= '-' . $object->ref;
 
-llxHeader('', $title);
+
+include_once '../lib/include_datatables.php';
+llxHeader('', $title, '', '', 0, 0, $TJs, $TCss);
 
 $form = new Form($db);
 $formconsogaz = new FormConsoGazoil($db);
@@ -210,11 +212,11 @@ $formconsogaz = new FormConsoGazoil($db);
 // Add new
 if ($action == 'create' && $user->rights->consogazoil->creer) {
 	print_fiche_titre($title . '-' . $langs->trans('ConsoGazNew'), '', dol_buildpath('/consogazoil/img/object_consogazoil.png', 1), 1);
-	
+
 	print '<form name="add" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
 	print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 	print '<input type="hidden" name="action" value="create_confirm">';
-	
+
 	print '<table class="border" width="100%">';
 	print '<tr>';
 	print '<td class="fieldrequired"  width="20%">';
@@ -247,26 +249,26 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 	print '<td>';
 	$arrval = array (
 			'0' => $langs->trans("No"),
-			'1' => $langs->trans("Yes") 
+			'1' => $langs->trans("Yes")
 	);
 	print $form->selectarray("activ", $arrval, $active);
 	print '</td>';
 	print '</tr>';
-	
+
 	// Other attributes
 	$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
-	
+
 	if (empty($reshook) && ! empty($extrafields->attribute_label)) {
 		print $object->showOptionals($extrafields, 'edit');
 	}
-	
+
 	print '<table>';
-	
+
 	print '<center>';
 	print '<input type="submit" class="button" value="' . $langs->trans("ConsoGazNew") . '">';
 	print '&nbsp;<input type="button" class="button" value="' . $langs->trans("Cancel") . '" onClick="javascript:history.go(-1)">';
 	print '</center>';
-	
+
 	print '</form>';
 } else {
 	/*
@@ -274,7 +276,7 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 	 */
 	$head = vehicule_prepare_head($object);
 	dol_fiche_head($head, 'card', $title, 0, 'bill');
-	
+
 	// Confirm form
 	$formconfirm = '';
 	if ($action == 'delete') {
@@ -283,15 +285,15 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id . '&id_link=' . GETPOST('id_link', 'int'), $langs->trans('ConsoGazDelete'), $langs->trans('ConsoGazConfirmDelete'), 'confirm_link_delete', '', 0, 1);
 	}
 	print $formconfirm;
-	
+
 	$linkback = '<a href="' . dol_buildpath('/consogazoil/vehicule/list.php', 1) . '">' . $langs->trans("BackToList") . '</a>';
-	
+
 	if ($action == 'edit') {
 		print '<form name="update" action="' . $_SERVER["PHP_SELF"] . '?id=' . $object->id . '" method="POST">';
 		print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 		print '<input type="hidden" name="action" value="update">';
 	}
-	
+
 	print '<table class="border" width="100%">';
 	print '<tr>';
 	print '<td width="20%">';
@@ -301,27 +303,27 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 	print $form->showrefnav($object, 'id', $linkback, 1, 'rowid', 'id', '');
 	print '</td>';
 	print '</tr>';
-	
+
 	print '<tr><td>' . $form->editfieldkey("Ref", 'ref', $object->ref, $object, $user->rights->consogazoil->modifier, 'string') . '</td><td>';
 	print $form->editfieldval("Ref", 'ref', $object->ref, $object, $user->rights->consogazoil->modifier, 'string');
-	
+
 	print '</td></tr>';
-	
+
 	print '<tr><td>' . $form->editfieldkey("ConsoGazImmat", 'immat_veh', $object->immat_veh, $object, $user->rights->consogazoil->modifier, 'string') . '</td><td>';
 	print $form->editfieldval("ConsoGazImmat", 'immat_veh', $object->immat_veh, $object, $user->rights->consogazoil->modifier, 'string');
 	print '</td></tr>';
-	
+
 	print '<tr><td>' . $form->editfieldkey("ConsoGazConsoAvg", 'avg_conso', $object->avg_conso, $object, $user->rights->consogazoil->modifier, 'string') . '</td><td>';
 	print $form->editfieldval("ConsoGazConsoAvg", 'avg_conso', $object->avg_conso, $object, $user->rights->consogazoil->modifier, 'string');
 	print '</td></tr>';
-	
+
 	print '<tr><td>' . $form->editfieldkey("activ", 'activ', $object->activ, $object, $user->rights->consogazoil->modifier, 'select;1:' . $langs->trans("Yes") . ',0:' . $langs->trans("No")) . '</td><td>';
 	print $form->editfieldval("activ", 'activ', $object->activ, $object, $user->rights->consogazoil->modifier, 'select;1:' . $langs->trans("Yes") . ',0:' . $langs->trans("No"));
 	print '</td></tr>';
-	
+
 	// Other attributes
 	$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
-	
+
 	if (empty($reshook) && ! empty($extrafields->attribute_label)) {
 		if ($action == 'edit') {
 			print $object->showOptionals($extrafields, 'edit');
@@ -329,28 +331,28 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 			print $object->showOptionals($extrafields);
 		}
 	}
-	
+
 	print '</table>';
-	
+
 	if ($action == 'edit') {
-		
+
 		print '<center>';
 		print '<input type="submit" class="button" value="' . $langs->trans("Modify") . '">';
 		print '&nbsp;<input type="button" class="button" value="' . $langs->trans("Cancel") . '" onClick="javascript:history.go(-1)">';
 		print '</center>';
-		
+
 		print '</form>';
 	}
-	
+
 	print "</div>\n";
-	
+
 	/*
 	 * Barre d'actions
 	 *
 	 */
 	if ($action != 'edit') {
 		print '<div class="tabsAction">';
-		
+
 		if (! empty($extrafields->attribute_label)) {
 			// Edit
 			if ($user->rights->consogazoil->modifier) {
@@ -365,18 +367,18 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 		} else {
 			print '<div class="inline-block divButAction"><font class="butActionRefused" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans("Delete") . "</font></div>";
 		}
-		
+
 		print '</div>';
 	}
-	
+
 	if ($action != 'edit') {
 		print_fiche_titre($langs->trans('ConsoGazManageServ'), '', dol_buildpath('/consogazoil/img/object_consogazoil.png', 1), 1);
-		
+
 		print '<div class="fiche">';
 		print '<form name="add" action="' . $_SERVER["PHP_SELF"] . '?id=' . $object->id . '" method="POST">';
 		print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 		print '<input type="hidden" name="action" value="create_link_serv_confirm">';
-		
+
 		print '<table class="border" width="100%">';
 		print '<tr>';
 		print '<td class="fieldrequired"  width="20%">';
@@ -386,7 +388,7 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 		print $formconsogaz->select_service(GETPOST('service'));
 		print '</td>';
 		print '</tr>';
-		
+
 		print '<tr>';
 		print '<td class="fieldrequired"  width="20%">';
 		print $langs->trans('ConsoGazDtSt');
@@ -395,7 +397,7 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 		$form->select_date("", 'dtst', '', '', '', 'create_link_serv_confirm');
 		print '</td>';
 		print '</tr>';
-		
+
 		print '<tr>';
 		print '<td class="fieldrequired"  width="20%">';
 		print $langs->trans('ConsoGazDtEnd');
@@ -404,24 +406,24 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 		$form->select_date("", 'dtend', '', '', '', 'create_link_serv_confirm');
 		print '</td>';
 		print '</tr>';
-		
+
 		// Other attributes
 		$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
 
 		if (empty($reshook) && ! empty($extrafields_link->attribute_label)) {
 				print $object_link->showOptionals($extrafields_link, 'edit');
 		}
-		
-		
+
+
 		print '<table>';
-		
+
 		print '<center>';
 		print '<input type="submit" class="button" value="' . $langs->trans("ConsoGazAssociate") . '">';
 		print '</center>';
-		
+
 		print '</form>';
 		print '</div>';
-		
+
 		include 'tpl/list_service.tpl.php';
 	}
 }
