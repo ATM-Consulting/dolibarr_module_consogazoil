@@ -43,18 +43,18 @@ $optioncss = GETPOST('optioncss', 'alpha');
  * Put here all code to build page
  */
 $TJs = array(
-	dol_buildpath('/consogazoil/lib/datatables/js/jquery.dataTables.min.js', 1)
-	,dol_buildpath('/consogazoil/lib/datatables/media/js/jquery.dataTables.min.js', 1)
-	,dol_buildpath('/consogazoil/lib/datatables/extensions/ColReorder/js/dataTables.colReorder.min.js', 1)
-	,dol_buildpath('/consogazoil/lib/datatables/extensions/ColVis/js/dataTables.colVis.min.js', 1)
-	,dol_buildpath('/consogazoil/lib/datatables/extensions/TableTools/js/dataTables.tableTools.min.js', 1)
+	dol_buildpath('/consogazoil/includes/datatables/js/jquery.dataTables.min.js', 1)
+	,dol_buildpath('/consogazoil/includes/datatables/media/js/jquery.dataTables.min.js', 1)
+	,dol_buildpath('/consogazoil/includes/datatables/extensions/ColReorder/js/dataTables.colReorder.min.js', 1)
+	,dol_buildpath('/consogazoil/includes/datatables/extensions/ColVis/js/dataTables.colVis.min.js', 1)
+	,dol_buildpath('/consogazoil/includes/datatables/extensions/TableTools/js/dataTables.tableTools.min.js', 1)
 );
 $TCss = array(
-	dol_buildpath('/consogazoil/lib/datatables/css/datatables.min.css', 1)
-	,dol_buildpath('/consogazoil/lib/datatables/media/css/jquery.dataTables.min.css', 1)
-	,dol_buildpath('/consogazoil/lib/datatables/extensions/ColReorder/css/dataTables.colReorder.min.css', 1)
-	,dol_buildpath('/consogazoil/lib/datatables/extensions/ColVis/css/dataTables.colVis.min.css', 1)
-	,dol_buildpath('/consogazoil/lib/datatables/extensions/TableTools/css/dataTables.tableTools.min.css', 1)
+	dol_buildpath('/consogazoil/includes/datatables/css/datatables.min.css', 1)
+	,dol_buildpath('/consogazoil/includes/datatables/media/css/jquery.dataTables.min.css', 1)
+	,dol_buildpath('/consogazoil/includes/datatables/extensions/ColReorder/css/dataTables.colReorder.min.css', 1)
+	,dol_buildpath('/consogazoil/includes/datatables/extensions/ColVis/css/dataTables.colVis.min.css', 1)
+	,dol_buildpath('/consogazoil/includes/datatables/extensions/TableTools/css/dataTables.tableTools.min.css', 1)
 );
 
 llxHeader('', $langs->trans('ConsoGazManageDriv') . '-' . $langs->trans('ConsoGazList'), '', '', 0, 0, $TJs, $TCss);

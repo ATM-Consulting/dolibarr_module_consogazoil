@@ -1,5 +1,5 @@
 <?php
-/* Consomation Gazoil 
+/* Consomation Gazoil
  * Copyright (C) 2013 florian Henry <florian.henry@open-concept.pro>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@ include_once DOL_DOCUMENT_ROOT . "/core/modules/DolibarrModules.class.php";
  * Description and activation class for module ConsoGazoil
  */
 class modConsoGazoil extends DolibarrModules {
-	
+
 	/**
 	 * Constructor.
 	 * Define names, constants, directories, boxes, permissions
@@ -38,16 +38,16 @@ class modConsoGazoil extends DolibarrModules {
 	 */
 	public function __construct($db) {
 		global $langs, $conf;
-		
+
 		$this->db = $db;
-		
+
 		// Id for module (must be unique).
 		// Use a free id here
 		// (See in Home -> System information -> Dolibarr for list of used modules id).
 		$this->numero = 103040;
 		// Key text used to identify module (for permissions, menus, etc...)
 		$this->rights_class = 'consogazoil';
-		
+
 		// Family can be 'crm','financial','hr','projects','products','ecm','technic','other'
 		// It is used to group modules in module setup page
 		$this->family = "other";
@@ -97,19 +97,19 @@ class modConsoGazoil extends DolibarrModules {
 		// Set here all workflow context managed by module
 		// 'workflow' => array('order' => array('WORKFLOW_ORDER_AUTOCREATE_INVOICE'))
 		;
-		
+
 		// Data directories to create when module is enabled.
 		// Example: this->dirs = array("/consogazoil/temp");
 		$this->dirs = array (
-				'/consogazoil' 
+				'/consogazoil'
 		);
-		
+
 		// Config pages. Put here list of php pages
 		// stored into consogazoil/admin directory, used to setup module.
 		$this->config_page_url = array (
-				"admin_consogazoil.php@consogazoil" 
+				"admin_consogazoil.php@consogazoil"
 		);
-		
+
 		// Dependencies
 		// List of modules id that must be enabled if this module is enabled
 		$this->depends = array ();
@@ -118,21 +118,21 @@ class modConsoGazoil extends DolibarrModules {
 		// Minimum version of PHP required by module
 		$this->phpmin = array (
 				5,
-				4 
+				4
 		);
 		// Minimum version of Dolibarr required by module
 		$this->need_dolibarr_version = array (
 				3,
-				9 
+				9
 		);
 		$this->langfiles = array (
-				"consogazoil@consogazoil" 
+				"consogazoil@consogazoil"
 		); // langfiles@consogazoil
 		                                                     // Constants
 		                                                     // List of particular constants to add when module is enabled
 		                                                     // (key, 'chaine', value, desc, visible, 'current' or 'allentities', deleteonunactive)
 		                                                     // Example:
-		
+
 		$r = 0;
 		$r ++;
 		$this->const[$r][0] = "GAZOIL_LAST_VERION_INSTALL";
@@ -142,7 +142,7 @@ class modConsoGazoil extends DolibarrModules {
 		$this->const[$r][4] = 0;
 		$this->const[$r][5] = 'allentities';
 		$this->const[$r][6] = 0;
-		
+
 		$r ++;
 		$this->const[$r][0] = "GAZOIL_THRESOLD_CONSO";
 		$this->const[$r][1] = "chaine";
@@ -151,7 +151,7 @@ class modConsoGazoil extends DolibarrModules {
 		$this->const[$r][4] = 0;
 		$this->const[$r][5] = 'current';
 		$this->const[$r][6] = 0;
-		
+
 		$r ++;
 		$this->const[$r][0] = "GAZOIL_THRESOLD_KM";
 		$this->const[$r][1] = "chaine";
@@ -160,7 +160,7 @@ class modConsoGazoil extends DolibarrModules {
 		$this->const[$r][4] = 0;
 		$this->const[$r][5] = 'current';
 		$this->const[$r][6] = 0;
-		
+
 		$r ++;
 		$this->const[$r][0] = "GAZOIL_EMAIL_EXPLOIT";
 		$this->const[$r][1] = "chaine";
@@ -169,7 +169,7 @@ class modConsoGazoil extends DolibarrModules {
 		$this->const[$r][4] = 0;
 		$this->const[$r][5] = 'current';
 		$this->const[$r][6] = 0;
-		
+
 		$r ++;
 		$this->const[$r][0] = "GAZOIL_ID_VEH_NO_IMPORT";
 		$this->const[$r][1] = "chaine";
@@ -178,16 +178,7 @@ class modConsoGazoil extends DolibarrModules {
 		$this->const[$r][4] = 0;
 		$this->const[$r][5] = 'current';
 		$this->const[$r][6] = 0;
-		
-		$r ++;
-		$this->const[$r][0] = 'REQUIRE_JQUERY_DATATABLES';
-		$this->const[$r][1] = 'yesno';
-		$this->const[$r][2] = '1';
-		$this->const[$r][3] = 'use JQUERY DataTable Module';
-		$this->const[$r][4] = 0;
-		$this->const[$r][5] = 'allentities';
-		$this->const[$r][6] = 1;
-		
+
 		$r ++;
 		$this->const[$r][0] = 'GAZOIL_PROD_CODE_REPORT';
 		$this->const[$r][1] = 'chaine';
@@ -196,7 +187,7 @@ class modConsoGazoil extends DolibarrModules {
 		$this->const[$r][4] = 0;
 		$this->const[$r][5] = 'current';
 		$this->const[$r][6] = 1;
-		
+
 		$r ++;
 		$this->const[$r][0] = 'GAZOIL_KEY_SCRIPT';
 		$this->const[$r][1] = 'chaine';
@@ -205,7 +196,7 @@ class modConsoGazoil extends DolibarrModules {
 		$this->const[$r][4] = 0;
 		$this->const[$r][5] = 'allentities';
 		$this->const[$r][6] = 1;
-		
+
 		$r ++;
 		$this->const[$r][0] = 'GAZOIL_PROD_TYPE';
 		$this->const[$r][1] = 'chaine';
@@ -214,7 +205,7 @@ class modConsoGazoil extends DolibarrModules {
 		$this->const[$r][4] = 0;
 		$this->const[$r][5] = 'allentities';
 		$this->const[$r][6] = 1;
-		
+
 		// Array to add new pages in new tabs
 		// Example:
 		$this->tabs = array ()
@@ -288,68 +279,68 @@ class modConsoGazoil extends DolibarrModules {
 		 )
 		 );
 		 */
-		
+
 		// Boxes
 		// Add here list of php file(s) stored in core/boxes that contains class to show a box.
 		$this->boxes = array (); // Boxes list
 		$r = 0;
 		// Example:
-		
+
 		// $this->boxes[$r][1] = "MyBox@consogazoil";
 		// $r ++;
 		/*
 		 $this->boxes[$r][1] = "myboxb.php";
 		 $r++;
 		 */
-		
+
 		// Permissions
 		$this->rights = array (); // Permission array used by this module
 		$r = 0;
-		
+
 		$this->rights[$r][0] = 103041;
 		$this->rights[$r][1] = 'Lecture';
 		$this->rights[$r][3] = 1;
 		$this->rights[$r][4] = 'lire';
 		$r ++;
-		
+
 		$this->rights[$r][0] = 103042;
 		$this->rights[$r][1] = 'Modification';
 		$this->rights[$r][3] = 0;
 		$this->rights[$r][4] = 'modifier';
 		$r ++;
-		
+
 		$this->rights[$r][0] = 103043;
 		$this->rights[$r][1] = 'Ajout';
 		$this->rights[$r][3] = 0;
 		$this->rights[$r][4] = 'creer';
 		$r ++;
-		
+
 		$this->rights[$r][0] = 103044;
 		$this->rights[$r][1] = 'Suppression';
 		$this->rights[$r][3] = 0;
 		$this->rights[$r][4] = 'supprimer';
 		$r ++;
-		
+
 		$this->rights[$r][0] = 103045;
 		$this->rights[$r][1] = 'Imports';
 		$this->rights[$r][3] = 0;
 		$this->rights[$r][4] = 'import';
 		$r ++;
-		
+
 		$this->rights[$r][0] = 103046;
 		$this->rights[$r][1] = 'Export';
 		$this->rights[$r][3] = 0;
 		$this->rights[$r][4] = 'export';
-		
+
 		$this->rights[$r][0] = 103047;
 		$this->rights[$r][1] = 'finance';
 		$this->rights[$r][3] = 0;
 		$this->rights[$r][4] = 'finance';
-		
+
 		// Main menu entries
 		$this->menus = array (); // List of menus to add
 		$r = 0;
-		
+
 		// Add here entries to declare new menus
 		//
 		// Example to declare a new Top Menu entry and its Left menu entry:
@@ -376,7 +367,7 @@ class modConsoGazoil extends DolibarrModules {
 		// // 0=Menu for internal users, 1=external users, 2=both
 		// 'user'=>2
 		// );
-		
+
 		$this->menu[$r] = array (
 				'fk_menu' => 0,
 				'type' => 'top',
@@ -388,9 +379,9 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->lire',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
-		
+
 		$r ++;
 		$this->menu[$r] = array (
 				'fk_menu' => 'fk_mainmenu=consogazoil',
@@ -403,7 +394,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->lire',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -416,7 +407,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->lire',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -429,7 +420,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->creer',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -443,7 +434,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->lire',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -456,7 +447,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->lire',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -469,7 +460,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->creer',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -483,7 +474,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->lire',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -496,7 +487,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->lire',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -509,7 +500,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->creer',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -523,7 +514,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->lire',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -536,7 +527,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->lire',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -549,7 +540,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->creer',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -563,7 +554,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->import',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -576,7 +567,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->import',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -590,7 +581,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->lire',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -603,7 +594,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->lire',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -616,7 +607,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->lire',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -630,7 +621,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->lire',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -644,7 +635,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->lire',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -657,7 +648,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->lire',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -670,7 +661,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->lire',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -683,7 +674,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->lire',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		$r ++;
 		$this->menu[$r] = array (
@@ -696,7 +687,7 @@ class modConsoGazoil extends DolibarrModules {
 				'enabled' => '$conf->consogazoil->enabled',
 				'perms' => '$user->rights->consogazoil->lire',
 				'target' => '',
-				'user' => 2 
+				'user' => 2
 		);
 		//
 		// Example to declare a Left Menu entry into an existing Top menu entry:
@@ -727,7 +718,7 @@ class modConsoGazoil extends DolibarrModules {
 		// $r++;
 		// Exports
 		$r = 1;
-		
+
 		// Example:
 		// $this->export_code[$r]=$this->rights_class.'_'.$r;
 		// // Translation key (used only if key ExportDataset_xxx_z not found)
@@ -818,7 +809,7 @@ class modConsoGazoil extends DolibarrModules {
 		// . 'AND f.rowid = fd.fk_facture';
 		// $r++;
 	}
-	
+
 	/**
 	 * Function called when module is enabled.
 	 * The init function add constants, boxes, permissions and menus
@@ -830,12 +821,12 @@ class modConsoGazoil extends DolibarrModules {
 	 */
 	public function init($options = '') {
 		$sql = array ();
-		
+
 		$result = $this->loadTables();
-		
+
 		return $this->_init($sql, $options);
 	}
-	
+
 	/**
 	 * Function called when module is disabled.
 	 * Remove from database constants, boxes and permissions from Dolibarr database.
@@ -846,10 +837,10 @@ class modConsoGazoil extends DolibarrModules {
 	 */
 	public function remove($options = '') {
 		$sql = array ();
-		
+
 		return $this->_remove($sql, $options);
 	}
-	
+
 	/**
 	 * Create tables, keys and data required by module
 	 * Files llx_table1.sql, llx_table1.key.sql llx_data.sql with create table, create keys
@@ -861,7 +852,7 @@ class modConsoGazoil extends DolibarrModules {
 	private function loadTables() {
 		return $this->_load_tables_consogazoil('/consogazoil/sql/');
 	}
-	
+
 	/**
 	 * Create tables and keys required by module.
 	 * Do not use version of Dolibarr because execute script only if version requiered it
@@ -874,17 +865,17 @@ class modConsoGazoil extends DolibarrModules {
 	 */
 	function _load_tables_consogazoil($reldir) {
 		global $db, $conf;
-		
+
 		$error = 0;
-		
+
 		include_once (DOL_DOCUMENT_ROOT . "/core/lib/admin.lib.php");
-		
+
 		$ok = 1;
 		foreach ( $conf->file->dol_document_root as $dirroot ) {
 			if ($ok) {
 				$dir = $dirroot . $reldir;
 				$ok = 0;
-				
+
 				// Run llx_mytable.sql files
 				$handle = @opendir($dir); // Dir may not exists
 				if (is_resource($handle)) {
@@ -897,7 +888,7 @@ class modConsoGazoil extends DolibarrModules {
 					}
 					closedir($handle);
 				}
-				
+
 				// Run llx_mytable.key.sql files (Must be done after llx_mytable.sql)
 				$handle = @opendir($dir); // Dir may not exist
 				if (is_resource($handle)) {
@@ -910,7 +901,7 @@ class modConsoGazoil extends DolibarrModules {
 					}
 					closedir($handle);
 				}
-				
+
 				// Run data_xxx.sql files (Must be done after llx_mytable.key.sql)
 				$handle = @opendir($dir); // Dir may not exist
 				if (is_resource($handle)) {
@@ -923,7 +914,7 @@ class modConsoGazoil extends DolibarrModules {
 					}
 					closedir($handle);
 				}
-				
+
 				// Run update_xxx.sql files
 				$handle = @opendir($dir); // Dir may not exist
 				if (is_resource($handle)) {
@@ -931,10 +922,10 @@ class modConsoGazoil extends DolibarrModules {
 						$dorun = false;
 						if (preg_match('/\.sql$/i', $file) && ! preg_match('/\.key\.sql$/i', $file) && substr($file, 0, 6) == 'update') {
 							// dol_syslog(get_class($this)."::_load_tables_agefodd analyse file:".$file, LOG_DEBUG);
-							
+
 							// Special test to know what kind of update script to run
 							$sql = "SELECT value FROM " . MAIN_DB_PREFIX . "const WHERE name='GAZOIL_LAST_VERION_INSTALL'";
-							
+
 							// dol_syslog(get_class($this)."::_load_tables_agefodd sql:".$sql, LOG_DEBUG);
 							$resql = $this->db->query($sql);
 							if ($resql) {
@@ -942,7 +933,7 @@ class modConsoGazoil extends DolibarrModules {
 									$obj = $this->db->fetch_object($resql);
 									$last_version_install = $obj->value;
 									// dol_syslog(get_class($this)."::_load_tables_agefodd last_version_install:".$last_version_install, LOG_DEBUG);
-									
+
 									$tmpversion = explode('_', $file);
 									$fileversion_array = explode('-', $tmpversion[1]);
 									$fileversion = str_replace('.sql', '', $fileversion_array[1]);
@@ -957,7 +948,7 @@ class modConsoGazoil extends DolibarrModules {
 								dol_syslog(get_class($this) . "::_load_tables_consogazoil " . $this->error, LOG_ERR);
 								$error ++;
 							}
-							
+
 							if ($dorun) {
 								$result = run_sql($dir . $file, 1, '', 1);
 								if ($result <= 0)
@@ -967,13 +958,13 @@ class modConsoGazoil extends DolibarrModules {
 					}
 					closedir($handle);
 				}
-				
+
 				if ($error == 0) {
 					$ok = 1;
 				}
 			}
 		}
-		
+
 		// DELETE GAZOIL_LAST_VERION_INSTALL to update with the new one
 		$sql = 'DELETE FROM ' . MAIN_DB_PREFIX . 'const WHERE name=\'GAZOIL_LAST_VERION_INSTALL\'';
 		dol_syslog(get_class($this) . "::_load_tables_consogazoil sql:" . $sql, LOG_DEBUG);
@@ -983,7 +974,7 @@ class modConsoGazoil extends DolibarrModules {
 			dol_syslog(get_class($this) . "::_load_tables_consogazoil " . $this->error, LOG_ERR);
 			$error ++;
 		}
-		
+
 		return $ok;
 	}
 }

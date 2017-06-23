@@ -1,5 +1,5 @@
 <?php
-/* Consomation Gazoil 
+/* Consomation Gazoil
  * Copyright (C) 2013 florian Henry <florian.henry@open-concept.pro>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ if (! $res) {
 require_once DOL_DOCUMENT_ROOT . "/core/lib/admin.lib.php";
 require_once '../lib/consogazoil.lib.php';
 
-dol_include_once('/consogazoil/lib/php-markdown/markdown.php');
+dol_include_once('/consogazoil/includes/php-markdown/markdown.php');
 
 // require_once "../class/myclass.class.php";
 // Translations
