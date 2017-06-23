@@ -24,16 +24,16 @@
 $(document).ready(function() {
 	$("#list").dataTable( {
 		<?php
-		if ($optioncss == 'print') {
-			print '"sDom": "lfrtip",';
+		if ($optioncss=='print') {
+			print '\'dom\': \'lfrtip\',';
 		} else {
-			print '"sDom": \'T<"clear">lfrtip\',';
+			print '\'dom\': \'Blfrtip\',';
 		}
 		?>
-		"oTableTools": {
-			"sSwfPath": "<?php echo dol_buildpath('/consogazoil/includes/datatables/extensions/TableTools/swf/copy_csv_xls_pdf.swf',1); ?>"
-		},
-		"bJQueryUI": true,
+		"colReorder": true,
+		'buttons': [
+		          'colvis','copy', 'csv', 'excel', 'pdf', 'print'
+		      ],
 		"sPaginationType": "full_numbers",
 		"aLengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "<?php echo $langs->trans('ConsoGazAll'); ?>"]],
 		"oLanguage": {
@@ -52,6 +52,7 @@ $(document).ready(function() {
 		},
 		"aaSorting": [[0,'desc']],
 		"bProcessing": true,
+		"stateSave": true,
 		"bServerSide": true,
 		"sAjaxSource": "<?php echo dol_buildpath('/consogazoil/vehicule/ajax/list.php',1); ?>"
 	});

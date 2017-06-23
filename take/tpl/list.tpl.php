@@ -24,16 +24,16 @@
 $(document).ready(function() {
 	$("#list").dataTable( {
 		<?php
-		if ($optioncss == 'print') {
-			print '"sDom": "lfrtip",';
+		if ($optioncss=='print') {
+			print '\'dom\': \'lfrtip\',';
 		} else {
-			print '"sDom": \'TC<"clear">lfrtip\',';
+			print '\'dom\': \'Blfrtip\',';
 		}
 		?>
-		"oTableTools": {
-			"sSwfPath": "<?php echo dol_buildpath('/consogazoil/includes/datatables/extensions/TableTools/swf/copy_csv_xls_pdf.swf',1); ?>"
-		},
-		"oColVis": {"buttonText": "<?php echo $langs->trans('Showhidecols')?>" },
+		"colReorder": true,
+		'buttons': [
+		          'colvis','copy', 'csv', 'excel', 'pdf', 'print'
+		      ],
 		"sPaginationType": "full_numbers",
 		"aLengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "<?php echo $langs->trans('ConsoGazAll'); ?>"]],
 		"oLanguage": {
@@ -79,7 +79,7 @@ $(document).ready(function() {
 			$object = new ConsogazoilVehTake($db);
 			$extrafields = new ExtraFields($db);
 			$extralabels = $extrafields->fetch_name_optionals_label($object->table_element);
-			
+
 			if (count($extrafields->attribute_label) > 0) {
 				foreach ( $extrafields->attribute_label as $key => $label ) {
 					echo getTitleFieldOfList($label, 1);

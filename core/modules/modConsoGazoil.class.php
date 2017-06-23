@@ -98,6 +98,9 @@ class modConsoGazoil extends DolibarrModules {
 		// 'workflow' => array('order' => array('WORKFLOW_ORDER_AUTOCREATE_INVOICE'))
 		;
 
+		$this->editor_name = 'ATM Consulting';
+		$this->editor_url = 'https://www.atm-consulting.fr';
+
 		// Data directories to create when module is enabled.
 		// Example: this->dirs = array("/consogazoil/temp");
 		$this->dirs = array (

@@ -1,5 +1,5 @@
 <?php
-/* Consomation Gazoil 
+/* Consomation Gazoil
  * Copyright (C) 2013	Florian HENRY 		<florian.henry@open-concept.pro>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,21 +43,7 @@ $optioncss = GETPOST('optioncss', 'alpha');
  *
  * Put here all code to build page
  */
-$TJs = array(
-	dol_buildpath('/consogazoil/includes/datatables/js/jquery.dataTables.min.js', 1)
-	,dol_buildpath('/consogazoil/includes/datatables/media/js/jquery.dataTables.min.js', 1)
-	,dol_buildpath('/consogazoil/includes/datatables/extensions/ColReorder/js/dataTables.colReorder.min.js', 1)
-	,dol_buildpath('/consogazoil/includes/datatables/extensions/ColVis/js/dataTables.colVis.min.js', 1)
-	,dol_buildpath('/consogazoil/includes/datatables/extensions/TableTools/js/dataTables.tableTools.min.js', 1)
-);
-$TCss = array(
-	dol_buildpath('/consogazoil/includes/datatables/css/datatables.min.css', 1)
-	,dol_buildpath('/consogazoil/includes/datatables/media/css/jquery.dataTables.min.css', 1)
-	,dol_buildpath('/consogazoil/includes/datatables/extensions/ColReorder/css/dataTables.colReorder.min.css', 1)
-	,dol_buildpath('/consogazoil/includes/datatables/extensions/ColVis/css/dataTables.colVis.min.css', 1)
-	,dol_buildpath('/consogazoil/includes/datatables/extensions/TableTools/css/dataTables.tableTools.min.css', 1)
-);
-
+include_once '../lib/include_datatables.php';
 llxHeader('', $langs->trans('ConsoGazManageTake') . '-' . $langs->trans('ConsoGazList'), '', '', 0, 0, $TJs, $TCss);
 
 $form = new Form($db);
