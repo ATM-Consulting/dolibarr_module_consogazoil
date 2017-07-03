@@ -126,7 +126,7 @@ class modConsoGazoil extends DolibarrModules {
 		// Minimum version of Dolibarr required by module
 		$this->need_dolibarr_version = array (
 				3,
-				9
+				8
 		);
 		$this->langfiles = array (
 				"consogazoil@consogazoil"
