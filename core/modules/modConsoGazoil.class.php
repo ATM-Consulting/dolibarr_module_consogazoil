@@ -302,7 +302,7 @@ class modConsoGazoil extends DolibarrModules {
 
 		$this->rights[$r][0] = 103041;
 		$this->rights[$r][1] = 'Lecture';
-		$this->rights[$r][3] = 1;
+		$this->rights[$r][3] = 0;
 		$this->rights[$r][4] = 'lire';
 		$r ++;
 
