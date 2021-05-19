@@ -38,7 +38,7 @@ $langs->load('consogazoil@consogazoil');
 $year_filter = GETPOST('yearfilter', 'int');
 
 llxHeader('', $langs->trans("ConsoGazReportKM"), '', '', '', '', array (), array (
-		'/consogazoil/css/gazoil.css' 
+		'/consogazoil/css/gazoil.css'
 ));
 
 $object = new ConsogazoilVehTake($db);
@@ -52,7 +52,7 @@ if (empty($year_filter))
 print_fiche_titre($langs->trans('ConsoGazReportKM'), '', dol_buildpath('/consogazoil/img/object_consogazoil.png', 1), 1);
 
 print '<form action="' . $_SERVER["PHP_SELF"] . '" method="POST" name="filterdate">' . "\n";
-print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '" / >';
+print '<input type="hidden" name="token" value="'.newToken().'">';
 print '<table><tr><td>';
 $selectdate = $formconsogaz->select_year_report('yearfilter', $year_filter);
 if ($selectdate != - 1) {
@@ -68,7 +68,7 @@ print '<tr class="liste_titre">';
 print '<td>' . $langs->trans('ConsoGazImmat') . '</td>';
 
 for($month = 1; $month <= 12; $month ++) {
-	
+
 	print '<td>' . dol_print_date(dol_mktime(12, 0, 0, $month, 1, $year_filter), "%B") . '</td>';
 }
 
@@ -86,14 +86,14 @@ foreach ( $object->lines_immat as $lineimat ) {
 		$ligne_style = '';
 	else
 		$ligne_style = 'bis';
-	
+
 	print '<tr ' . $bc[$var] . '>';
 	print '<td>' . $lineimat . '</td>';
-	
+
 	$result = $object->fetch_report_km_original($year_filter, $lineimat);
 	if ($result < 0)
 		setEventMessage($object->error, 'errors');
-	
+
 	foreach ( $object->lines_report as $key => $linereport ) {
 		if ($key >= 1 && $key <= 3) {
 			$columnstyle = 'trim1' . $ligne_style;
@@ -110,7 +110,7 @@ foreach ( $object->lines_immat as $lineimat ) {
 		}
 		print '<td  class="' . $columnstyle . '">' . $linereport . '</td>' . "\n";
 	}
-	
+
 	print '</tr>';
 }
 
@@ -123,7 +123,7 @@ print '<tr class="liste_titre">';
 print '<td>' . $langs->trans('ConsoGazServ') . '</td>';
 
 for($month = 1; $month <= 12; $month ++) {
-	
+
 	print '<td>' . dol_print_date(dol_mktime(12, 0, 0, $month, 1, $year_filter), "%B") . '</td>';
 }
 
@@ -140,14 +140,14 @@ foreach ( $object->lines_service as $keyserv => $lineserv ) {
 		$ligne_style = '';
 	else
 		$ligne_style = 'bis';
-	
+
 	print '<tr ' . $bc[$var] . '>';
 	print '<td>' . $lineserv . '</td>';
-	
+
 	$result = $object->fetch_report_km_service_original($year_filter, $keyserv);
 	if ($result < 0)
 		setEventMessage($object->error, 'errors');
-	
+
 	foreach ( $object->lines_report as $key => $linereport ) {
 		if ($key >= 1 && $key <= 3) {
 			$columnstyle = 'trim1' . $ligne_style;
@@ -162,7 +162,7 @@ foreach ( $object->lines_service as $keyserv => $lineserv ) {
 		}
 		print '<td class="' . $columnstyle . '">' . $linereport . '</td>' . "\n";
 	}
-	
+
 	print '</tr>';
 }
 

@@ -38,7 +38,7 @@ $langs->load('consogazoil@consogazoil');
 $year_filter = GETPOST('yearfilter', 'int');
 
 llxHeader('', $langs->trans("ConsoGazReportConso"), '', '', '', '', array (), array (
-		'/consogazoil/css/gazoil.css' 
+		'/consogazoil/css/gazoil.css'
 ));
 
 $object = new ConsogazoilVehTake($db);
@@ -52,7 +52,7 @@ if (empty($year_filter))
 print_fiche_titre($langs->trans('ConsoGazReportConso'), '', dol_buildpath('/consogazoil/img/object_consogazoil.png', 1), 1);
 
 print '<form action="' . $_SERVER["PHP_SELF"] . '" method="POST" name="filterdate">' . "\n";
-print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '" / >';
+print '<input type="hidden" name="token" value="'.newToken().'">';
 print '<table><tr><td>';
 $selectdate = $formconsogaz->select_year_report('yearfilter', $year_filter);
 if ($selectdate != - 1) {
@@ -68,7 +68,7 @@ print '<tr class="liste_titre">';
 print '<td>' . $langs->trans('ConsoGazImmat') . '</td>';
 
 for($month = 1; $month <= 12; $month ++) {
-	
+
 	print '<td colspan="2" align="center">' . dol_print_date(dol_mktime(12, 0, 0, $month, 1, $year_filter), "%B") . '</td>';
 }
 
@@ -92,77 +92,77 @@ foreach ( $object->lines_immat as $lineimat ) {
 		$ligne_style = '';
 	else
 		$ligne_style = 'bis';
-	
+
 	print '<tr>';
 	print '<td ' . $bc[$var] . ' width="100">' . $lineimat . '</td>';
-	
+
 	$result = $object->fetch_report_conso($year_filter, $lineimat);
 	if ($result < 0)
 		setEventMessage($object->error, 'errors');
-		
+
 		// janvier fevier mars
 	For($indice = 1; $indice <= 6; $indice ++) {
 		print '<td class="trim1' . $ligne_style . '">';
 		print $object->lines_report[$indice];
 		print '</td>';
 	}
-	
+
 	// avril mai Juin
 	For($indice = 7; $indice <= 12; $indice ++) {
 		print '<td class="trim2' . $ligne_style . '">';
 		print $object->lines_report[$indice];
 		print '</td>';
 	}
-	
+
 	// Juillet Aout Septembre
 	For($indice = 13; $indice <= 18; $indice ++) {
 		print '<td class="trim3' . $ligne_style . '">';
 		print $object->lines_report[$indice];
 		print '</td>';
 	}
-	
+
 	// Octobre Novembre decembre
 	For($indice = 19; $indice <= 24; $indice ++) {
 		print '<td class="trim4' . $ligne_style . '">';
 		print $object->lines_report[$indice];
 		print '</td>';
 	}
-	
+
 	// trimestre 1
 	For($indice = 25; $indice <= 26; $indice ++) {
 		print '<td class="trim1' . $ligne_style . '">';
 		print $object->lines_report[$indice];
 		print '</td>';
 	}
-	
+
 	// trimestre 2
 	For($indice = 27; $indice <= 28; $indice ++) {
 		print '<td class="trim2' . $ligne_style . '">';
 		print $object->lines_report[$indice];
 		print '</td>';
 	}
-	
+
 	// trimestre 3
 	For($indice = 29; $indice <= 30; $indice ++) {
 		print '<td class="trim3' . $ligne_style . '">';
 		print $object->lines_report[$indice];
 		print '</td>';
 	}
-	
+
 	// trimestre 4
 	For($indice = 31; $indice <= 32; $indice ++) {
 		print '<td class="trim4' . $ligne_style . '">';
 		print $object->lines_report[$indice];
 		print '</td>';
 	}
-	
+
 	// Semestre 1 et 2
 	For($indice = 33; $indice <= 36; $indice ++) {
 		print '<td class="semestre' . $ligne_style . '">';
 		print $object->lines_report[$indice];
 		print '</td>';
 	}
-	
+
 	// Total annuel
 	For($indice = 37; $indice <= 38; $indice ++) {
 		print '<td class="total' . $ligne_style . '">';
@@ -176,7 +176,7 @@ print '<tr class="liste_titre">';
 print '<td>' . $langs->trans('ConsoGazImmat') . '</td>';
 
 for($month = 1; $month <= 12; $month ++) {
-	
+
 	print '<td colspan="2" align="center">' . dol_print_date(dol_mktime(12, 0, 0, $month, 1, $year_filter), "%B") . '</td>';
 }
 
@@ -200,79 +200,79 @@ foreach ( $object->lines_service as $keyserv => $lineserv ) {
 		$ligne_style = '';
 	else
 		$ligne_style = 'bis';
-	
+
 	print '<tr>';
 	print '<td ' . $bc[$var] . '>' . $lineserv . '</td>';
-	
+
 	$result = $object->fetch_report_conso_service($year_filter, $keyserv);
 	if ($result < 0)
 		setEventMessage($object->error, 'errors');
-		
+
 		// janvier fevier mars
 	For($indice = 1; $indice <= 3; $indice ++) {
 		print '<td class="trim1' . $ligne_style . '" colspan ="2">';
 		print round($object->lines_report[$indice], 2);
 		print '</td>';
 	}
-	
+
 	// avril mai Juin
 	For($indice = 4; $indice <= 6; $indice ++) {
 		print '<td class="trim2' . $ligne_style . '" colspan ="2">';
 		print round($object->lines_report[$indice], 2);
 		print '</td>';
 	}
-	
+
 	// Juillet Aout Septembre
 	For($indice = 7; $indice <= 9; $indice ++) {
 		print '<td class="trim3' . $ligne_style . '" colspan ="2">';
 		print round($object->lines_report[$indice], 2);
 		print '</td>';
 	}
-	
+
 	// Octobre Novembre decembre
 	For($indice = 10; $indice <= 12; $indice ++) {
 		print '<td class="trim4' . $ligne_style . '" colspan ="2">';
 		print round($object->lines_report[$indice], 2);
 		print '</td>';
 	}
-	
+
 	// trimestre 1
 	$indice = 13;
 	print '<td class="trim1' . $ligne_style . '" colspan ="2">';
 	print round($object->lines_report[$indice], 2);
 	print '</td>';
-	
+
 	// trimestre 2
 	$indice = 14;
 	print '<td class="trim2' . $ligne_style . '" colspan ="2">';
 	print round($object->lines_report[$indice], 2);
 	print '</td>';
-	
+
 	// trimestre 3
 	$indice = 15;
 	print '<td class="trim3' . $ligne_style . '" colspan ="2">';
 	print round($object->lines_report[$indice], 2);
 	print '</td>';
-	
+
 	// trimestre 4
 	$indice = 16;
 	print '<td class="trim4' . $ligne_style . '" colspan ="2">';
 	print round($object->lines_report[$indice], 2);
 	print '</td>';
-	
+
 	// Semestre 1 et 2
 	For($indice = 17; $indice <= 18; $indice ++) {
 		print '<td class="semestre' . $ligne_style . '" colspan ="2">';
 		print round($object->lines_report[$indice], 2);
 		print '</td>';
 	}
-	
+
 	// Total annuel
 	$indice = 19;
 	print '<td class="total' . $ligne_style . '" colspan ="2">';
 	print round($object->lines_report[$indice], 2);
 	print '</td>';
-	
+
 	print '</tr>';
 }
 
@@ -288,7 +288,7 @@ print '<td>' . $langs->trans('Total') . '</td>';
 $result = $object->fetch_report_conso_service($year_filter, 0);
 if ($result < 0)
 	setEventMessage($object->error, 'errors');
-	
+
 	// janvier fevier mars
 For($indice = 1; $indice <= 3; $indice ++) {
 	print '<td class="trim1' . $ligne_style . '" colspan ="2">';
