@@ -55,10 +55,10 @@ $error = 0;
 $dir = $conf->consogazoil->dir_output;
 
 if ($step == 2 && $action == 'sendit') {
-	
+
 	if (GETPOST('sendit') && ! empty($conf->global->MAIN_UPLOAD_DOC)) {
 		$nowyearmonth = dol_print_date(dol_now(), '%Y%m%d%H%M%S');
-		
+
 		$fullpath = $dir . "/" . $nowyearmonth . '-' . $_FILES['userfile']['name'];
 		if (dol_move_uploaded_file($_FILES['userfile']['tmp_name'], $fullpath, 1) > 0) {
 			dol_syslog("File " . $fullpath . " was added for import");
@@ -86,12 +86,12 @@ if ($action == 'confirm_deletefile' && $confirm == 'yes') {
 // Check data file look like
 if ($step == 3 && ! (empty($filetoimport))) {
 	$importobject = new ConsogazoilImport($db);
-	
+
 	$arrayrecords = array ();
 	$linearray = array ();
-	
+
 	$file = $dir . '/' . $filetoimport;
-	
+
 	$result = $importobject->import_open_file($file);
 	$importobject->separator = ";";
 	if ($result > 0) {
@@ -105,13 +105,13 @@ if ($step == 3 && ! (empty($filetoimport))) {
 		// Loop on each input file record
 		while ( $sourcelinenb < $nboflinestmp && ! $error ) {
 			$sourcelinenb ++;
-			
+
 			$linearray = $importobject->import_read_record();
-			
+
 			// Do not read the first line : title line
 			if ($sourcelinenb != 1 && is_array($linearray)) {
 				$arrayrecords[] = $linearray;
-				
+
 				if (! is_array($linearray)) {
 					$error ++;
 					setEventMessage($importobject->error, 'errors');
@@ -129,28 +129,28 @@ if ($step == 3 && ! (empty($filetoimport))) {
 // integrate data in temporary tables
 if ($step == 4 && ! (empty($filetoimport))) {
 	$importobject = new ConsogazoilImport($db);
-	
+
 	$arrayrecords = array ();
 	$linearray = array ();
-	
+
 	$file = $dir . '/' . $filetoimport;
-	
+
 	$result = $importobject->import_open_file($file);
 	$importobject->separator = ";";
 	if ($result > 0) {
 		$importobject->truncate_temp_table();
-		
+
 		$nboflines = dol_count_nb_of_line($file);
 		$sourcelinenb = 0;
 		// Loop on each input file record
 		while ( $sourcelinenb < $nboflines && ! $error ) {
 			$sourcelinenb ++;
-			
+
 			$linearray = $importobject->import_read_record();
-			
+
 			// Do not read the first line : title line
 			if ($sourcelinenb != 1 && is_array($linearray) && count($linearray) > 0) {
-				
+
 				if ($importobject->col != $importobject->nbcol) {
 					$error ++;
 					setEventMessage($langs->trans("ConsoGazImportErrorCols", $sourcelinenb), 'errors');
@@ -167,7 +167,7 @@ if ($step == 4 && ! (empty($filetoimport))) {
 		}
 		// Close file
 		$importobject->import_close_file();
-		
+
 		if (! $error) {
 			$ret = $importobject->import_check_data();
 			if ($ret < 0) {
@@ -191,18 +191,18 @@ if ($step == 5) {
 }
 
 if ($step == 6 && $action = 'send') {
-	
+
 	$langs->load('mails');
-	
+
 	$sendto = GETPOST('sendto');
-	
+
 	if (! empty($sendto)) {
 		$from = GETPOST('fromname') . ' <' . GETPOST('frommail') . '>';
 		$message = GETPOST('message');
-		
+
 		if (dol_strlen(GETPOST('subject')))
 			$subject = GETPOST('subject');
-			
+
 			// Send mail
 		require_once DOL_DOCUMENT_ROOT . '/core/class/CMailFile.class.php';
 		$mailfile = new CMailFile($subject, $sendto, $from, $message);
@@ -243,7 +243,7 @@ dol_fiche_head($head, 'business', $langs->trans("InformationOnSourceFile"), 0, (
 $form = new Form($db);
 
 if ($step == 1 || $step == 2) {
-	
+
 	/*
 	 * Confirm delete file
 	 */
@@ -252,30 +252,30 @@ if ($step == 1 || $step == 2) {
 		if ($ret == 'html')
 			print '<br>';
 	}
-	
+	$newToken = function_exists('newToken')?newToken():$_SESSION['newtoken'];
 	print '<form name="userfile" action="' . $_SERVER["PHP_SELF"] . '" enctype="multipart/form-data" METHOD="POST">';
-	print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
+	print '<input type="hidden" name="token" value="'.$newToken.'">';
 	print '<input type="hidden" name="max_file_size" value="' . $conf->maxfilesize . '">';
 	print '<input type="hidden" value="2" name="step">';
 	print '<input type="hidden" value="sendit" name="action">';
 	print '<table class="noborder" width="100%" cellspacing="0" cellpadding="4">';
-	
+
 	$filetoimport = '';
 	$var = true;
-	
+
 	print '<tr><td colspan="6">' . $langs->trans("ChooseFileToImport", img_picto('', 'filenew')) . '</td></tr>';
 	print '<tr><td colspan="6">' . $langs->trans("ConsoGazSampleFile") . ': <a href="sample/sample_consogazoil_import.csv">' . img_picto('', 'file') . '</a></td></tr>';
-	
+
 	print '<tr class="liste_titre"><td colspan="6">' . $langs->trans("FileWithDataToImport") . '</td></tr>';
-	
+
 	// Input file name box
 	$var = false;
 	print '<tr ' . $bc[$var] . '><td colspan="6">';
 	print '<input type="file"   name="userfile" size="20" maxlength="80"> &nbsp; &nbsp; ';
 	print '<input type="submit" class="button" value="' . $langs->trans("AddFile") . '" name="sendit">';
-	
+
 	print "</tr>\n";
-	
+
 	// Search available imports
 	$filearray = dol_dir_list($dir, 'files', 0, '', '', 'name', SORT_DESC);
 	if (count($filearray) > 0) {
@@ -283,14 +283,14 @@ if ($step == 1 || $step == 2) {
 		$i = 0;
 		foreach ( $filearray as $key => $val ) {
 			$file = $val['name'];
-			
+
 			// readdir return value in ISO and we want UTF8 in memory
 			if (! utf8_check($file))
 				$file = utf8_encode($file);
-			
+
 			if (preg_match('/^\./', $file))
 				continue;
-			
+
 			$modulepart = 'b2simport';
 			$urlsource = $_SERVER["PHP_SELF"] . '?step=' . $step . $param . '&filetoimport=' . urlencode($filetoimport);
 			$relativepath = $file;
@@ -316,19 +316,19 @@ if ($step == 1 || $step == 2) {
 			print '</tr>';
 		}
 	}
-	
+
 	print '</table></form>';
 }
 
 // Check data file look like
 if ($step == 3) {
-	
+
 	print_fiche_titre($langs->trans("InformationOnSourceFile") . ' : ' . $filetoimport);
-	
+
 	print '<b>' . $langs->trans("ConsoGazoleSampleFileData") . '</b>';
 	print '<table width="100%" cellspacing="0" cellpadding="4" class="border">';
 	print '<tr class="liste_titre">';
-	
+
 	print '<td>' . $langs->trans('ConsoGazColContrat') . '</td>';
 	print '<td>' . $langs->trans('ConsoGazColCardVeh') . '</td>';
 	print '<td>' . $langs->trans('ConsoGazColCardDriv') . '</td>';
@@ -354,9 +354,9 @@ if ($step == 3) {
 	print '<td>' . $langs->trans('ConsoGazColKM') . '</td>';
 	print '<td>' . $langs->trans('ConsoGazColImmat') . '</td>';
 	print '<td>' . $langs->trans('ConsoGazColTypePiece') . '</td>';
-	
+
 	print '</tr>';
-	
+
 	$style = 'impair';
 	for($i = 0; $i < $nboflinestmp - 1; $i ++) {
 		if ($style == 'pair') {
@@ -364,7 +364,7 @@ if ($step == 3) {
 		} else {
 			$style = 'pair';
 		}
-		
+
 		$arrayrecord = $arrayrecords[$i];
 		print '<tr class="' . $style . '">';
 		foreach ( $arrayrecord as $val ) {
@@ -372,11 +372,11 @@ if ($step == 3) {
 		}
 		print '</tr>';
 	}
-	
+
 	print '</table>';
-	
+
 	dol_fiche_end();
-	
+
 	print '<BR>';
 	print '<table><tr>';
 	print '<td><a class="butAction" href="' . $_SERVER["PHP_SELF"] . '?step=4&filetoimport=' . $filetoimport . '">' . $langs->trans("ConsoGazLoadFileOK", $nboflines - 1) . '</a></td>';
@@ -387,7 +387,7 @@ if ($step == 3) {
 // Check data file look like
 if ($step == 4 && $conf->use_javascript_ajax) {
 	print_fiche_titre($langs->trans("InformationDataConsistency") . ' : ' . $filetoimport);
-	
+
 	$noimport = false;
 	if (count($importobject->lines) > 0) {
 		print '<b>' . $langs->trans("ConsoGazImportExplanation") . '</b>';
@@ -421,12 +421,12 @@ if ($step == 4 && $conf->use_javascript_ajax) {
 		print '<td>' . $langs->trans('ConsoGazColKM') . '</td>';
 		print '<td>' . $langs->trans('ConsoGazColImmat') . '</td>';
 		print '<td>' . $langs->trans('ConsoGazColTypePiece') . '</td>';
-		
+
 		print '</tr>' . "\n";
-		
+
 		$style = 'impair';
 		$nblineko = 0;
-		
+
 		if (! empty($importobject->error)) {
 			foreach ( $importobject->lines as $line ) {
 				if ($style == 'pair') {
@@ -434,11 +434,11 @@ if ($step == 4 && $conf->use_javascript_ajax) {
 				} else {
 					$style = 'pair';
 				}
-				
+
 				$stylerow = '';
-				
+
 				print '<tr class="' . $style . '">';
-				
+
 				// Action Veh
 				print '<td>';
 				if (empty($line->pb_quality)) {
@@ -452,7 +452,7 @@ if ($step == 4 && $conf->use_javascript_ajax) {
 					print '<table class="nobordernopadding"><tr><td>' . img_picto($langs->trans("ConsoGazImportExplanationCol1"), 'error') . '</td><td>' . $langs->trans('ConsoGazColNoImport') . '<br>' . $line->pb_quality . '</td></tr></table>';
 				}
 				print '</td>' . "\n";
-				
+
 				// Action station
 				print '<td>';
 				if (empty($line->pb_quality)) {
@@ -467,7 +467,7 @@ if ($step == 4 && $conf->use_javascript_ajax) {
 					print '<table class="nobordernopadding"><tr><td>' . img_picto($langs->trans("ConsoGazImportExplanationCol1"), 'error') . '</td><td>' . $langs->trans('ConsoGazColNoImport') . '<br>' . $line->pb_quality . '</td></tr></table>';
 				}
 				print '</td>' . "\n";
-				
+
 				foreach ( $line->record as $key => $val ) {
 					if ($key != 'rowid' && is_numeric($key)) {
 						print '<td>' . $val . '</td>';
@@ -475,9 +475,9 @@ if ($step == 4 && $conf->use_javascript_ajax) {
 				}
 				print '</tr>' . "\n";
 			}
-			
+
 			print '</table>';
-			
+
 			print '<BR>';
 		} else {
 			print '<b>' . $langs->trans("ConsoGazNoConsistencyProblem") . '</b>';
@@ -494,9 +494,9 @@ if ($step == 4 && $conf->use_javascript_ajax) {
 			print '<b style="color:red">' . img_picto($langs->trans("ConsoGazErrorImport"), 'error') . $langs->trans("ConsoGazErrorImport") . '</b>';
 		}
 	}
-	
+
 	dol_fiche_end();
-	
+
 	print '<BR>';
 	if ($nblineko)
 		print '<b>' . $langs->trans("ConsoGazNbLigneKO", $nblineko) . '</b>';
@@ -515,9 +515,9 @@ if ($step == 5) {
 	print_fiche_titre($langs->trans("InformationResult") . ' : ' . $filetoimport);
 	if (! $error) {
 		print '<b>' . $langs->trans("InformationResultSuccess") . '</b>';
-		
+
 		print_titre($langs->trans('ConsoGazSendEmail'));
-		
+
 		// Cree l'objet formulaire mail
 		include_once DOL_DOCUMENT_ROOT . '/core/class/html.formmail.class.php';
 		$formmail = new FormMail($db);
@@ -534,7 +534,7 @@ if ($step == 5) {
 		$formmail->withbody = $langs->trans('ConsoGazMailExploitMail');
 		$formmail->param['action'] = 'send';
 		$formmail->param['returnurl'] = $_SERVER["PHP_SELF"] . '?step=6';
-		
+
 		// Show form
 		$formmail->show_form();
 	}

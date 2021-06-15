@@ -50,7 +50,8 @@ if (empty($year_filter))
 print_fiche_titre($langs->trans('ConsoGazReportTakeNoPref'), '', dol_buildpath('/consogazoil/img/object_consogazoil.png', 1), 1);
 
 print '<form action="' . $_SERVER["PHP_SELF"] . '" method="POST" name="filterdate">' . "\n";
-print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '" / >';
+$newToken = function_exists('newToken')?newToken():$_SESSION['newtoken'];
+print '<input type="hidden" name="token" value="'.$newToken.'">';
 print '<table><tr><td>';
 $selectdate = $formconsogaz->select_year_report('yearfilter', $year_filter);
 if ($selectdate != - 1) {
@@ -66,7 +67,7 @@ print '<tr class="liste_titre">';
 print '<td>' . $langs->trans('ConsoGazDriver') . '</td>';
 
 for($month = 1; $month <= 12; $month ++) {
-	
+
 	print '<td>' . dol_print_date(dol_mktime(12, 0, 0, $month, 1, $year_filter), "%B") . '</td>';
 }
 
@@ -81,15 +82,15 @@ foreach ( $object->lines_driver as $key => $val ) {
 	$var = ! $var;
 	print '<tr ' . $bc[$var] . '>';
 	print '<td>' . $val . '</td>';
-	
+
 	$result = $object->fetch_report_takepref($year_filter, $key);
 	if ($result < 0)
 		setEventMessage($object->error, 'errors');
-	
+
 	foreach ( $object->lines_report as $linereport ) {
 		print '<td>' . $linereport . '</td>' . "\n";
 	}
-	
+
 	print '</tr>';
 }
 

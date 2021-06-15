@@ -1,5 +1,5 @@
 <?php
-/* Consomation Gazoil 
+/* Consomation Gazoil
  * Copyright (C) 2013 florian Henry <florian.henry@open-concept.pro>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,42 +48,42 @@ $action = GETPOST('action', 'alpha');
 
 if ($action == 'setvar') {
 	require_once (DOL_DOCUMENT_ROOT . "/core/lib/files.lib.php");
-	
+
 	$val = GETPOST('GAZOIL_THRESOLD_CONSO', 'alpha');
 	$res = dolibarr_set_const($db, 'GAZOIL_THRESOLD_CONSO', $val, 'chaine', 0, '', $conf->entity);
 	if (! $res > 0)
 		$error ++;
-	
+
 	$val = GETPOST('GAZOIL_THRESOLD_KM', 'alpha');
 	$res = dolibarr_set_const($db, 'GAZOIL_THRESOLD_KM', $val, 'chaine', 0, '', $conf->entity);
 	if (! $res > 0)
 		$error ++;
-	
+
 	$val = GETPOST('GAZOIL_EMAIL_EXPLOIT', 'alpha');
 	$res = dolibarr_set_const($db, 'GAZOIL_EMAIL_EXPLOIT', $val, 'chaine', 0, '', $conf->entity);
 	if (! $res > 0)
 		$error ++;
-	
+
 	$val = GETPOST('GAZOIL_ID_VEH_NO_IMPORT', 'alpha');
 	$res = dolibarr_set_const($db, 'GAZOIL_ID_VEH_NO_IMPORT', $val, 'chaine', 0, '', $conf->entity);
 	if (! $res > 0)
 		$error ++;
-	
+
 	$val = GETPOST('GAZOIL_PROD_CODE_REPORT', 'alpha');
 	$res = dolibarr_set_const($db, 'GAZOIL_PROD_CODE_REPORT', $val, 'chaine', 0, '', $conf->entity);
 	if (! $res > 0)
 		$error ++;
-	
+
 	$val = GETPOST('GAZOIL_KEY_SCRIPT', 'alpha');
 	$res = dolibarr_set_const($db, 'GAZOIL_KEY_SCRIPT', $val, 'chaine', 0, '', $conf->entity);
 	if (! $res > 0)
 		$error ++;
-	
+
 	$val = GETPOST('GAZOIL_PROD_TYPE', 'alpha');
 	$res = dolibarr_set_const($db, 'GAZOIL_PROD_TYPE', $val, 'chaine', 0, '', $conf->entity);
 	if (! $res > 0)
 		$error ++;
-	
+
 	if (! $error) {
 		setEventMessage($langs->trans("SetupSaved"), 'mesgs');
 	} else {
@@ -118,7 +118,7 @@ $form = new Form($db);
 // Subheader
 $linkback = '<a href="' . DOL_URL_ROOT . '/admin/modules.php">' . $langs->trans("BackToModuleList") . '</a>';
 print_fiche_titre($langs->trans($page_name), $linkback);
-
+$newToken = function_exists('newToken')?newToken():$_SESSION['newtoken'];
 // Configuration header
 $head = consogazoilAdminPrepareHead();
 dol_fiche_head($head, 'settings', $langs->trans("Module103040Name"), 0, "consogazoil@consogazoil");
@@ -129,7 +129,7 @@ echo $langs->trans("ConsoGazoilSetupPage");
 print '<table class="noborder" width="100%">';
 
 print '<form method="post" action="' . $_SERVER['PHP_SELF'] . '" >';
-print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
+print '<input type="hidden" name="token" value="'.$newToken.'">';
 print '<input type="hidden" name="action" value="setvar">';
 
 print '<tr class="liste_titre">';
