@@ -252,9 +252,9 @@ if ($step == 1 || $step == 2) {
 		if ($ret == 'html')
 			print '<br>';
 	}
-
+	$newToken = function_exists('newToken')?newToken():$_SESSION['newtoken'];
 	print '<form name="userfile" action="' . $_SERVER["PHP_SELF"] . '" enctype="multipart/form-data" METHOD="POST">';
-	print '<input type="hidden" name="token" value="'.newToken().'">';
+	print '<input type="hidden" name="token" value="'.$newToken.'">';
 	print '<input type="hidden" name="max_file_size" value="' . $conf->maxfilesize . '">';
 	print '<input type="hidden" value="2" name="step">';
 	print '<input type="hidden" value="sendit" name="action">';

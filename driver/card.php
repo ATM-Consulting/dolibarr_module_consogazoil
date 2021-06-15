@@ -221,10 +221,11 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 	print $formconfirm;
 
 	$linkback = '<a href="' . dol_buildpath('/consogazoil/driver/list.php', 1) . '">' . $langs->trans("BackToList") . '</a>';
+	$newToken = function_exists('newToken')?newToken():$_SESSION['newtoken'];
 
 	if ($action == 'edit') {
 		print '<form name="update" action="' . $_SERVER["PHP_SELF"] . '?id=' . $object->id . '" method="POST">';
-		print '<input type="hidden" name="token"value="'.newToken().'">';
+		print '<input type="hidden" name="token"value="'.$newToken.'">';
 		print '<input type="hidden" name="action" value="update">';
 	}
 

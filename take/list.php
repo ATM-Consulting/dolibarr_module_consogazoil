@@ -37,6 +37,7 @@ if (! $user->rights->consogazoil->lire)
 $filterdate = GETPOST('filterdate', 'alpha');
 
 $optioncss = GETPOST('optioncss', 'alpha');
+$newToken = function_exists('newToken')?newToken():$_SESSION['newtoken'];
 
 /*
  * VIEW
@@ -52,7 +53,7 @@ $formconsogaz = new FormConsoGazoil($db);
 echo load_fiche_titre($langs->trans('ConsoGazManageTake') . '-' . $langs->trans('ConsoGazList'), '', 'consogazoil@consogazoil');
 
 print '<form action="' . $_SERVER["PHP_SELF"] . '" method="POST" name="filterdate">' . "\n";
-print '<input type="hidden" name="token" value="'.newToken().'">';
+print '<input type="hidden" name="token" value="'.$newToken.'">';
 print '<table><tr><td>';
 $selectdate = $formconsogaz->select_date_filter('filterdate', $filterdate, 'take');
 if ($selectdate != - 1) {

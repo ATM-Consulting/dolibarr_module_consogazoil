@@ -83,7 +83,7 @@ if (! empty($id) || (! empty($ref))) {
 	if ($ret < 0)
 		setEventMessage($object->error, 'errors');
 }
-
+$newToken = function_exists('newToken')?newToken():$_SESSION['newtoken'];
 /*
  * Action
  */
@@ -233,7 +233,7 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 	print_fiche_titre($title . '-' . $langs->trans('ConsoGazNew'), '', dol_buildpath('/consogazoil/img/object_consogazoil.png', 1), 1);
 
 	print '<form name="add" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
-	print '<input type="hidden" name="token" value="'.newToken().'">';
+	print '<input type="hidden" name="token" value="'.$newToken.'">';
 	print '<input type="hidden" name="action" value="create_confirm">';
 
 	print '<table class="border" width="100%">';
@@ -322,7 +322,7 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 	print_fiche_titre($title . '-' . $langs->trans('ConsoGazEdit'), '', dol_buildpath('/consogazoil/img/object_consogazoil.png', 1), 1);
 
 	print '<form name="add" action="' . $_SERVER["PHP_SELF"] . '?id=' . $object->id . '" method="POST">';
-	print '<input type="hidden" name="token" value="'.newToken().'">';
+	print '<input type="hidden" name="token" value="'.$newToken.'">';
 	print '<input type="hidden" name="action" value="edit_confirm">';
 
 	If ($user->rights->consogazoil->import) {

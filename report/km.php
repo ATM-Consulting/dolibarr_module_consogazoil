@@ -93,7 +93,8 @@ if (empty($year_filter))
 print_fiche_titre($langs->trans('ConsoGazReportKM'), '', dol_buildpath('/consogazoil/img/object_consogazoil.png', 1), 1);
 
 print '<form action="' . $_SERVER["PHP_SELF"] . '" method="POST" name="filterdate">' . "\n";
-print '<input type="hidden" name="token" value="'.newToken().'">';
+$newToken = function_exists('newToken')?newToken():$_SESSION['newtoken'];
+print '<input type="hidden" name="token" value="'.$newToken.'">';
 print '<table><tr><td>';
 $selectdate = $formconsogaz->select_year_report('yearfilter', $year_filter);
 if ($selectdate != - 1) {

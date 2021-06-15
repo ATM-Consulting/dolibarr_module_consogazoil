@@ -38,6 +38,7 @@ $ref = GETPOST('ref', 'alpha');
 $label = GETPOST('label', 'alpha');
 $action = GETPOST('action', 'alpha');
 $confirm = GETPOST('confirm', 'alpha');
+$newToken = function_exists('newToken')?newToken():$_SESSION['newtoken'];
 
 // Security check
 if (empty($user->rights->consogazoil->lire))
@@ -149,7 +150,7 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 	print_fiche_titre($title . '-' . $langs->trans('ConsoGazNew'), '', dol_buildpath('/consogazoil/img/object_consogazoil.png', 1), 1);
 
 	print '<form name="add" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
-	print '<input type="hidden" name="token" value="'.newToken().'">';
+	print '<input type="hidden" name="token" value="'.$newToken.'">';
 	print '<input type="hidden" name="action" value="create_confirm">';
 
 	print '<table class="border" width="100%">';
@@ -203,7 +204,7 @@ if ($action == 'create' && $user->rights->consogazoil->creer) {
 
 	if ($action == 'edit') {
 		print '<form name="update" action="' . $_SERVER["PHP_SELF"] . '?id=' . $object->id . '" method="POST">';
-		print '<input type="hidden" name="token" value="'.newToken().'">';
+		print '<input type="hidden" name="token" value="'.$newToken.'">';
 		print '<input type="hidden" name="action" value="update">';
 	}
 
