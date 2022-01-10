@@ -1,8 +1,8 @@
 Gazoil Comsuption
 =========
 
-This module is use to manage Gazoil consumption for Car/Truck
-Import file format is the one use by SHELL/ESSO/TOTAL
+This module is use to manage Gazoil consumption for Car/Truck.
+Import file format is the one use by SHELL/ESSO/TOTAL.
 
 Licence
 -------
